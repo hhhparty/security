@@ -1,8 +1,6 @@
 # Repository Introduce 
-# 资源库介绍
-
 This repository is a collection of lectures, notes, and tools about security.
-
+# 资源库介绍
 该资源库用于收集个人的教学讲义、学习笔记、安全小工具。
 
 ## 资源目录（Directories）：
