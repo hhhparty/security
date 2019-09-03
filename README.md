@@ -1,8 +1,17 @@
-这个项目用于收集整理自己网安方面的学习笔记、发布自定义的小工具。
-This repository is used to combe lectures and notes, and share my custmized little sec tools.
+# Repository Introduce 
+# 资源库介绍
 
-资源目录（Outline）：
+This repository is a collection of lectures, notes, and tools about security.
 
-1.
-2.
-3.
+该资源库用于收集个人的教学讲义、学习笔记、安全小工具。
+
+## 资源目录（Directories）：
+
+- lectures：some my teaching lecutures in this directory。这个目录中存放了我的教学讲义。
+
+- note：some my learning notes in this directory. 这个目录中存放了我的学习笔记。
+
+## lectures 教学讲义
+
+
+## notes 学习笔记
