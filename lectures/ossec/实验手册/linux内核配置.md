@@ -105,6 +105,7 @@ sudo apt install build-essential gcc libncurses5-dev alien ncurses-dev flex
 ```cd ~\Downloads\linux-5.2.11```
 
 4.运行下列命令，准备配置Linux内核。
+
 ```make menuconfig```
 
 会弹出下列窗口:

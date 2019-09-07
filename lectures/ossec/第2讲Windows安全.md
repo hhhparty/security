@@ -109,18 +109,7 @@ SID的生成机制：
 
 #### 本节实验操作
 
-1.尝试查看自己电脑windows系统当前用户的SID
-
-方法如下：打开CMD,运行命令```whoami   /user``` ，然后将自己的SID的4个部分进行解析，可以参考 https://docs.microsoft.com/zh-cn/windows/security/identity-protection/access-control/security-identifiers。
-
-2.尝试查看当前windows系统下所有用户的sid。
-
-方法：在cmd中运行```wmic useraccount get name,sid```。
-
-3.在注册表中查找各用户的SID.
-方法：在CMD中运行“regedit”，点击确定进去注册表编辑器，点击HKEY_USERS。
-
-以上问题，回答时将结果截图，连同分析结果以实验报告方式记录。
+参考实验手册中实验：实验1 理解Windows的安全标识符（SID)
 
 ---
 
@@ -236,8 +225,6 @@ Windows权限是允许每个安全对象的所有者允许谁可以对对象或�
 - 来宾账户
 - HelpAssistant 帐户 (随远程协助会话一起安装)
 
-
-
 ##### 管理员账户（Administrator）
 
 管理员账户，SID为``` S-1-5-域-500```，是在 Windows 安装期间创建的第一个帐户。
@@ -310,7 +297,10 @@ DSMA账户和System Managed Accounts Group组是在计算机第一次启动Windo
 
 从权限角度来看, DefaultAccount 是标准用户帐户。 
 
-DefaultAccount 是运行多用户相关应用 (MUMA 应用) 所必需的，这些MUMA程序不随某个用户登录而启动，也不随某个用户退出而停止，MUMA 应用始终运行，但会对登录设备和注销设备的用户做出响应。 MUMA 应用通过使用 DSMA 运行（以默认用户的权限执行操作）。
+- DefaultAccount 是运行多用户相关应用 (MUMA 应用) 所必需的；
+- 这些MUMA程序不随某个用户登录而启动，也不随某个用户退出而停止；
+- MUMA 应用始终运行，但会对登录设备和注销设备的用户做出响应。 
+- MUMA 应用通过使用 DSMA 运行（以默认用户的权限执行操作）。
 
 ###### 域控制器上的DefaultAccount
 
@@ -319,8 +309,6 @@ DefaultAccount 是运行多用户相关应用 (MUMA 应用) 所必需的，这�
 ###### 安全注意事项
 
 Microsoft 不建议更改默认配置, 即使DefaultAccount处于禁用状态。 让帐户处于禁用状态不会产生安全风险。 
-
-
 
 
 #### 默认本地系统帐户（Default local system accounts）
@@ -379,41 +367,9 @@ LOCAL SERVICE 账户具有访问呢本地计算机（windows）的最低权限, 
 
 ---
 
-#### 实验操作
+#### 本节实验操作
 
-一.查看自己的Windows系统用户和组
-
-1.本地用户有几个，分别是何种权限？
-说明：可以在windows nt下输入```lusrmgr.msc```命令查看用户组和用户设置.
-2.本地用户组有几个，分别用于何种角色？
-
-3.Windows server提供了不少用户组，你对这些用户组的使用意见是？
-
-二.强制实施对远程访问的本地账户限制
-
-1.启动组策略管理控制台（运行命令```gpedit.msc```)；
-2.在控制台树中，打开“计算机配置”——"Windows设置"——“安全设置”；
-3.继续打开“本地策略”——“用户权限分配”
-
-![本地账户登录设置](images/02/本地账户登录设置.png)
-
-4.查看当前有哪些用户被禁止从网络访问本台计算机。将结果截图记录于实验报告中。
-
-> windows建议：拒绝所有本地管理员帐户的网络登录。
-
-三.更改账户策略
-
-1.启动组策略管理控制台（运行命令```gpedit.msc```)。
-2.在控制台树中，打开“计算机配置”——"Windows设置"——“安全设置”。
-3.继续打开“本地策略”——“账户锁定策略”
-4.修改其中“账户锁定阈值”为5次。
-5.更改系统建议的“账户锁定时间”为30分钟。
-6.更改“充值账户锁定计数器”为30分钟后。
-7.修改“密码策略”中的密码长度最小值为8个字符。
-8.修改“密码最长使用期限”为30天。
-9.开启“密码必须符合复杂性要求”。
-
-以上题目的答案请以实验报告形式提交到高校邦。
+见实验手册：实验 2 Windows用户组策略设置.md
 
 ---
 
@@ -428,6 +384,8 @@ AD中的默认本地账户（Default local accounts）包括：
 - Guest
 - KRBTGT，用于运行KDC(Key Distribution Center)
 - HelpAssistant（如果运行远程协助会话时会建立）
+
+> 有关域的知识，稍后介绍。
 
 ### Microsoft 账户
 
@@ -480,12 +438,263 @@ Microsoft 密钥分发服务 (kdssvc) 提供了使用 Active Directory 帐户的
 - 虚拟帐户可以在域环境中访问网络。
 - 无需密码管理。 
 
-
 以虚拟帐户身份运行的服务使用```<domain_name>\<computer_name>$```格式的计算机帐户凭据访问网络资源。
 
-### 工作组，域和信任关系
+### Active Directory 安全组 
 
-#### 工作组
+> Active Directory 安全组常见于Windows Server 2016之中。
+
+之前，我们已经介绍了这些在Windows server中的多个内建（自带）账户。下面我们介绍Windows server中的内建安全组。
+
+安全组（Security groups）用于用户账户、计算机账户等的集中管理。Windows server内建安全组预设了权限，实现了有效的访问控制。
+
+为了理解AD上的安全组，有两方面基础概念，我们需要知道：
+
+1.Windows server 的AD中，有两种形式的常见安全主体：
+- 用户账户（user accounts），表示物理实体“人”。
+  - 用户账户也可以作为服务账户（Service account），表示物理实体“程序”
+- 计算机账户（computer accounts），表示物理实体“计算机”。
+
+2.对于AD，有两类管理职责：
+- 服务管理员（Service administrators），负责维护和提供AD域服务（AD DS），包括管理域控制器和配置AD DS。
+- 数据管理员（Data administrators），负责维护存储在AD DS中的数据，以及在域成员服务器或工作站上的数据。
+
+#### 2类 AD安全组 
+
+为了实现集中用户管理、分配工作职责、设立一致的安全准则，Windows server预设了2类AD安全组：
+- 通信组（Distribution groups），用于生成 email 通信列表（distribution lists）。
+  - 仅使用 email 应用（如 Exchange server）发送邮件给各组用户。
+  - 通信组不考虑安全性
+  - 不能被列在随机访问控制列表中（DACL)。
+- 安全组（Security groups），用于给共享资源分配权限（assign permissions）。在安全组中可以有两类操作：
+  - 1.分配用户权力（Assign user rights）
+    - 在AD中，为安全组分配用户权限，即指明哪个组中用户可以在某个域或森林中访问资源。
+    - 安装 ActiveDirectory 时, 系统会自动为某些安全组分配用户权限, 以帮助管理员在域中定义人员的管理角色。
+    - 例如, 在 ActiveDirectory 中添加到 "备份操作员" 组的用户可以备份和还原位于域中每个域控制器上的文件和目录。
+  - 2.分配资源访问权限（Assign permissions）。
+    - 权限不同于用户权力。
+    - 用户权力是指用户的作用域或访问范围（某个域、某个林、某个服务器...)
+    - 权限指：（1）谁可以访问资源（2）访问级别。
+    - 设置在域对象上的权限，有些可以自动分配给一定级别的安全组。这些权限在DACL中列出。
+
+#### AD 组（Groups）的作用域（scope）
+
+组的作用域：指某个组能在什么范围内被授予权限（permission）。
+
+有3类作用域：
+- Universal
+- Global
+- Domain Local
+
+#### 默认安全组
+
+默认组 (如 "域管理员" 组) 是创建 ActiveDirectory 域时自动创建的安全组。 你可以使用这些预定义组来帮助控制对共享资源的访问, 并委派特定域范围的管理角色。
+
+默认安全组一般位于 AD用户和计算机的两个文件夹内：
+- buildin，用于存放那些在域本地域（domain local scope）中的组。
+- usesrs，用于存放定义在全局域（global scope）中的组和定义在域本地域（domain local scope）中的组。
+
+某些管理组和这些组的所有成员都受后台进程的保护, 该进程定期检查并应用特定的安全描述符。 安全描述符存放在AdminSDHolder对象中，它包含与受保护对象关联的安全信息的数据结构。
+
+常见的AD默认安全组有：
+
+- Access Control Assistance Operators
+- Account Operators
+- Administrators
+- Allowed RODC Password Replication Group
+- Backup Operators
+- Certificate Service DCOM Access
+- Cert Publishers
+- Cloneable Domain Controllers
+- Cryptographic Operators
+- Denied RODC Password Replication Group
+- Device Owners
+- Distributed COM Users
+- DnsUpdateProxy
+- DnsAdmins
+- Domain Admins
+- Domain Computers
+- Domain Controllers
+- Domain Guests
+- Domain Users
+- Enterprise Admins
+- Enterprise Key Admins
+- Enterprise Read-only Domain Controllers
+- Event Log Readers
+- Group Policy Creator Owners
+- Guests
+- Hyper-V Administrators
+- IIS_IUSRS
+- Incoming Forest Trust Builders
+- Key Admins
+- Network Configuration Operators
+- Performance Log Users
+- Performance Monitor Users
+- Print Operators
+- Protected Users
+- RAS and IAS Servers
+- RDS Endpoint Servers
+- RDS Management Servers
+- RDS Remote Access Servers
+- Read-only Domain Controllers
+- Remote Desktop Users
+- Remote Management Users
+- Replicator
+- Schema Admins
+- Server Operators
+- Storage Replica Administrators
+- System Managed Accounts Group
+- Terminal Server License Servers
+- Users
+- Windows Authorization Access Group
+- WinRMRemoteWMIUsers_
+
+具体的 ，可以参考https://docs.microsoft.com/en-us/windows/security/identity-protection/access-control/active-directory-security-groups。
+
+### 特殊标识（Special Identities）
+
+特殊标识组与 "Users" 和 "buildin" 中列出的 AD 安全组类似。
+
+特殊标识用来分配对网络中资源的访问权限。 通过使用特殊标识组可以：
+- 分派用户权力(user rights) 给AD中的安全组。
+- 分派权限（permissions）给某个安全组。
+
+常见的特殊标识（特殊的SID)有：
+|特殊标识名称|常见SID值|用途|
+|-|-|-|
+|匿名登录|S-1-5-7|
+- 已验证用户
+- 批处理
+- 创建者组
+- 创建者所有者
+- 拨号
+- 摘要式身份验证
+- 企业域控制器
+- 所有人
+- 交互式
+- 本地服务
+- 系统
+- 网络
+- 网络服务
+- NTLM 身份验证
+- 其他组织
+- Principal Self
+- 远程交互式登录
+- 限制
+- SChannel 身份验证
+- 服务
+- 终端服务器用户
+- 此组织
+- Window Manager\Window 管理器组
+
+### 用户账户控制（User Account Control, UAC)
+
+用户帐户控制 (UAC) 是 Microsoft 的总体安全构想的基本组件。
+
+用户帐户控制 (UAC) 有助于防止恶意软件损坏电脑，并且有助于组织部署易于管理的桌面。
+
+UAC控制下，应用和任务将始终在非管理员帐户的安全上下文中运行，除非管理员专门授予管理员级别的访问系统权限。 UAC 可阻止自动安装未经授权的应用并防止意外更改系统设置。
+
+#### UAC 工作原理
+
+##### UAC 进程和交互
+
+每个需要执行管理员权限操作（需要administrator access token ）的程序都必须显示确认（弹出对话框）。但子程序可以继承父程序的访问令牌。
+
+UAC控制着下列过程：
+- 登录过程
+- 用户权力审查
+- 权限审查
+
+登录过程简介：
+
+![管理员用户与标准用户的不同](images/02/管理员用户与标准用户的不同.png)
+
+默认情况下, 标准用户和管理员访问资源并在标准用户的安全上下文中运行应用。 当用户登录到计算机时, 系统会为该用户创建访问令牌。 访问令牌包含有关用户授予的访问权限级别的信息, 包括特定的安全标识符 (Sid) 和 Windows 权限。
+
+当管理员登录时, 将为用户创建两个单独的访问令牌: 
+- 标准用户访问令牌
+  - 标准用户访问令牌包含与管理员访问令牌相同的特定于用户的信息, 但会删除管理 Windows 权限和 Sid。
+  - 标准用户访问令牌用于启动不执行管理任务 (标准用户应用) 的应用。 
+  - 使用标准用户访问令牌显示桌面 (explorer .exe)。 Explorer 是父进程, 所有其他用户启动的进程都将继承其访问令牌。
+  - 所有应用都作为标准用户运行, 除非用户提供同意或凭据来批准应用以使用完整的管理访问令牌。
+- 管理员访问令牌。  
+
+
+
+使用标准用户访问令牌时, 作为管理员组成员的用户可以登录、浏览 Web 和阅读电子邮件。 当管理员需要执行需要管理员访问令牌的任务时, Windows10 会自动提示用户进行审批。 此提示称为提升提示, 其行为可通过使用本地安全策略管理单元 (Secpol) 或组策略进行配置。 有关详细信息, 请参阅用户帐户控制安全策略设置。
+
+同意和凭据提示
+
+启用 UAC 后, 在启动需要完全管理员访问令牌的程序或任务之前, Windows10 会提示同意或提示输入有效的本地管理员帐户的凭据。 此提示可确保不会自动安装恶意软件。
+
+许可提示
+
+当用户尝试执行需要用户的管理访问令牌的任务时, 将显示 "同意" 提示。 下面是 UAC 同意提示的示例。
+
+
+当标准用户的操作，需要用户的管理访问令牌时，windows会弹出下列提示：
+![windowsuser许可提示](images/02/windowsuser许可提示.gif)
+
+凭据提示
+
+当标准用户尝试执行需要用户的管理访问令牌的任务时, 将显示凭据提示。 管理员还可以通过设置用户帐户控制来提供其凭据 : 管理员批准模式策略设置值中管理员的提升提示行为, 以提示输入凭据。
+
+下面是 UAC 凭据提示的示例。
+
+
+![windowsuser许可提示2](images/02/windowsuser许可提示2.gif)
+
+UAC 提升提示
+
+UAC 提升提示具有特定于应用的颜色编码, 从而能够立即识别应用程序的潜在安全风险。 当应用尝试使用管理员的完整访问令牌运行时, Windows10 首先分析可执行文件以确定其发布者。 根据文件的发布者: Windows10、publisher 已验证 (已签名) 和 publisher 未验证 (无符号), 应用首先分为三个类别。 下图演示了 Windows10 如何确定向用户显示哪种颜色提升提示。
+
+提升提示的颜色编码如下所示:
+
+- 红色背景, 红色盾牌图标: 应用被组策略阻止或来自被阻止的发布者。
+- 蓝色背景, 带有蓝色和金色盾牌图标: 应用程序是 Windows10 管理应用程序, 如 "控制面板" 项目。
+- 蓝色背景, 带有蓝色盾牌图标: 应用程序使用 Authenticode 签名, 并且受本地计算机信任。
+- 黄色背景, 黄色盾牌图标: 应用程序未经签名或已签名, 但尚未被本地计算机信任。
+
+#### UAC体系结构
+
+下图详细介绍了 UAC 体系结构。
+
+![uacarchitecture](images/02/uacarchitecture.gif)
+
+对于Users：
+- 用户执行需要权限的操作，如果操作更改了文件系统或注册表, 则会调用虚拟化。 所有其他操作都调用 ShellExecute。
+- ShellExecute，ShellExecute 调用 CreateProcess。 ShellExecute 查找 CreateProcess 中的 ERROR_ELEVATION_REQUIRED 错误。 如果它收到错误, ShellExecute 将调用应用程序信息服务, 以尝试用提升的提示执行所请求的任务。
+- CreateProcess，如果应用程序需要提升, 则 CreateProcess 通过 ERROR_ELEVATION_REQUIRED 拒绝呼叫。
+
+对于SYSTEM:
+可参考：https://docs.microsoft.com/zh-cn/windows/security/identity-protection/user-account-control/how-user-account-control-works
+
+#### 用户帐户控制安全策略设置
+
+可以使用本地安全策略管理单元 (Secpol.msc) 对用户帐户进行安全配置
+
+![uac策略](images/02/uac策略.png)
+
+有以下用户帐户控制:：
+- 用于内置管理员帐户的管理员批准模式
+- 允许 UIAccess 应用程序在不使用安全桌面的情况下提示提升
+- 管理员批准模式中管理员的提升权限提示行为
+- 标准用户的提升权限提示行为
+- 检测应用程序安装并提示提升权限
+- 仅提升已签名和已验证的可执行文件
+- 仅提升安装在安全位置的 UIAccess 应用程序
+- 打开管理员批准模式
+- 提示提升权限时切换到安全桌面
+- 将文件和注册表写入错误虚拟化到每用户位置
+
+这些策略设置位于 "本地安全策略" 管理单元的 "安全 Settings\Local Policies\Security 选项" 中。
+
+注册表项位于HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System中。 有关每个注册表项的信息, 请参阅关联的组策略描述。这些设置与上面的策略是一一对应的。
+
+## Windows基础概念：工作组、域和信任关系
+
+### 工作组
 
 工作组（WorkGroup）为小型办公系统提供了资源共享功能，使用户可共享其他计算机上的本地资源。
 
@@ -495,7 +704,7 @@ Microsoft 密钥分发服务 (kdssvc) 提供了使用 Active Directory 帐户的
 
 ---
 
-#### Domain
+### Domain
 
 域是一个计算机集合，包含“
 - 一或多个集中安全授权机构（AAA服务器）
@@ -510,7 +719,13 @@ Microsoft 密钥分发服务 (kdssvc) 提供了使用 Active Directory 帐户的
 
 ---
 
-#### 信任关系
+#### 实验：创建一个域控制器
+
+参考实验手册中的实验:创建一个域控制器
+
+---
+
+### 信任关系
 
 信任关系是域之间的关系。
 
