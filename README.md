@@ -15,9 +15,20 @@ This repository is a collection of lectures, notes, and tools about security.
 
 ## lectures 教学讲义
 
-- ossec：操作系统安全
-- cyberhack：网络攻防技术
-- webhack：Web攻防技术
+### ossec：操作系统安全
+- 第1讲 操作系统安全概述
+- 第2讲 Windows 中的访问控制
+
+#### 实验指导书
+- 实验1 理解Windows的安全标识符（SID)
+- 实验2 Windows用户组查看与安全策略设置
+
+### cyberhack：网络攻防技术
+- 第1讲 网络空间安全现状与网络攻防基本流程
+- 第2讲 信息收集与网络扫描
+
+### webhack：Web攻防技术
+- 
 
 ## notes 学习笔记
 

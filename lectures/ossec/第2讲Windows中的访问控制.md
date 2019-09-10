@@ -1,8 +1,10 @@
-# Windows 中的访问控制
+# 第2讲 Windows 中的访问控制
 
-主要内容：
+Windows 的安全机制中主要内容有：
 
 ![windows安全性](images/02/windows安全性.png)
+
+本章节主要介绍第一部分。
 
 ---
 
@@ -196,7 +198,7 @@ SID的生成机制：
 
 ---
 
-##### 安全描述符（Security identifiers ，SIDs） 和 访问控制列表（ Access Control Lists，ACL）
+##### 安全描述符和 访问控制列表（ Access Control Lists，ACL）
 
 安全描述符是与每个安全对象相关联的数据结构。Windows根据安全描述符实现对安全对象的访问控制。
 
