@@ -13,7 +13,7 @@
 
 1.尝试查看自己电脑windows系统当前用户的SID
 
-方法如下：打开CMD,运行命令```whoami   /user``` ，然后将自己的SID的4个部分进行解析，可以参考 https://docs.microsoft.com/zh-cn/windows/security/identity-protection/access-control/security-identifiers。
+方法如下：打开CMD,运行命令```whoami   /user``` ，然后将自己的SID的4个部分进行解析，可以参考：https://docs.microsoft.com/zh-cn/windows/security/identity-protection/access-control/security-identifiers  
 
 2.尝试查看当前windows系统下所有用户的sid。
 
