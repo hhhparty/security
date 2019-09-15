@@ -252,7 +252,7 @@ The only real drawback of msfcli is that it is not supported quite as well as ms
 
 具体参考：https://www.offensive-security.com/metasploit-unleashed/msfconsole-commands/
 
-### 使用渗透模块
+### 渗透模块（exploit）
 
 使用渗透模块一般有以下几个步骤：
 
@@ -374,3 +374,12 @@ Module evasion options:
    TCP::max_send_size             0                no        Maxiumum tcp segment size.  (0 = disable)
    TCP::send_delay                0                no        Delays inserted before every send.  (0 = disable)
 ```
+
+### 攻击载荷（payload）
+
+MSF中的攻击载荷（payload）对应于某个渗透模块（exploit）。MSF中有3种不同类型的载荷模块：
+
+- singles
+- stagers
+- stages
+
