@@ -1,4 +1,4 @@
-# 第4讲 Windows威胁防护
+# 第3讲 Windows威胁防护
 
 Microsoft Defender 高级威胁防护（Microsoft DEFENDER ATP）是一个统一的平台，用于实现：
 - 预防性保护服务器和终端结点
@@ -70,14 +70,9 @@ Configuration Manager 可与以下各项集成：
 - 站点系统角色，可扩展管理功能并使用 Internet Information Services (IIS) 的 Web 服务。
 - 后台智能传输服务 (BITS) 和 BranchCache 来帮助管理可用的网络带宽。
 
+具体可以参考微软安全中心：https://securitycenter.windows.com/
+
 ---
-
-在安全保障时，最常用的解决方案有：
-- 实时终端保护和响应（EDR)
-- 智能化优化管理
-- 无缝补救
-
-微软安全中心：https://securitycenter.windows.com/
 
 ## 减少Windows系统的攻击面
 
@@ -91,6 +86,8 @@ Configuration Manager 可与以下各项集成：
 - 受控文件夹访问权限
 - 网络防火墙
 - 攻击面减少规则
+
+---
 
 ### 基于硬件的隔离
 
@@ -136,11 +133,15 @@ SMM 保护构建在安全启动技术的基础之上, 并且需要它才能正�
 
 系统启动后, Windows Defender 系统保护使用 TPM 对这些测量进行签名和签署。 请求后, 诸如 Intune 或 System Center Configuration Manager 之类的管理系统可以获取它们以进行远程分析。 如果 Windows Defender System Guard 指示设备缺少完整性, 管理系统可以执行一系列操作, 例如拒绝设备对资源的访问。
 
+---
+
 ### 应用程序控制（WDAC）
 
 应用程序控件是一项至关重要的防线, 可保护企业环境免受不断变化的恶意软件影响。
 
 只能在从 Windows 10 企业版或专业版或 Windows Server 2016 开始的计算机上创建 WDAC 策略。 可将其应用于运行任何版本的 Windows 10 或 Windows Server 2016 的计算机, 也可通过移动设备管理 (MDM) (如 Microsoft Intune) 进行管理。 可以使用组策略或 Intune 分发 WDAC 策略。
+
+---
 
 ## 新安全防护技术
 
@@ -153,6 +154,8 @@ SMM 保护构建在安全启动技术的基础之上, 并且需要它才能正�
 - 自动沙盒服务
 
 ![microsoft-defender-atp-next-generation-protection-engines](images/03/microsoft-defender-atp-next-generation-protection-engines.png)
+
+---
 
 ### 行为监视
 
@@ -175,6 +178,8 @@ SMM 保护构建在安全启动技术的基础之上, 并且需要它才能正�
 - 大数据分析
 
 具体信息可以参考：https://docs.microsoft.com/zh-cn/windows/security/threat-protection/windows-defender-antivirus/utilize-microsoft-cloud-protection-windows-defender-antivirus
+
+---
 
 ### URL 保护
 
@@ -241,9 +246,13 @@ Windows Defender 防病毒安全智能更新的备用位置（如果已安装的
 - vortex-win.data.microsoft.com 
 - settings-win.data.microsoft.com
 
+---
+
 ###  首次看到时阻止
 
 当 Windows Defender 防病毒软件遇到可疑但未检测到的文件时, 它会查询云保护后端。 云后端应用对文件的启发、机器学习和自动分析, 以确定文件是否是恶意的或干净的。
+
+---
 
 ## 终结点检测和响应
 
@@ -260,6 +269,8 @@ Windows Defender 防病毒安全智能更新的备用位置（如果已安装的
 - 自定义检测
 - 实时和历史搜索
 
+---
+
 ## 自动调查和修正
 
 与能够快速响应高级攻击相结合，Microsoft Defender ATP 提供自动调查和补救功能，可帮助在数分钟内减少警报数量。
@@ -268,6 +279,8 @@ Windows Defender 防病毒安全智能更新的备用位置（如果已安装的
 威胁修正
 管理自动调查
 分析自动调查
+
+---
 
 ## 安全功能分数
 
@@ -280,10 +293,12 @@ Microsoft Defender ATP 包括一个安全分数，可帮助你动态评估企业
 - 安全功能分数
 - 威胁分析
 
+---
+
 ## Microsoft 威胁专家
 Microsoft Defender ATP 新增的托管威胁搜寻服务提供主动的搜寻、优先级和其他上下文和见解，进一步使安全操作中心（SOCs）能够快速准确地识别和响应威胁。
 
-
+---
 
 ## 管理和 API
 将 Microsoft Defender 高级威胁防护集成到现有工作流中。
