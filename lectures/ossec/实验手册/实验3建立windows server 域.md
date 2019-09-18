@@ -14,6 +14,7 @@
 1.打开windows server 2019 虚拟机。最好使用快照。
 
 2.改变其虚拟机设置中的“网络适配器”为“vmnet 8”。
+
 3.打开命令行，运行命令```ipconfig```，查看ip地址。假设为10.10.10.131. 打开网络适配器配置，配置IPv4为静态IP地址：10.10.10.230/24.
 ![network setting](images/lab03/winserver-dm-network-staticip.png)
 
