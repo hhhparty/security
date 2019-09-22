@@ -383,3 +383,34 @@ MSF中的攻击载荷（payload）对应于某个渗透模块（exploit）。MSF
 - stagers
 - stages
 
+#### Singles
+
+Singles是自包含、完全独立的攻击载荷。由于这些载荷是独立的，所以可以用在其它程序中，例如netcat。
+
+#### Stagers
+
+Stagers载荷通常要在攻击者和目标之间建立一个网络连接，这个连接一般被设计为小且可靠。当然又小又可靠是很难同时做到的。
+
+Windows NX 与 No-Nx stagers对比:
+- NX cpus 和 DEP 有可靠性问题
+- NX stagers 比较大（VirtualAlloc)
+- 默认情况下，选NX+WIN7 兼容性
+
+> 从Windows Vista上的Windows Internet Explorer 7开始，Internet控制面板项包括“ 启用内存保护”选项，以帮助缓解在线攻击。此选项也称为数据执行保护（DEP）或禁止执行（NX）。启用此选项后，它将与处理器一起使用，通过阻止标记为不可执行的内存中的代码执行来帮助防止缓冲区溢出攻击。
+  
+#### Stages
+
+Stages是Stagers模块下载的载荷组件。
+
+各种payload的stages使用无大小限制的提供高级特征，例如Meterpreter，VNC Injection，和 iPhon ‘ipwn’ shell。
+
+Payload stages自动使用“middle stagers”，特点是：
+- 含有大载荷的单一 recv() fail
+- stager接收中等的stager
+- middle stager 执行全下载
+
+#### 扩展攻击载荷
+
+在MSF中有多种类型的攻击载荷。
+
+
