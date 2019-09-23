@@ -179,3 +179,16 @@ Windows10 支持四种功能来帮助防止在启动过程中发生 rootkit 和 
 
 只有在使用 UEFI 2.3.1 和 TPM 芯片的电脑上，才可以安全启动和测量启动。满足 Windows 硬件兼容性计划要求的所有 Windows 10 电脑都具有这些组件，并且许多为早期版本的 Windows 设计的电脑也具有这些组件。
 
+## Windows 内存保护
+
+- 使用 GS 编译技术，在函数返回地址之前加入了 Security Cookie，在函数返回前首先检测 Security Cookie 是否被覆盖，从而把针对操作系统的栈溢出变得非常困难。
+- 增加了对 S.E.H 的安全校验机制，能够有效地挫败绝大多数通过改写 S.E.H 而劫持进程的攻击。
+- 堆中加入了 Heap Cookie、Safe Unlinking 等一系列的安全机制，为原本就困难重重的堆溢出增加了更多的限制。
+- DEP（Data Execution Protection，数据执行保护）将数据部分标示为不可执行，阻止了栈、堆和数据节中攻击代码的执行。
+- ASLR（Address space layout randomization，加载地址随机）技术通过对系统关键地址的随机化，使得经典堆栈溢出手段失效。
+- SEHOP（Structured Exception Handler Overwrite Protection，S.E.H 覆盖保护）作为对安全 S.E.H 机制的补充，SEHOP 将 S.E.H 的保护提升到系统级别，使得 S.E.H 的保护机制更为
+有效。
+
+- 核心隔离。Windows 10中新增功能。启用这些功能后，Windows将使用硬件虚拟化功能创建与正常操作系统隔离的系统内存安全区域。 Windows可以在此安全区域中运行系统进程和安全软件。 这可以保护重要的操作系统进程免受安全区域外运行的任何操作的影响。
+
+- 内存完整性。启用“内存完整性”后，Windows中的“代码完整性服务”将在Core Isolation创建的受管理程序保护的容器内运行。 这应该使恶意软件几乎不可能篡改代码完整性检查并获得对Windows内核的访问权限。此功能是Core Isolation的子集。 Windows通常需要设备驱动程序的数字签名以及在低级Windows内核模式下运行的其他代码。
