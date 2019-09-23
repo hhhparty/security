@@ -1,28 +1,56 @@
 # 第3讲 Windows威胁防护
 
+Windows 10 、Windows Server 2016等产品中的威胁防护主要使用Microsoft Defender。
+
 Microsoft Defender 高级威胁防护（Microsoft DEFENDER ATP）是一个统一的平台，用于实现：
 - 预防性保护服务器和终端结点
 - 入侵检测、检测高级威胁和数据泄露
 - 自动调查和响应、自动执行安全操作
 
-![microatp](images/03/microatp.png)
+<img src="images/03/microatp.png" width = "640" alt="microatp" align=center />
+
+
+我们下面将依次介绍Microsoft Defender的：
+
+- 威胁与漏洞管理
+- 减少攻击面
+- 安防新技术
+- 端点检测与防护
+
+--- 
 
 ## 威胁与漏洞管理（Threat & Vulnerability Management）
 
-这一内置功能使用颠覆性（game-changing）的基于风险的方法来发现（discovery）、优化（prioritization）、补救（remediation）终端的漏洞和错误配置。
+TVM是Microsoft Defender的内置功能。它使用颠覆性（game-changing）的基于风险的方法来发现（discovery）、优化（prioritization）、补救（remediation）终端的漏洞和错误配置。
 
 它有效整合了3方面内容：
-- 微软终端安全堆栈（Microsoft endpoint security stack）
+- 微软终端安全栈（Microsoft endpoint security stack）
 - 微软智能安全图（Microsoft Intelligent Security Graph）
 - 应用分析知识库（Application analytics knowledgebase）
+
+微软终端安全栈：
+
+<img src="images/03/system-center-endpoint-protection-4-638.jpg" width = "640" alt="system-center-endpoint-protection" align=center />
+
+微软智能安全图:
+
+<img src="images/03/Microsoft-Graph-Security-API-1024x516.png" width = "640" alt="microsoftISG" align=center />
+
+应用分析知识库:
+
+<img src="images/03/MICROBOToverview.png" width = "640" alt="MICROBOToverview" align=center />
 
 Windows的威胁与漏洞管理是业界首个将安全管理与IT管理结合起来的解决方案。通过整合下列2个工具来生成安全任务(task)或票据(ticket)：
 - 微软精灵（Microsoft Intune）
 - 微软系统中心配置管理器（Microsoft System Center Configuration Manager, SCCM）
 
+--- 
+
 ### Microsoft Intune 
 
 Microsoft Intune 是企业移动管理 (EMM) 领域中基于云的服务，可帮助员工提高工作效率，同时保护企业数据。 
+
+<img src="images/03/Microsoft-Intune.png" width = "640" alt="Microsoft-Intune" align=center />
 
 与其他 Azure 服务一样，Microsoft Intune 也可在 Azure 门户中使用。 通过 Intune，还可以：
 - 管理工作人员用来访问公司数据的移动设备和 PC。
@@ -39,11 +67,15 @@ Microsoft Intune 是企业移动管理 (EMM) 领域中基于云的服务，可�
 - 允许员工从不受管理的公用网亭安全访问 Office 365
 - 向任务工作者发放使用受限的共享平板电脑
 
+<img src="images/03/Microsoft-Intune01.png" width = "640" alt="Microsoft-Intune01" align=center />
+
 #### Intune 如何工作？
 
 Intune 是 Microsoft 企业移动性 + 安全性 (EMS) 套件的组件，可用于管理移动设备和应用。 它与 Azure Active Directory (Azure AD) 等其他 EMS 组件紧密集成以实现标识和访问控制，并与 Azure 信息保护集成以实现数据保护。 将它与 Office 365 结合使用时，员工可以在其设备上高效工作，同时保护组织的信息。
 
-![intune工作原理图](images/03/intunearchitecture.svg)
+<img src="images/03/intunearchitecture.svg" width = "640" alt="intune工作原理图" align=center />
+
+--- 
 
 ### 微软系统中心配置管理器（Microsoft System Center Configuration Manager, SCCM）
 
@@ -53,7 +85,13 @@ Configuration Manager 扩展现有的 Microsoft 技术和解决方案并与之�
 - 安全和可伸缩的软件部署。
 - 符合性设置管理。
 - 服务器、台式计算机、笔记本电脑和移动设备的全面资产管理。
+- 
+<img src="images/03/SCCMOVERVIEW.jpg" width = "640" alt="SCCMOVERVIEW" align=center />
 
+说明:
+- CMDB：配置管理数据库
+- Virtual Workload Provisioning：虚拟工作载荷配置
+- Orchestration ：编排治理，配置集中化与动态化。可支持数据源、表与分片及读写分离策略的动态切换；数据治理。提供熔断数据库访问程序对数据库的访问和禁用从库的访问的能力；
 
 Configuration Manager 可与以下各项集成：
 - Microsoft Intune，管理各种移动设备平台。
@@ -76,7 +114,9 @@ Configuration Manager 可与以下各项集成：
 
 ## 减少Windows系统的攻击面
 
-攻击面减少功能组在堆栈中提供了第一道防线。 这些功能组可确保已正确设置配置设置以及应用攻击缓解方法，从而能够抵御攻击和漏洞。
+攻击面减少功能组在堆栈中提供了第一道防线。 
+
+Windows在减少攻击面方面做了很多功能、程序，能够抵御攻击和漏洞。
 
 主要内容包括：
 - 基于硬件的隔离
@@ -87,11 +127,11 @@ Configuration Manager 可与以下各项集成：
 - 网络防火墙
 - 攻击面减少规则
 
----
-
 ### 基于硬件的隔离
 
-windows 使用 Windows Defender 应用程序防护和Windows Defender System Guard等工具，提供独特的硬件隔离方法，保护系统。
+windows 提供独特的硬件隔离方法，保护系统。主要使用了：
+- Windows Defender 应用程序防护
+- Windows Defender System Guard等工具，
 
 #### Windows Defender 应用程序防护
 
@@ -99,13 +139,25 @@ Windows Defender 应用程序防护专为 Windows 10 和 Microsoft Edge 设计�
 
 企业管理员需要定义哪些是受信任的网站、云资源和内部网络。 
 
-如果员工通过 Microsoft Edge 或 Internet Explorer 访问不受信任的网站，则 Microsoft Edge 将在启用 Hyper-V 的隔离容器中打开这些网站，这将与主机操作系统隔离开来。 这一方法可让隔离容器成为匿名容器，而攻击者无法获得员工的企业凭据。
+如果用户通过 Microsoft Edge 或 Internet Explorer 访问不受信任的网站，则 Microsoft Edge 将在启用 Hyper-V 的隔离容器中打开这些网站，这将与主机操作系统隔离开来。 这一方法可让隔离容器成为匿名容器，而攻击者无法获得员工的企业凭据。
 
-![appguard-hardware-isolation](images/03/appguard-hardware-isolation.png)
+<img src="images/03/appguard-hardware-isolation.png" width = "640" alt="appguard-hardware-isolation" align=center />
+
+---
 
 #### Windows Defender System Guard（系统防护）
 
 Windows Defender 系统防护可以在启动Windows时、运行Windows中保护系统。防止在windows启动前运行未经确认的固件或软件（bootkit）。
+
+<img src="images/03/windows-defender-system-guard-1-2.png" width = "640" alt="windows-defender-system-guard" align=center />
+
+Windows Defender 系统防护在2个阶段起作用：
+- Windows 启动时
+- Windows 运行中
+
+下面依次说明。
+
+---
 
 ##### Windows 启动前的防护
 
@@ -113,7 +165,8 @@ Windows Defender 系统防护主要使用的技术有：
 - 静态信任根（SRTM)，用于在开启启动前，评估UEFI的信任状态。具体方法就是采集受信任的安全硬件厂商提供的UEFI BIOS驱动程序的哈希等信息。
 - 动态信任根（DRTM），用于在开启启动时测量受信任状态。具体方法是：通过CPU计算可能加载的UEFI驱动的受信任状态。
 
-![system-guard-secure-launch](images/03/system-guard-secure-launch.png)
+<img src="images/03/system-guard-secure-launch.png" width = "640" alt="system-guard-secure-launch" align=center />
+
 
 - 系统管理模式(SMM)保护，用于保护电源管理、硬件配置、热量监控等CPU管理模式。Windows使用两种方法保护SMM。
   - 分页保护，防止恶意代码访问SMM使用内存和缓存
@@ -129,7 +182,8 @@ SMM 保护构建在安全启动技术的基础之上, 并且需要它才能正�
 
 当 Windows 10 启动时, 将使用设备的受信任的平台模块 2.0 (TPM 2.0) 执行一系列完整性测量。
 
-![windows-defender-system-guard-boot-time-integrity](images/03/windows-defender-system-guard-boot-time-integrity.png)
+
+<img src="images/03/windows-defender-system-guard-boot-time-integrity.png" width = "640" alt="windows-defender-system-guard-boot-time-integrity" align=center />
 
 系统启动后, Windows Defender 系统保护使用 TPM 对这些测量进行签名和签署。 请求后, 诸如 Intune 或 System Center Configuration Manager 之类的管理系统可以获取它们以进行远程分析。 如果 Windows Defender System Guard 指示设备缺少完整性, 管理系统可以执行一系列操作, 例如拒绝设备对资源的访问。
 
@@ -153,7 +207,7 @@ SMM 保护构建在安全启动技术的基础之上, 并且需要它才能正�
 - URL 保护
 - 自动沙盒服务
 
-![microsoft-defender-atp-next-generation-protection-engines](images/03/microsoft-defender-atp-next-generation-protection-engines.png)
+<img src="images/03/microsoft-defender-atp-next-generation-protection-engines.png" width = "640" alt="windows-defender-system-guard-boot-time-integrity" align=center />
 
 ---
 
@@ -216,8 +270,8 @@ Windows Defender 防病毒安全智能更新的备用位置（如果已安装的
 - ussuk1westprod.blob.core.windows.net 
 - ussas1eastprod.blob.core.windows.net 
 - ussas1southeastprod.blob.core.windows.net
--  ussau1eastprod.blob.core.windows.net 
--  ussau1southeastprod.blob.core.windows.net
+- ussau1eastprod.blob.core.windows.net 
+- ussau1southeastprod.blob.core.windows.net
 
 
 #### 证书吊销列表 (CRL)
@@ -269,6 +323,10 @@ Windows Defender 防病毒安全智能更新的备用位置（如果已安装的
 - 自定义检测
 - 实时和历史搜索
 
+Microsoft 安全响应中心: https://www.microsoft.com/en-us/msrc?rtc=1
+
+<img src="images/03/RE2iDfp.webp" width = "640" alt="RE2iDfp" align=center />
+
 ---
 
 ## 自动调查和修正
@@ -284,7 +342,9 @@ Windows Defender 防病毒安全智能更新的备用位置（如果已安装的
 
 ## 安全功能分数
 
-安全分数现在是作为配置分数的威胁 & 漏洞管理的一部分。 "安全分数" 页面将在几周内可用。 查看 "安全分数" 页面。
+使用Azure云，可以通过安全功能分数查看自己系统安全情况。
+
+<img src="images/03/new-secure-score-dashboard.png" width = "640" alt="RE2iDfp" align=center />
 
 Microsoft Defender ATP 包括一个安全分数，可帮助你动态评估企业网络的安全状态、识别未受保护的系统，并采取建议的措施来提高组织的整体安全。
 
@@ -296,11 +356,12 @@ Microsoft Defender ATP 包括一个安全分数，可帮助你动态评估企业
 ---
 
 ## Microsoft 威胁专家
+
 Microsoft Defender ATP 新增的托管威胁搜寻服务提供主动的搜寻、优先级和其他上下文和见解，进一步使安全操作中心（SOCs）能够快速准确地识别和响应威胁。
 
 ---
 
-## 管理和 API
+## 管理 和 API
 将 Microsoft Defender 高级威胁防护集成到现有工作流中。
 
 - 载入
