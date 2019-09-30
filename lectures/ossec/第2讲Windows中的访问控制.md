@@ -4,13 +4,23 @@ Windows 的安全机制中主要内容有：
 
 ![windows安全性](images/02/windows安全性.png)
 
-本章节主要介绍第一部分。
+本章节主要介绍第一部分，主要内容有：
+- 身份标识SID
+- 安全主体（security principals）
+  - Windows 本地账户
+  - Active Directory 账户
+  - Microsoft 账户
+  - Service 账户
+  - Active Directory 安全组 
+  - 特殊标识
+- Windows基础概念：工作组、域和信任关系
+- 用户访问控制UAC
+- VPN
+- Windows 身份验证
 
 ---
 
-## 标识与访问
-
-### 标识 
+## 身份标识SID 
 
 ![id示意](images/02/id示意.jpg)
 
@@ -18,9 +28,7 @@ Windows 的安全机制中主要内容有：
 
 例如：一对用户名和密码就是最为常见的身份标识方式。
 
-### 安全标识符SID
-
-#### SID 的概念
+### SID 的概念
 
 Windows 中，安全标识符 (SID) 用于唯一标识安全主体或安全组。 SID是 Windows 安全模型的基础构建基块。 
 
@@ -31,7 +39,7 @@ Windows 中，安全标识符 (SID) 用于唯一标识安全主体或安全组�
 - 用户权限
 - 用户所属的任何组的 Sid
 
-##### SID 标识的对象
+### SID 标识的对象
 
 Windows中的SID用于标识以下对象：
 - 安全主体，即可以表示可由操作系统进行身份验证的任何实体。
@@ -41,7 +49,7 @@ Windows中的SID用于标识以下对象：
 - 安全组
 
 
-#### 安全标识符的工作原理
+### 安全标识符的工作原理
 
 SID由 Windows 域控制器 或 本地 颁发，有唯一性，一旦发出则不可更改，它被存储在域安全数据库或本地SAM中。 
 
@@ -58,7 +66,7 @@ SID的生成机制：
 5.每个用户和组的SID都是唯一的，永远不会有两个相同的SID。
 
 
-#### 安全标识符体系结构
+### 安全标识符体系结构
 
 安全标识符是包含可变数目值的二进制格式的数据结构。 结构中的第一个值包含有关 SID 结构的信息。 剩余值按层次结构排列 (类似于电话号码), 并且它们标识 SID 颁发机构 (例如, "NT 机关")、SID 签发域以及特定安全主体或组。 下图说明了 SID 的结构。
 
@@ -109,14 +117,14 @@ SID的生成机制：
 
 ---
 
-#### 本节实验操作
+### 本节实验操作
 
 参考实验手册中实验：实验1 理解Windows的安全标识符（SID)
 
 ---
 ---
 
-### 安全主体（security principals）
+## 安全主体（security principals）
 
 安全主体是可以通过操作系统进行身份验证的任何实体。每个安全主体在操作系统中由唯一的安全标识符 (SID) 表示。
 
@@ -133,7 +141,7 @@ SID的生成机制：
 
 ---
 
-#### 安全主体分类
+### 安全主体分类
 
 在 Windows 中, 可以启动操作的任何用户、服务、组或计算机都是安全主体。 
 
@@ -142,23 +150,23 @@ SID的生成机制：
 - 本地安全主体
 - 域安全主体
 
-##### 本地安全主体（本地用户帐户和安全组）
+#### 本地安全主体（本地用户帐户和安全组）
 
 - 在本地计算机上创建, 用于实现本地资源的访问控制。
 - 由本地计算机上的安全帐户管理器 (SAM) 管理。
 
-##### 域中创建的安全主体（ActiveDirectory 对象）
+#### 域中创建的安全主体（ActiveDirectory 对象）
 - 由 Active Directory 域控制器创建
 - 用于实现对域内资源的访问控制。 
 
 ---
 
-#### 安全主体的工作原理
+### 安全主体的工作原理
 
 下面，我们从几个方面来介绍安全主体的工作原理，其中包括：
 - 授权与访问控制组件（Authorization and access control components）
 
-##### 授权与访问控制组件
+#### 授权与访问控制组件
 
 下图显示了 Windows authorization 和访问控制过程。
 
@@ -182,7 +190,7 @@ SID的生成机制：
 
 ---
 
-##### 访问令牌（Access tokens）
+#### 访问令牌（Access tokens）
 
 访问令牌是包含SID、用户特权的对象。
 
@@ -198,7 +206,7 @@ SID的生成机制：
 
 ---
 
-##### 安全描述符和 访问控制列表（ Access Control Lists，ACL）
+#### 安全描述符和 访问控制列表（ Access Control Lists，ACL）
 
 安全描述符是与每个安全对象相关联的数据结构。Windows根据安全描述符实现对安全对象的访问控制。
 
@@ -227,7 +235,7 @@ Active Directory中的所有对象以及本地计算机或网络上的所有安�
 
 ---
 
-##### 权限
+#### 权限
 
 Windows权限是允许每个安全对象的所有者允许谁可以对对象或对象属性执行操作的列表。
 
@@ -242,7 +250,7 @@ Windows权限是允许每个安全对象的所有者允许谁可以对对象或�
 
 ---
 
-##### 身份验证中的安全上下文（Security context in authentication）
+#### 身份验证中的安全上下文（Security context in authentication）
 
 安全上下文，定义了用户或服务在某台计算机或某个网络上的标识和功能。 
 
@@ -254,7 +262,7 @@ Windows权限是允许每个安全对象的所有者允许谁可以对对象或�
 
 ---
 
-#### 账户和安全组（Accounts and security groups)
+### 账户和安全组（Accounts and security groups)
 
 前面提到2类安全主体，本地安全主体和域安全主体。
 - 本地安全主体，即本地用户帐户和安全组
@@ -268,7 +276,7 @@ Windows权限是允许每个安全对象的所有者允许谁可以对对象或�
 
 ---
 
-##### 用户账户（User Accounts）
+#### 用户账户（User Accounts）
 
 用户账户唯一标识了使用计算机资源的人（或程序）。
 
@@ -284,7 +292,7 @@ Windows 和 Windows Server 操作系统具有内置的用户帐户, 还可以创
 
 ---
 
-##### 安全组（Security groups)
+#### 安全组（Security groups)
 
 安全组是用户帐户、计算机帐户和其他帐户组的集合, 这些帐户可以从安全角度作为单个单元进行管理。 
 
@@ -308,7 +316,7 @@ Windows预置的安全组，配置了权限，便于使用，还可以根据需�
 
 接下来，我们学习Windows安全主体的具体构成：Windows本地账户、AD账户。
 
-### Windows 本地账户
+## Windows 本地账户
 
 本地用户帐户存储在服务器本地。 
 
@@ -324,7 +332,7 @@ Windows预置的安全组，配置了权限，便于使用，还可以根据需�
 
 ---
 
-#### 默认本地用户账户（Default local user accounts）
+### 默认本地用户账户（Default local user accounts）
 
 默认本地用户帐户是内置帐户, 这些帐户是在安装 Windows 时自动创建的。
 
@@ -341,7 +349,7 @@ Windows预置的安全组，配置了权限，便于使用，还可以根据需�
 
 ---
 
-##### 管理员账户（Administrator）
+#### 管理员账户（Administrator）
 
 管理员账户，SID为``` S-1-5-域-500```，是在 Windows 安装期间创建的第一个帐户。
 
@@ -353,7 +361,7 @@ Windows预置的安全组，配置了权限，便于使用，还可以根据需�
 
 ---
 
-###### 安全注意事项
+##### 安全注意事项
 
 - 最好禁用管理员帐户, 以使恶意用户更难获得访问权限。
 - 可以重命名管理员帐户。 但重命名的管理员帐户将继续使用同一个自动分配的安全标识符 (SID), 这些标识符可以由恶意用户发现。 
@@ -363,7 +371,7 @@ Windows预置的安全组，配置了权限，便于使用，还可以根据需�
 
 ---
 
-##### 来宾账户(Guest)
+#### 来宾账户(Guest)
 
 默认情况下, 来宾帐户在安装时处于禁用状态。 
 
@@ -377,11 +385,11 @@ Windows预置的安全组，配置了权限，便于使用，还可以根据需�
 
 ---
 
-###### Guest组成员身份
+##### Guest组成员身份
 
 默认情况下, 来宾帐户是默认来宾组 (SID S-1-5-32-546) 中的唯一成员, 允许用户登录到服务器。 
 
-###### 安全注意事项
+##### 安全注意事项
 
 - 启用Guest时，仅授予有限的权力和权限。
 - Guest用户不应在网络上使用，且不允许其他计算机访问。
@@ -390,13 +398,13 @@ Windows预置的安全组，配置了权限，便于使用，还可以根据需�
 
 ---
 
-##### HelpAssistant 账户
+#### HelpAssistant 账户
 
 HelpAssistant 帐户是在运行远程协助会话时启用的默认本地帐户。 如果没有等待远程协助请求, 此帐户将自动禁用。
 
 对于 "请求的远程协助", 用户通过电子邮件或文件向可提供帮助的人员发送来自其计算机 (通过电子邮件或文件) 的邀请。 接受用户的远程协助会话邀请后, 系统会自动创建默认的 HelpAssistant 帐户, 以使提供帮助的人员对计算机的访问权限有限。 HelpAssistant 帐户由远程桌面帮助会话管理器服务管理。
 
-###### 安全注意事项
+##### 安全注意事项
 
 - 与默认HelpAssistant账户相关的SID包括：
   - SID: S-1-5 —<域>13, 显示名称终端服务器用户。 此组包括登录到启用了远程桌面服务的服务器的所有用户。
@@ -406,7 +414,7 @@ HelpAssistant 帐户是在运行远程协助会话时启用的默认本地帐户
 
 ---
 
-##### DefaultAccount
+#### DefaultAccount
 
 DefaultAccount,也称为默认系统托管帐户 (DSMA), 是 Windows 10 版本1607和 Windows Server 2016 中引入的内置帐户。 
 
@@ -421,7 +429,7 @@ DSMA账户和System Managed Accounts Group组是在计算机第一次启动Windo
 
 ---
 
-###### Windows如果使用DefaultAccount？
+##### Windows如果使用DefaultAccount？
 
 从权限角度来看, DefaultAccount 是标准用户帐户。 
 
@@ -432,16 +440,16 @@ DSMA账户和System Managed Accounts Group组是在计算机第一次启动Windo
 
 ---
 
-###### 域控制器上的DefaultAccount
+##### 域控制器上的DefaultAccount
 
 如果域是通过运行 Windows Server 2016 的域控制器创建的, 则 DefaultAccount 将存在于域中的所有域控制器上。
 
-###### 安全注意事项
+##### 安全注意事项
 
 Microsoft 不建议更改默认配置, 即使DefaultAccount处于禁用状态。 让帐户处于禁用状态不会产生安全风险。 
 
 
-#### 默认本地系统帐户（Default local system accounts）
+### 默认本地系统帐户（Default local system accounts）
 
 可以这样理解：本地系统账户**作为Windows内核的代理人**（与user accounts不同）执行各种操作，受SAM的访问控制管理。
 
@@ -452,7 +460,7 @@ Microsoft 不建议更改默认配置, 即使DefaultAccount处于禁用状态。
 
 ---
 
-##### SYSTEM 账户
+#### SYSTEM 账户
 
 SYSTEM 帐户由OS（Windows自己）和 Windows 中运行的服务（Services）使用。 
 
@@ -470,7 +478,7 @@ SYSTEM 帐户是一个内部帐户, 它不会显示在用户管理器中,也不�
 
 ---
 
-##### NETWORK SERVICE 账户
+#### NETWORK SERVICE 账户
 
 NETWORK SERVICE 账户是个Windows 预定义本地系统账户，它由服务控制管理器 (SCM) 使用。
 
@@ -480,7 +488,7 @@ NETWORK SERVICE 账户是个Windows 预定义本地系统账户，它由服务�
 
 ---
 
-##### LOCAL SERVICE 账户
+#### LOCAL SERVICE 账户
 
 LOCAL SERVICE 账户也是一个预定义的本地账户，它用于服务控制管理器。
 
@@ -490,7 +498,7 @@ LOCAL SERVICE 账户具有访问呢本地计算机（windows）的最低权限, 
 
 ---
 
-#### 管理本地用户账户
+### 管理本地用户账户
 
 Windows通过SAM实现对两类本地用户账户的管理：
 - 默认本地用户帐户
@@ -510,7 +518,7 @@ Windows通过SAM实现对两类本地用户账户的管理：
 
 ---
 
-##### 通过管理权限限制和保护本地帐户
+#### 通过管理权限限制和保护本地帐户
 
 管理员可以使用多种方法来防止恶意用户使用已盗用的凭据 (如盗用密码或密码哈希), 以便用于在另一台计算机上使用管理权限进行身份验证的计算机上的本地帐户。
 
@@ -524,7 +532,7 @@ Windows通过SAM实现对两类本地用户账户的管理：
 
 ---
 
-##### 强制执行远程访问的本地帐户限制
+#### 强制执行远程访问的本地帐户限制
 
 UAC 在程序需要执行管理员权限的操作时通知用户。可以使用命令```uac```，查看。
 
@@ -538,13 +546,13 @@ UAC 使具有管理权限的帐户可以被视为标准用户非管理员帐户,
 
 ---
 
-#### 本节实验操作
+### 本节实验操作
 
 见实验手册：实验 2 Windows用户组查看与安全策略设置.md
 
 ---
 
-### Active Directory 账户
+## Active Directory 账户
 
 当某个Windows server域控制器被建立且此域生成时，默认本地账户（Default local accounts）将被自动生成。同时，这些默认本地账户也将出现在Active Directory的用户容器中（user container）。
 
@@ -558,7 +566,7 @@ AD中的默认本地账户（Default local accounts）包括：
 
 > 有关域的知识，稍后介绍。
 
-### Microsoft 账户
+## Microsoft 账户
 
 Microsoft 网站、服务和属性以及运行 Windows 10 的计算机可以使用 Microsoft 帐户作为标识用户的一种方法。
 
@@ -566,7 +574,7 @@ Microsoft 帐户以前称为 Windows Live ID。 它具有用户定义的密钥�
 
 当某个用户以一个Microsoft账户登录时，当前设备将被连接到云服务，这样用户的设置、偏好、应用软件就可以通过云进行共享。
 
-### Service 账户
+## Service 账户
 
 服务帐户是显式创建的用户帐户, 用于为在 Windows Server 操作系统上运行的服务提供安全上下文。 安全上下文确定服务访问本地和网络资源的能力。
 
@@ -575,7 +583,7 @@ Windows 服务器上包括三种Service 账户：
 - 组托管服务帐户（Group managed service accounts）
 - 虚拟帐户（Virtual accounts）
 
-#### 独立托管服务帐户
+### 独立托管服务帐户
 
 托管服务帐户旨在隔离关键应用 (如 Internet 信息服务 (IIS)) 中的域帐户, 并消除管理员手动管理服务主体名称 (SPN) 和凭据的需要。
 
@@ -592,7 +600,7 @@ Windows 服务器上包括三种Service 账户：
 - 不需要完成复杂的SPN管理。
 - 托管服务帐户的管理任务可以委派给非管理员。
 
-#### 组托管服务账户
+### 组托管服务账户
 
 组托管服务帐户是 Windows Server 2008R2 中引入的独立托管服务帐户的扩展。 
 
@@ -602,7 +610,7 @@ Windows 服务器上包括三种Service 账户：
 
 Microsoft 密钥分发服务 (kdssvc) 提供了使用 Active Directory 帐户的密钥标识符安全地获取最新键或特定密钥的机制。 此服务是在 Windows Server 2012 中引入的, 它不会在以前版本的 Windows Server 操作系统上运行。 密钥分发服务共享用于为帐户创建密钥的机密。 这些密钥会定期更改。 对于组托管服务帐户, 除了组托管服务帐户的其他属性之外, 域控制器还会计算密钥分发服务提供的密钥上的密码。
 
-#### 虚拟账户
+### 虚拟账户
 
 虚拟帐户是在 Windows Server 2008R2 和 Windows 7 中引入的, 并且是托管的本地帐户, 可提供以下功能来简化服务管理:
 - 虚拟帐户是自动管理的。
@@ -611,7 +619,7 @@ Microsoft 密钥分发服务 (kdssvc) 提供了使用 Active Directory 帐户的
 
 以虚拟帐户身份运行的服务使用```<domain_name>\<computer_name>$```格式的计算机帐户凭据访问网络资源。
 
-### Active Directory 安全组 
+## Active Directory 安全组 
 
 > Active Directory 安全组常见于Windows Server 2016之中。
 
@@ -630,7 +638,7 @@ Microsoft 密钥分发服务 (kdssvc) 提供了使用 Active Directory 帐户的
 - 服务管理员（Service administrators），负责维护和提供AD域服务（AD DS），包括管理域控制器和配置AD DS。
 - 数据管理员（Data administrators），负责维护存储在AD DS中的数据，以及在域成员服务器或工作站上的数据。
 
-#### 2类 AD安全组 
+### 两类 AD 安全组 
 
 为了实现集中用户管理、分配工作职责、设立一致的安全准则，Windows server预设了2类AD安全组：
 - 通信组（Distribution groups），用于生成 email 通信列表（distribution lists）。
@@ -648,7 +656,7 @@ Microsoft 密钥分发服务 (kdssvc) 提供了使用 Active Directory 帐户的
     - 权限指：（1）谁可以访问资源（2）访问级别。
     - 设置在域对象上的权限，有些可以自动分配给一定级别的安全组。这些权限在DACL中列出。
 
-#### AD 组（Groups）的作用域（scope）
+### AD 组（Groups）的作用域（scope）
 
 组的作用域：指某个组能在什么范围内被授予权限（permission）。
 
@@ -657,7 +665,7 @@ Microsoft 密钥分发服务 (kdssvc) 提供了使用 Active Directory 帐户的
 - Global
 - Domain Local
 
-#### 默认安全组
+### 默认安全组
 
 默认组 (如 "域管理员" 组) 是创建 ActiveDirectory 域时自动创建的安全组。 你可以使用这些预定义组来帮助控制对共享资源的访问, 并委派特定域范围的管理角色。
 
@@ -722,7 +730,7 @@ Microsoft 密钥分发服务 (kdssvc) 提供了使用 Active Directory 帐户的
 
 具体的 ，可以参考https://docs.microsoft.com/en-us/windows/security/identity-protection/access-control/active-directory-security-groups。
 
-### 特殊标识（Special Identities）
+## 特殊标识（Special Identities）
 
 特殊标识组与 "Users" 和 "buildin" 中列出的 AD 安全组类似。
 
@@ -757,7 +765,7 @@ Microsoft 密钥分发服务 (kdssvc) 提供了使用 Active Directory 帐户的
 - 此组织
 - Window Manager\Window 管理器组
 
-### 用户账户控制（User Account Control, UAC)
+## 用户账户控制（User Account Control, UAC)
 
 用户帐户控制 (UAC) 是 Microsoft 的总体安全构想的基本组件。
 
@@ -765,9 +773,9 @@ Microsoft 密钥分发服务 (kdssvc) 提供了使用 Active Directory 帐户的
 
 UAC控制下，应用和任务将始终在非管理员帐户的安全上下文中运行，除非管理员专门授予管理员级别的访问系统权限。 UAC 可阻止自动安装未经授权的应用并防止意外更改系统设置。
 
-#### UAC 工作原理
+### UAC 工作原理
 
-##### UAC 进程和交互
+#### UAC 进程和交互
 
 每个需要执行管理员权限操作（需要administrator access token ）的程序都必须显示确认（弹出对话框）。但子程序可以继承父程序的访问令牌。
 
@@ -826,7 +834,7 @@ UAC 提升提示具有特定于应用的颜色编码, 从而能够立即识别�
 - 蓝色背景, 带有蓝色盾牌图标: 应用程序使用 Authenticode 签名, 并且受本地计算机信任。
 - 黄色背景, 黄色盾牌图标: 应用程序未经签名或已签名, 但尚未被本地计算机信任。
 
-#### UAC体系结构
+### UAC体系结构
 
 下图详细介绍了 UAC 体系结构。
 
@@ -840,7 +848,7 @@ UAC 提升提示具有特定于应用的颜色编码, 从而能够立即识别�
 对于SYSTEM:
 可参考：https://docs.microsoft.com/zh-cn/windows/security/identity-protection/user-account-control/how-user-account-control-works
 
-#### 用户帐户控制安全策略设置
+### 用户帐户控制安全策略设置
 
 可以使用本地安全策略管理单元 (Secpol.msc) 对用户帐户进行安全配置
 
@@ -1083,3 +1091,436 @@ VPN 配置的一个最重要决策点是：
 
 如果使用windows提供的VPNv2配置服务提供程序CSP，那么配置过程可参考：https://docs.microsoft.com/zh-cn/windows/security/identity-protection/vpn/vpn-routing
 
+
+
+## Windows 身份验证
+
+身份验证是验证对象、 服务或人员身份的过程。
+
+通常情况下，身份验证会使用公钥加密或对称加密方法，验证用户拥有唯一的密钥。认证服务器端则使用服务器留存的加密密钥与用户提交的签名数据进行对比，以此验证身份。
+
+认证技术有多种：
+- 验证用户所知，例如用户名+密码，这是最简单的方法
+- 验证用户所有，例如令牌设备
+- 
+
+将加密密钥存放在安全的中心位置，可以确保身份验证过程的伸缩性和可维护性。Active Directory 域服务建议使用Windows 默认的技术来实现密钥存放和身份验证，包括：
+- NTLM
+- Kerberos
+- 公钥证书
+- Transport Layer Security/Secure Sockets Layer (TLS/SSL)
+- Digest
+- 其它安全协议，如 Negotiate 和 the Credential Security Support Provider 等等
+
+
+Windows 的身份验证配置通常在服务器管理器的组策略中，一些服务器角色配置被设置在特定的服务器软件中，例如IIS、AD Domain Services.
+
+### Windows 登录方案
+
+Windows设计了多种登录方法：
+- 交互式登录
+- 网络登录
+- 智能卡登录
+- 生物识别登录
+
+#### 交互式登录
+
+下图显示了交互式登录元素和登录过程。
+
+
+<img src="images/02/authn_lsa_architecture_client.gif" width = "640" alt="Windows 客户端身份验证体系结构-交互登录过程" align=center />
+
+本地登录和网络登录要求用户有注册的帐户，本地计算机中的安全帐户管理器 (SAM)保护并管理用户和组信息。通过终端服务或远程桌面服务 (RDS)可以实现远程登录。在 Windows 中，通过远程登录访问另一台计算机依赖于远程桌面协议 (RDP)。 
+
+登录域，需要在域Active Directory 中注册账户。
+
+#### 智能卡登录
+
+使用智能卡仅能以域帐户登录，本地帐户不可以用智能卡登录。
+
+智能卡身份验证要求使用 Kerberos 身份验证协议。
+
+<img src="images/02/smartcardcredarchitecture.gif
+" width = "640" alt="智能卡凭据提供程序体系结构-智能卡登录过程" align=center />
+
+智能卡代替了密码，其上存储了一个PK/SK密钥对。
+
+#### 生物学认证登录
+
+略。
+
+### Windows 身份验证体系结构
+
+Windows Server 操作系统可实现一组默认的身份验证安全支持提供者，包括协商、 Kerberos 协议、 NTLM、 Schannel （安全通道） 和摘要。
+
+最主要的部件包括：
+- 本地安全机构LSA
+- 安全支持提供程序结构SSPI，是获取身份验证、 消息完整性、 消息隐私性和安全的服务质量任何分布式应用程序协议的集成的安全服务的 API。
+
+#### Microsoft 安全支持提供程序接口 (SSPI) 
+
+SSPI 是 Windows 身份验证的基础。 SSPI 实现了通用安全服务 API (GSSAPI)(可以参考RFC 2743和RFC 2744)。
+
+Windows中默认的安全支持提供者（SSPs）调用特定认证协议DLLs。
+
+<img src="images/02/authn_securitysupportproviderinterfacearchitecture.jpg
+" width = "640" alt="Security Support Provider Layer" align=center />
+
+#### SSPs
+
+Windows中的SSPs有许多：
+- Kerberos Security Support Provider
+- NTLM Security Support Provider
+- Digest Security Support Provider
+- Schannel Security Support Provider
+- Negotiate Security Support Provider
+- Credential Security Support Provider
+- Negotiate Extensions Security Support Provider
+- PKU2U Security Support Provider
+
+##### Kerberos Security Support Provider
+
+微软仅提供了kerberos v5 协议作为一种ssp。这个协议基于Network Working Group's RFC 4120 and draft revisions。这是一个工业标准协议，使用password 或 smart card完成交互登录。
+
+Kerberos是自Windows server 2000后的默认SSP，包含的服务有：
+- 基于LDAP的 Active Directory 查询
+- 使用远程过程调用服务的远程服务器或工作站管理
+- 打印服务
+- 客户端-服务器身份验证
+- 使用服务器消息块 (SMB) 协议 （也称为通用 Internet 文件系统或 CIFS） 的远程文件访问
+- 分布式的文件系统管理和引用
+- Intranet 身份验证到 Internet 信息服务 (IIS)
+- 有关 Internet 协议安全性 (IPsec) 安全机构身份验证
+- 为域用户和计算机的 Active Directory 证书服务的证书申请
+
+该SSP的位置在：%windir%\Windows\System32\kerberos.dll
+
+##### NTLM Security Support Provider
+
+NTLM SSP是一个二进制消息传送协议，采用质询-响应进行身份验证，并且协商了通信过程中为实现完整性和保密性所需的参数。
+
+NTLM SSP包含 NTLM and NTLM version 2 (NTLMv2) .
+
+Windows上的NTLM可以支持下列功能：
+- Client/server authentication
+- Print services
+- File access by using CIFS (SMB)
+- Secure Remote Procedure Call service or DCOM service
+
+NTLM SSP程序位置： %windir%\Windows\System32\msv1_0.dll
+
+##### Digest Security Support Provider
+
+Digest SSP是一个用于LDAP和Web认证的工业标准。Digest 认证通过网络传递MD5 HASH码或消息摘要码形式的凭证（Credentials）。
+
+Digest SSP (Wdigest.dll) 可以实现:
+- Internet Explorer
+- Internet Information Services (IIS) access
+- LDAP queries
+
+##### Schannel Security Support Provider
+
+这个SSP用于基于web的认证，例如用户访问一个安全的web server时。
+
+Schannel SSP 基于公钥加密技术支持：
+- TLS protocol 1.0，1.1，1.2
+- SSL protocol 2.0，3.0
+- the Private Communications Technology (PCT) protocol（PCT is disabled by default.）
+- the Datagram Transport Layer (DTLS) protocol。
+
+所有Schannel 协议都采用了C/S模型。程序位置在：%windir%\Windows\System32\Schannel.dll。
+
+##### Negotiate Security Support Provider
+
+The Simple and Protected GSS-API Negotiation Mechanism (SPNEGO) 构成了Negotiate SSP的基础，这个SSP用于双方协商合适的双方的特定认证协议。支持的选择为：Kerberos protocol 和 NTLM。
+
+SPNEGO is specified in RFC 2478.
+
+Negotiate SSP的位置：%windir%\Windows\System32\lsasrv.dll
+
+##### Credential Security Support Provider
+
+当用户使用Terminal Services and Remote Desktop Services sessions时，CredSSP 提供了单一登录服务single sign-on (SSO) .
+
+CredSSP policies are configured by using Group Policy, and the delegation of credentials is turned off by default.
+
+位置: %windir%\Windows\System32\credssp.dll
+
+##### Negotiate Extensions Security Support Provider
+
+协商扩展 (NegoExts) 允许以下方案：
+- Rich client availability within a federated system. 具体参考 SharePoint sites, 它们可以通过使用全功能的 Microsoft Office 应用程序进行编辑。
+- Rich client support for Microsoft Office services. 
+- Hosted Microsoft Exchange Server and Outlook. There is no domain trust established because Exchange Server is hosted on the web. Outlook uses the Windows Live service to authenticate users.
+- Rich client availability between client computers and servers. The operating system's networking and authentication components are used.
+
+位置： %windir%\Windows\System32\negoexts.dll
+
+##### PKU2U Security Support Provider
+
+此 SSP 启用对等身份验证，特别是通过媒体和文件共享名为 Windows 7 中引入的家庭组功能。 
+
+位置： %windir%\Windows\System32\pku2u.dll
+
+#### Windows 认证中的凭据处理过程（ Credentials Processes）
+
+身份验证中使用的凭据是证明用户真实性的证据，它以某种形式存在，如证书、 密码或 PIN 的用户的标识的数字文档。
+
+下图显示了所需的组件和路径：
+
+<img src="images/02/authn_lsa_architecture_client.gif" width = "640" alt="Windows 客户端身份验证体系结构-交互登录过程" align=center />
+
+通常凭据Credentials的验证由SAM 或 AD 完成。
+
+用户登录时，Winlogon.exe 是执行用户登录的程序，管理用户交互安全。它将初始化一个登录过程，调用Secur32.dll程序收集用户凭据给LSA。
+
+应用程序登录时，不要求交互模式登录。Most processes initiated by the user run in user mode by using Secur32.dll whereas processes initiated at startup, such as services, run in kernel mode by using Ksecdd.sys.
+
+本地安全信息存储在注册表中HKEY_LOCAL_MACHINE\SECURITY。 存储的信息包括策略设置、 默认安全值和帐户信息，如缓存的登录凭据。 SAM 数据库的副本是也存储在此处，尽管它被写保护。
+
+Secur32.dll，有多个身份验证提供程序，形成了身份验证过程的基础。
+
+Lsasrv.dll，是LSA Server service，既有安全策略，也扮演这安全包管理器，LSA中有协商功能，可选择NTLM或Kerberos协议。
+
+Netlogon.dll提供了网络登录服务，执行下列任务：
+- 向domain controller维护计算机安全信道。
+- 通过安全信道向DC传递用户凭据，返回域SIDs和user rights。
+- 在域DNS中发布服务资源记录，使用DNS解析地址名.
+- 基于RPC实现复制协议，实现主DC和备份DC的同步.
+
+Samsrv.dll，即The Security Accounts Manager (SAM), 存储了本地安全账户，执行本地存储的策略和支持的APIs。
+
+Registry，包含了SAM数据，本地安全策略设置，默认安全值和账户信息等的拷贝。
+
+##### 用户登录中的凭证输入
+
+有两类凭证输入方式：
+
+- Graphical Identification and Authentication architecture（GINA）
+- Credential provider architecture
+
+###### GINA
+
+windows 2003，2000，xp等使用。
+
+每个交互式登录会话创建 Winlogon 服务的单独实例。 GINA 体系结构加载到使用 Winlogon 的进程空间、 接收和处理凭据，并使对通过 LSALogonUser 的身份验证接口的调用。
+在会话 0 中运行交互式登录 Winlogon 的实例。 会话 0 主机系统服务和其他关键进程，包括本地安全机构 (LSA) 进程。
+下图显示了 Windows Server 2003、 Microsoft Windows 2000 Server、 Windows XP 和 Microsoft Windows 2000 Professional 的凭据过程。
+
+<img src="images/02/authn_gina_architecture.gif" width = "640" alt="GINA 凭据输入过程" align=center />
+
+###### 凭据提供程序体系结构
+
+使用凭据提供程序体系结构，Winlogon 始终启动登录 UI 之后接收到它安全注意序列事件。 登录 UI 查询不同的凭据类型提供程序配置为枚举数每个凭据提供程序。
+
+<img src="images/02/authn_credman_credprov.gif" width = "640" alt="GINA 凭据输入过程" align=center />
+
+上面的架构可能随 credential providers 而改变，不同的providers会以不同的logon tiles（界面或对话框类的东西）许可任意数量的登录场景。
+
+在  Winlogon 接收到一个安全注意序列事件时， Winlogon 将启动一个 Logon UI。Logon UI 查询凭据提供者获得凭据。不同的凭据提供者会有不同的tiles, UI则将它们显示给用户。
+
+Credential providers 不是强制机制，它用于收集和序列化凭证。LSA的授权验证包强制实现安全性。 
+
+Credential providers 参与以下工作：
+- 描述凭据信息
+- 控制外部认证机制的通信和逻辑
+- 为交互登录和网络登录打包凭证
+
+
+
+
+##### 应用程序和服务登录的凭据输入
+
+在用户模式下，应用程序可访问该用户可访问的各种资源；
+
+在服务和内核模型下，以服务形式存在可无限制访问系统内存和外部设备。
+
+#### Local Security Authority
+
+LSA是一个保护系统，处理认证和记录本地计算机上的用户。此外，LSA 维护了所有本地安全相关的数据，它提供了名字和SIDs的转换。
+
+安全系统过程，也称为Local Security Authority Server Service (LSASS)，跟踪了安全策略和系统中的账户行为。
+
+LSA验证用户身份，基于下面两种记录在用户账户的实体：
+
+- Local Security Authority.LSA可以使用SAM信息验证用户。
+- Security authority for the local domain or for a trusted domain. 
+
+LSASS会把凭据存在内存里，这利于用户与windows 会话的交互。凭据存储形式可以有：
+- Reversibly encrypted plaintext
+- Kerberos tickets (ticket-granting tickets (TGTs), service tickets)
+- NT hash
+- LAN Manager (LM) hash
+
+### 用于Windows 验证的组策略
+
+主要包括：
+
+| Policy group | Location | 描述|
+|-|-|-|
+|Password Policy|Local Computer Policy\Computer Configuration\Windows Settings\Security Settings\Account Policies|
+|Account Lockout Policy |	Local Computer Policy\Computer Configuration\Windows Settings\Security Settings\Account Policies|
+|Kerberos Policy|	Local Computer Policy\Computer Configuration\Windows Settings\Security Settings\Account Policies|
+|Audit Policy	|Local Computer Policy\Computer Configuration\Windows Settings\Security Settings\Local Policies\Audit Policy	|
+|User Rights Assignment	| Local Computer Policy\Computer Configuration\Windows Settings\Security Settings\Local Policies\User Rights Assignment|
+|Security Options|	Local Computer Policy\Computer Configuration\Windows Settings\Security Settings\Local Policies\Security Options	|
+|Credentials Delegation	|Computer Configuration\Administrative Templates\System\Credentials Delegation|
+|KDC	|Computer Configuration\Administrative Templates\System\KDC|
+|Kerberos|	Computer Configuration\Administrative Templates\System\Kerberos|
+|Logon|	Computer Configuration\Administrative Templates\System\Logon|
+|Net Logon|	Computer Configuration\Administrative Templates\System\Net Logon|
+|Biometrics|	Computer Configuration\Administrative Templates\Windows Components\Biometrics|
+|Credential User Interface	|Computer Configuration\Administrative Templates\Windows Components\Credential User Interface|
+|Password Synchronization|	Computer Configuration\Administrative Templates\Windows Components\Password Synchronization	|
+|Smart Card	|Computer Configuration\Administrative Templates\Windows Components\Smart Card	|
+|Windows Logon Options|	Computer Configuration\Administrative Templates\Windows Components\Windows Logon Options|
+|Ctrl+Alt+Del Options	|Computer Configuration\Administrative Templates\Windows Components\Ctrl+Alt+Del Options	|
+|Logon|	Computer Configuration\Administrative Templates\Windows Components\Logon	|
+
+### Kerberos 
+
+Kerberos 是一个用于验证用户或主机身份的身份验证协议。
+
+参考：http://web.mit.edu/kerberos/krb5-latest/doc/
+
+Windows Server 操作系统可实现 Kerberos 版本 5 身份验证协议和对公钥身份验证的扩展，用于传输授权数据和委派。
+
+Kerberos 密钥分发中心(KDC)与其他域控制器运行的 Windows Server 安全服务集成。 KDC 使用域的 Active Directory 域服务数据库作为其安全帐户数据库。 Active Directory 域服务是域或林中的默认 Kerberos 实现所必需的。
+
+作为安全支持提供程序实现 Kerberos 身份验证客户端(SSP).
+
+Windows 域中使用Kerberos 的优势：
+- Delegated authentication，即模拟本地客户端进行认证，它连接了后台服务和别的计算机。
+- Single sign on
+- 互操作。有助于实现与使用 Kerberos 协议进行身份验证的其他网络之间的互操作性。 
+- 服务器身份验证更高效
+- 双向身份验证。这是本地NTLM无法实现的，NTLM假定主机服务是可信的，而用户是需要验证的。
+- 防止网络嗅探泄密
+
+#### Kerberos 工作原理
+
+Kerberos中有3方主体：
+- Client
+  - 需要验证身份，获得数据服务器服务。
+- Authentication Server (AS) 
+  - 接收认证申请，分发访问票据
+- KDC
+  - KDC 发出一个 ticket-granting ticket (TGT),TGT是一个时间戳，并使用 ticket-granting service's (TGS) secret key 加密，发送给客户端。
+  - KDC与AS可以是一台服务器。
+- Service Server(SS)
+  - 提供数据服务
+
+
+<img src="images/02/Kerberos.svg" width = "640" alt="Kerberos" align=center />
+
+When the client needs to communicate with a service on another node (a "principal", in Kerberos parlance), the client sends the TGT to the TGS, which usually shares the same host as the KDC. Service must be registered at TGT with a Service Principal Name (SPN). The client uses the SPN to request access to this service. After verifying that the TGT is valid and that the user is permitted to access the requested service, the TGS issues ticket and session keys to the client. The client then sends the ticket to the service server (SS) along with its service request.
+
+##### User Client-based Login
+A user enters a username and password on the client machine(s). Other credential mechanisms like pkinit (RFC 4556) allow for the use of public keys in place of a password.
+The client transforms the password into the key of a symmetric cipher. This either uses the built-in key scheduling, or a one-way hash, depending on the cipher-suite used.
+##### Client Authentication
+The client sends a cleartext message of the user ID to the AS (Authentication Server) requesting services on behalf of the user. (Note: Neither the secret key nor the password is sent to the AS.)
+The AS checks to see if the client is in its database. If it is, the AS generates the secret key by hashing the password of the user found at the database (e.g., Active Directory in Windows Server) and sends back the following two messages to the client:
+Message A: Client/TGS Session Key encrypted using the secret key of the client/user.
+Message B: Ticket-Granting-Ticket (TGT, which includes the client ID, client network address, ticket validity period, and the client/TGS session key) encrypted using the secret key of the TGS.
+Once the client receives messages A and B, it attempts to decrypt message A with the secret key generated from the password entered by the user. If the user entered password does not match the password in the AS database, the client's secret key will be different and thus unable to decrypt message A. With a valid password and secret key the client decrypts message A to obtain the Client/TGS Session Key. This session key is used for further communications with the TGS. (Note: The client cannot decrypt Message B, as it is encrypted using TGS's secret key.) At this point, the client has enough information to authenticate itself to the TGS.
+##### Client Service Authorization
+When requesting services, the client sends the following messages to the TGS:
+Message C: Composed of the TGT from message B and the ID of the requested service.
+Message D: Authenticator (which is composed of the client ID and the timestamp), encrypted using the Client/TGS Session Key.
+Upon receiving messages C and D, the TGS retrieves message B out of message C. It decrypts message B using the TGS secret key. This gives it the "client/TGS session key". Using this key, the TGS decrypts message D (Authenticator) and compare client ID from message C and D, if they match server sends the following two messages to the client:
+Message E: Client-to-server ticket (which includes the client ID, client network address, validity period and Client/Server Session Key) encrypted using the service's secret key.
+Message F: Client/Server Session Key encrypted with the Client/TGS Session Key.
+##### Client Service Request
+Upon receiving messages E and F from TGS, the client has enough information to authenticate itself to the Service Server (SS). The client connects to the SS and sends the following two messages:
+Message E: from the previous step (the client-to-server ticket, encrypted using service's secret key).
+Message G: a new Authenticator, which includes the client ID, timestamp and is encrypted using Client/Server Session Key.
+The SS decrypts the ticket (message E) using its own secret key to retrieve the Client/Server Session Key. Using the sessions key, SS decrypts the Authenticator and compares client ID from messages E and G, if they match server sends the following message to the client to confirm its true identity and willingness to serve the client:
+Message H: the timestamp found in client's Authenticator (plus 1 in version 4, but not necessary in version 5[6][7]), encrypted using the Client/Server Session Key.
+The client decrypts the confirmation (message H) using the Client/Server Session Key and checks whether the timestamp is correct. If so, then the client can trust the server and can start issuing service requests to the server.
+The server provides the requested services to the client.
+
+
+
+### 令牌绑定
+
+Windows 10, version 1703 supports Token Binding Protocol version 0.10 – On by default。
+
+https://datatracker.ietf.org/doc/draft-ietf-tokbind-protocol/10/
+
+### TLS/SSL 
+
+用于：
+- 电子商务网站受 SSL 保护的交易
+- 对受 SSL 保护的网站的经身份验证的客户端访问
+- 远程访问
+- SQL 访问
+- 电子邮件
+
+#### TLS Handshake Protocol
+
+TLS Handshake Protocol用于认证和密钥交换，实现安全会话。完成下列任务：
+- 加密套件协商
+- 服务器和可选客户端的认证
+- 会话密钥信息交换
+
+##### 使用TLS建立安全会话
+
+步骤如下：
+
+- 1.客户端发送一个Client hello 消息给服务器，同时送出一个随机数和支持的加密套件（代码）。
+- 2.服务器发送一个 Server hello 响应消息给客户端, 同时送出一个服务器随机数。
+- 3.服务器发送它的证书给要认证的客户端，并且可能向客户端请求一个证书（用于双向验证）。服务器发送 Server hello done消息。
+- 4.如果服务器已经请求了客户端证书，那么客户端发送自己的证书给服务器。
+- 5.客户端生成一个随机的 Pre-Master Secret 并且使用服务器证书中的公钥加密这个Pre-Master Secret ，然后发送给服务器。
+- 6.服务器接收到 Pre-Master Secret。根据Pre-Master Secret，服务器和客户端各自生成 Master Secret 和 Session keys 。
+- 7.客户端发送 Change cipher spec 通知给服务器，声明客户端将开始使用新的 session keys，用它来哈希和加密消息。客户端也会发送 Client finished 消息。
+- 8.服务器接收 Chage cipher spec 并切换它的记录层安全状态（ its record layer security state）到使用session keys 的 symmetric encryption 。服务器之后会发送“ Server finished”消息给客户端。
+- 9.客户端和服务器现在可以在安全的信道中交换应用数据了。所有的消息都将被加密。
+
+##### 使用TLS恢复安全会话
+
+- 1.客户端使用想恢复的会话 ID 发送 Client hello 消息给服务器;
+- 2.服务器检查它的会话缓存，寻找这个会话ID，如果有那么服务器能够恢复会话，并送出带会话ID的 Server hello 消息
+- 3.客户端和服务器必须交换 Change cipher spec 消息并发送 client finished 和 server finished 消息。
+- 4.之后就可以在安全信道中使用恢复的会话通信了。
+
+##### TLS Record Protocol
+
+TLS Record Protocol使用握手生成的密钥来加密数据。
+
+The Record Protocol负责：
+- 加密数据
+- 验证完整性
+- 数字签名
+
+具体工作包括：
+- 将传出的消息划分为可管理的块，然后重新组装传入的消息。
+- 压缩输出块和解压缩输入块（可选）。
+- 将消息验证码（MAC）应用于传出消息，并使用MAC验证传入消息。
+- 加密传出消息和解密传入消息。
+
+记录协议完成后，传出的加密数据将向下传递到传输控制协议（TCP）层进行传输。
+
+##### TLS密码套件
+
+Schannel在Windows Server 2003和Windows XP中为TLS 1.0支持以下密码套件。套件以选择它们的默认顺序列出。
+
+- TLS_RSA_WITH_RC4_128_MD5
+- TLS_RSA_WITH_RC4_128_SHA
+- TLS_RSA_WITH_3DES_EDE_CBC_SHA
+- TLS_DHE_DSS_WITH_3DES_EDE_CBC_SHA
+- TLS_RSA_WITH_DES_CBC_SHA
+- TLS_DHE_DSS_WITH_DES_CBC_SHA
+- TLS_RSA_EXPORT1024_WITH_RC4_56_SHA
+- TLS_RSA_EXPORT1024_WITH_DES_CBC_SHA
+- TLS_DHE_DSS_EXPORT1024_WITH_DES_CBC_SHA
+- TLS_RSA_EXPORT_WITH_RC4_40_MD5
+- TLS_RSA_EXPORT_WITH_RC2_CBC_40_MD5
+- TLS_RSA_WITH_NULL_MD5
+- TLS_RSA_WITH_NULL_SHA
+
+#### TLS与SSL
+TLS是与SSL 3.0紧密相关的标准，有时也称为“ SSL 3.1”。TLS取代SSL 2.0，应在新开发中使用。从Windows 10版本1607和Windows Server 2016开始，SSL 2.0已被删除并且不再受支持。
+
+需要高度互操作性的应用程序应支持SSL 3.0和TLS。由于这两个协议之间的相似性，因此SSL文档未包含在本文档中，除非它们与TLS不同。

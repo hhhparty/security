@@ -161,6 +161,8 @@ WIP 提供：
 
 - 与你的现有管理系统（Microsoft Intune、System Center Configuration Manager 或你的当前移动设备管理 (MDM) 系统）的集成，用于为公司配置、部署和管理 WIP。
 
+---
+
 ## Windows启动过程保护
 
 ### 威胁：Rootkit
@@ -188,6 +190,63 @@ Windows10 支持四种功能来帮助防止在启动过程中发生 rootkit 和 
 <img src="images/04/windows_boot_process.png" width = "640"  alt="winboot_process" align=center />
 
 只有在使用 UEFI 2.3.1 和 TPM 芯片的电脑上，才可以安全启动和测量启动。满足 Windows 硬件兼容性计划要求的所有 Windows 10 电脑都具有这些组件，并且许多为早期版本的 Windows 设计的电脑也具有这些组件。
+
+### 第一步：安全启动
+
+当电脑启动时，它首先查找操作系统启动加载程序。 无安全启动功能的电脑只是运行电脑硬盘上的任何启动加载程序。 电脑无法判断它是受信任的操作系统还是 rootkit。
+
+配备有 UEFI 的电脑启动时，电脑首先验证固件是否经过了数字签名，从而减少了固件 rootkit 风险。 如果启用了安全启动，则固件会检查启动加载程序的数字签名以验证它是否未被修改。 如果启动加载程序未被改动，则只有满足以下条件之一时，固件才会启动此启动加载程序：
+- 使用受信任证书对启动加载程序进行了签名。 在电脑认证 Windows10 的情况下，Microsoft®证书受信任。
+- 用户手动批准了启动加载程序的数字签名。 这样，用户可以加载非 Microsoft 操作系统。
+
+所有基于 x86 的 Windows10 电脑认证均须满足几项与安全启动相关的要求：
+- 默认情况下，它们必须启用安全启动。
+- 它们必须信任 Microsoft 的证书（因此信任经过 Microsoft 签名的任何启动加载程序）。
+- 它们必须允许用户将安全启动配置为信任其他启动加载程序。
+- 它们必须允许用户彻底禁用安全启动。
+
+### 第二步：受信任启动
+
+受信任启动将接管安全启动留下来的工作。 
+
+加载项在加载 Windows10 内核之前验证其数字签名。 反过来，Windows10 内核将验证 Windows 启动过程的每个其他组件，包括启动驱动程序、启动文件和 ELAM。 
+
+如果文件已被修改，则启动加载程序会检测到问题并拒绝加载损坏的组件。 通常，Windows10 可以自动修复损坏的组件、还原 Windows 的完整性并允许电脑正常启动。
+
+### 开机初期启动的反恶意软件
+
+在受信任启动最后要启动反恶意软件。
+
+因为安全启动已经保护了启动加载程序，受信任启动已经保护了 Windows 内核，所以恶意软件启动的下一个机会就是感染非 Microsoft 启动驱动程序。
+
+传统的反恶意软件应用直到加载启动驱动程序之后才会启动，因此使伪装成驱动程序的 rootkit 有机会发挥作用。
+
+开机初期启动的反恶意软件 (ELAM) 可以在所有非 Microsoft 启动驱动程序和应用程序之前，加载 Microsoft 或非 Microsoft 反恶意软件驱动程序，因此可以继续形成安全启动和受信任启动所建立的任信链。
+
+因为操作系统尚未启动，并且 Windows 需要尽快启动，所以 ELAM 具有一个简单的任务：检查每个启动驱动程序，并确定它是否在受信任的驱动程序的列表中。 如果它不受信任，则 Windows 将无法加载它。
+
+ELAM 驱动程序不是一个稍后在启动过程中加载的功能齐全的反恶意软件解决方案。 Windows Defender （包括在 Windows10 中）支持 ELAM，
+
+### 评估启动安全状况
+
+评估 Windows10 启动过程完整性使用以下过程：
+- 电脑的 UEFI 固件在 TPM 中存储固件、启动加载程序、启动驱动程序以及将在反恶意软件应用之前加载的所有内容的哈希值。
+- 在启动过程结束时，Windows 将启动非 Microsoft 远程证明客户端。 受信任的证明服务器会向客户端发送一个唯一密钥。
+- TPM 使用此唯一密钥对 UEFI 记录的日志进行数字签名。
+- 客户端会向服务器发送日志，其中可能包含其他安全信息。
+
+根据实现和配置，服务器现在可以确定客户端是否正常运行，并授予客户端有限隔离网络或整个网络的访问权限。
+
+下图显示了衡量的启动和远程认证过程。
+
+
+<img src="images/04/measure_boot.png" width = "640"  alt="measure_boot" align=center />
+
+Windows10 包括支持测量引导的应用程序编程接口，使用非微软工具时才可以使用。
+
+关于这部分， Microsoft Research 提供了 TPM 平台加密提供程序工具包（TPM Platform Crypto-Provider Toolkit）：https://www.microsoft.com/en-us/download/details.aspx?id=52487&from=https%3A%2F%2Fresearch.microsoft.com%2Fen-us%2Fdownloads%2F74c45746-24ad-4cb7-ba4b-0c6df2f92d5d%2F
+
+或下载 Microsoft 企业安全 MVP Dan Griffin 的测量的启动工具：https://archive.codeplex.com/?p=mbt
 
 ## Windows 内存保护
 
