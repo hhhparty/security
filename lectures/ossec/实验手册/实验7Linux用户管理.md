@@ -102,7 +102,7 @@ groupadd group1
 2.使用下列命令建立developer用户组。
 
 ```
-groupadd -g 101 developer
+groupadd -g 1001 developer
 ```
 
 此命令向系统中增加了一个新组 developer ，同时指定新组的组标识号是101。
@@ -117,7 +117,7 @@ groupadd -g 101 developer
 
 1.使用下列命令将组group2的组标识号修改为102。
 
-``` groupmod -g 102 group2```
+``` groupmod -g 1002 group2```
 
 2.使用下列命令将组group2的标识号改为10000，组名修改为group3
 
@@ -138,6 +138,12 @@ groupadd -g 101 developer
 1.先编辑一个有10行的文本用户文件。每一行按照/etc/passwd密码文件的格式书写，要注意每个用户的用户名、UID、宿主目录都不可以相同，其中密码栏可以留做空白或输入x号。
 
 ![linux-batchadduser-01](images/lab07/linux-batchadduser-01.png)
+
+注意：在Debian Linux/Ubuntu中可能会存在一个Bug，即无法使用newusers批量增加用户，有时会报出“Error in `newusers': free(): invalid next size (fast)”等错误。纠正方法暂时未知，但如果将上述文件中“user00*:”后加上密码，例如“123456”，可能不报出错误。例如先在文本文件中写两个用户：
+```
+user001:123456:600:100:user:/home/user001:/bin/bash
+user002:123456:601:100:user:/home/user002:/bin/bash
+```
 
 2.以root身份执行命令 /usr/sbin/newusers，从刚创建的用户文件user.txt中导入数据，创建用户：
 ```newusers < user.txt```

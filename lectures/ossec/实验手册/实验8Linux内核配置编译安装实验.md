@@ -159,8 +159,10 @@ leo@ubuntu:~/Downloads/linux-5.2.11$ make O=../mylinux/kernel/ menuconfig
 7.安装编译工具，准备编译。
 
 ```
-# 安装编译工具
-leo@ubuntu:~/Downloads/linux-5.2.11$ sudo apt-get install libssl-dev bc  libelf-dev build-essential libncurses-dev flex bison
+# 安装编译工具：
+leo@ubuntu:~/Downloads/linux-5.2.11$ sudo apt-get install libssl-dev bc  libelf-dev 
+# 以及：
+leo@ubuntu:~/Downloads/linux-5.2.11$ sudo apt-get install build-essential libncurses-dev flex bison
 ```
 
 8.编译已配置内核。
