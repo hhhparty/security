@@ -1,4 +1,4 @@
-# 第 6讲 Linux 账户和登录安全运维、启动过程、内核配置
+# 第6讲 Linux 账户和登录安全运维、启动过程、内核配置
 
 ## 本讲主要内容
 
@@ -28,13 +28,13 @@ Linux 系统安装完毕后，默认有很多不必要的用户和用户组。
 Linux系统中可以删除的默认用户和用户组大致如下：
 
 #### 可删除的用户：
-- adm
-- lp
-- sync
-- shutdown
-- halt
+- adm，管理用户
+- lp，打印用户
+- sync，同步
+- shutdown，关机
+- halt，悬挂
 - news
-- uucp
+- uucp，unix间拷贝
 - operator
 - games
 - gopher
@@ -86,7 +86,7 @@ Linux Server 默认安装后会有一些不必要的服务，这些服务是自�
   - 支持多种网络服务的核心守候进程
 - xfs
   - x window桌面系统必要服务
-- netword
+- network
   - 启动网络服务
 - sshd
   - 远程加密访问
@@ -183,9 +183,9 @@ level等级代号列表：
 - 等级5表示：带图形界面的多用户模式
 - 等级6表示：重新启动
 
-#### 如何增加一个服务？
+#### 如何增加一个服务？t
 
-- 1.服务脚本必须存放在/etc/ini.d/目录下；
+- 1.服务脚本必须存放在/etc/init.d/目录下；
 - 2.```chkconfig --add servicename```在chkconfig工具服务列表中增加此服务，此时服务会被在/etc/rc.d/rcN.d中赋予K/S入口了；
 - 3.```chkconfig --level 35 mysqld on```修改服务的默认启动等级。
 
