@@ -28,7 +28,7 @@
 ### 一.删除特殊的用户和用户组
 
 1.使用下列命令查看当前用户列表
-```less \etc\passwd```
+```sudo less /etc/passwd```
 
 结果大致如下：
 
@@ -128,7 +128,16 @@ sudo groupdel <用户组名>
 
 2.使用下列命令关闭不必要的某个服务
 
-```sudo chkconfig --level 345 <服务名> off```
+先安装工具```sudo apt install sysv-rc-conf```
+
+然后执行：
+
+```
+sudo cp /usr/sbin/sysv-rc-conf /usr/sbin/chkconfig
+
+sudo chkconfig --level 345 <服务名> off
+
+```
 
 服务名可从下列表中任选一个。
 - anacron
