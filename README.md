@@ -65,11 +65,6 @@ All rights reserved. 保留所有权利，目前不接受任何转载。
 - 第3章 Web页面爬取
 
 
-## notes 学习笔记
-
-- basicbinary：二进制基础
-- rookit：rookit入门
-- practicalmalwareanalysis：恶意软件分析实战
 
 资源库目前尚不完整，将竭力补充更新...
 
