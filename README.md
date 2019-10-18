@@ -50,10 +50,6 @@ This repository is a collection of lectures, notes, and tools about security.
 - 实验4 程序静态分析技术基础
 - 实验5 程序静态分析技术进阶
 
-## notes 学习笔记
 
-- basicbinary：二进制基础
-- rookit：rookit入门
-- practicalmalwareanalysis：恶意软件分析实战
 
 资源库目前尚不完整，将竭力补充更新...
