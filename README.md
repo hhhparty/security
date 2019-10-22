@@ -18,7 +18,8 @@ All rights reserved. 保留所有权利，目前不接受任何转载。
 
 ## lectures 教学讲义
 
-### ossec：“操作系统安全”课程
+### [ossec：“操作系统安全”课程](https://github.com/hhhparty/security/tree/master/lectures/ossec)
+
 
 #### 内容列表
 - 第1讲 操作系统安全概述
@@ -27,6 +28,7 @@ All rights reserved. 保留所有权利，目前不接受任何转载。
 - 第4讲 Windows中的信息保护
 - 第5讲 Linux安全概述
 - 第6讲 Linux账户安全运维与内核配置
+- 第7讲 Linux文件系统安全配置
 
 #### 实验列表
 - 实验1 理解Windows的安全标识符（SID)
@@ -38,8 +40,9 @@ All rights reserved. 保留所有权利，目前不接受任何转载。
 - 实验7 Linux用户管理
 - 实验8 Linux内核配置编译安装
 - 实验9 Linux账户和登录安全运维
+- 实验10 Linux文件系统运维实验
 
-### cyberhack：“网络攻防技术”课程
+### [cyberhack：“网络攻防技术”课程](https://github.com/hhhparty/security/tree/master/lectures/cyberhack)
 
 #### 内容列表
 - 第1讲 网络空间安全现状与网络攻防基本流程
@@ -57,7 +60,7 @@ All rights reserved. 保留所有权利，目前不接受任何转载。
 - 实验4 程序静态分析技术基础
 - 实验5 程序静态分析技术进阶
 
-### webcrawler：“网络爬虫与数据采集” 课程
+### [webcrawler：“网络爬虫与数据采集” 课程](https://github.com/hhhparty/security/tree/master/lectures/webcrawler)
 
 #### 内容列表
 - 第1章 网络数据采集概述
