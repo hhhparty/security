@@ -1,0 +1,44 @@
+2019-10-25 13:14:23:ERROR:timed out
+2019-10-25 13:23:54:DEBUG:Starting new HTTPS connection (1): www.baidu.com:443
+2019-10-25 13:23:54:DEBUG:https://www.baidu.com:443 "GET / HTTP/1.1" 200 None
+2019-10-25 13:26:40:DEBUG:Starting new HTTP connection (1): www.httpbin.org:80
+2019-10-25 13:26:41:DEBUG:http://www.httpbin.org:80 "GET /user-agent HTTP/1.1" 200 147
+2019-10-25 13:30:25:DEBUG:Starting new HTTPS connection (1): tieba.baidu.com:443
+2019-10-25 13:30:25:DEBUG:https://tieba.baidu.com:443 "GET /index.html HTTP/1.1" 200 None
+2019-10-25 13:30:26:DEBUG:ISO-8859-5 confidence = 0.0, below negative shortcut threshhold 0.05
+2019-10-25 13:30:26:DEBUG:MacCyrillic confidence = 0.014113366639090224, below negative shortcut threshhold 0.05
+2019-10-25 13:30:26:DEBUG:ISO-8859-5 confidence = 0.0, below negative shortcut threshhold 0.05
+2019-10-25 13:30:26:DEBUG:TIS-620 confidence = 0.04453178124991205, below negative shortcut threshhold 0.05
+2019-10-25 13:30:26:DEBUG:windows-1255 confidence = 0.0, below negative shortcut threshhold 0.05
+2019-10-25 13:30:26:DEBUG:windows-1255 confidence = 0.0, below negative shortcut threshhold 0.05
+2019-10-25 13:30:26:DEBUG:utf-8  confidence = 0.99
+2019-10-25 13:30:26:DEBUG:SHIFT_JIS Japanese confidence = 0.01
+2019-10-25 13:30:26:DEBUG:EUC-JP Japanese confidence = 0.01
+2019-10-25 13:30:26:DEBUG:GB2312 Chinese confidence = 0.01
+2019-10-25 13:30:26:DEBUG:EUC-KR Korean confidence = 0.01
+2019-10-25 13:30:26:DEBUG:CP949 Korean confidence = 0.01
+2019-10-25 13:30:26:DEBUG:Big5 Chinese confidence = 0.01
+2019-10-25 13:30:26:DEBUG:EUC-TW Taiwan confidence = 0.01
+2019-10-25 13:30:26:DEBUG:windows-1251 Russian confidence = 0.01
+2019-10-25 13:30:26:DEBUG:KOI8-R Russian confidence = 0.01
+2019-10-25 13:30:26:DEBUG:ISO-8859-5 not active
+2019-10-25 13:30:26:DEBUG:MacCyrillic not active
+2019-10-25 13:30:26:DEBUG:IBM866 Russian confidence = 0.08493652432342541
+2019-10-25 13:30:26:DEBUG:IBM855 Russian confidence = 0.062381093727778364
+2019-10-25 13:30:26:DEBUG:ISO-8859-7 Greek confidence = 0.0
+2019-10-25 13:30:26:DEBUG:windows-1253 Greek confidence = 0.0
+2019-10-25 13:30:26:DEBUG:ISO-8859-5 not active
+2019-10-25 13:30:26:DEBUG:windows-1251 Bulgarian confidence = 0.0
+2019-10-25 13:30:26:DEBUG:TIS-620 not active
+2019-10-25 13:30:26:DEBUG:ISO-8859-9 Turkish confidence = 0.39273591526944546
+2019-10-25 13:30:26:DEBUG:windows-1255 Hebrew confidence = 0.0
+2019-10-25 13:30:26:DEBUG:windows-1255 not active
+2019-10-25 13:30:26:DEBUG:windows-1255 not active
+2019-10-25 13:30:26:DEBUG:utf-8  confidence = 0.99
+2019-10-25 13:30:26:DEBUG:SHIFT_JIS Japanese confidence = 0.01
+2019-10-25 13:30:26:DEBUG:EUC-JP Japanese confidence = 0.01
+2019-10-25 13:30:26:DEBUG:GB2312 Chinese confidence = 0.01
+2019-10-25 13:30:26:DEBUG:EUC-KR Korean confidence = 0.01
+2019-10-25 13:30:26:DEBUG:CP949 Korean confidence = 0.01
+2019-10-25 13:30:26:DEBUG:Big5 Chinese confidence = 0.01
+2019-10-25 13:30:26:DEBUG:EUC-TW Taiwan confidence = 0.01
