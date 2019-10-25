@@ -161,7 +161,38 @@ Set-execution policy unrestricted
 Enter Y in the prompt
 Get-ExecutionPolicy
 
-## todo
+
+## Windows Management Framework(WMF)
+
+Windows Management Framework (WMF) provides a consistent management interface for Windows. WMF provides a seamless way to manage various versions of Windows client and Windows Server. WMF installer packages contain updates to management functionality and are available for older versions of Windows.
+
+WMF installation adds and/or updates the following features:
+
+- Windows PowerShell
+- Windows PowerShell Desired State Configuration (DSC)
+- Windows PowerShell Integrated Script Environment (ISE)
+- Windows Remote Management (WinRM)
+- Windows Management Instrumentation (WMI)
+- Windows PowerShell Web Services (Management OData IIS Extension)
+- Software Inventory Logging (SIL)
+- Server Manager CIM Provider
+
+WMF 内嵌于windows 10、server 2016中。之前版本需要安装。WMF 5.1 Prerequisites for Windows Server 2008 R2 SP1 and Windows 7 SP1
+
+## DSC
+
+What Is DSC?
+PowerShell DSC is a configuration management platform built into Windows that is based on open standards. DSC is flexible enough to function reliably and consistently in each stage of the deployment lifecycle (development, test, pre-production, production), and during scale-out.
+
+DSC centers around configurations. A configuration is PowerShell script that describes an environment made up of computers, or nodes, with specific characteristics. These characteristics can be as simple as ensuring a specific Windows feature is enabled or as complex as deploying SharePoint.
+
+DSC has monitoring and reporting built-in. If a system is no longer compliant, DSC can raise an alert and act to correct the system
+
+## Sample scripts for system administration
+
+https://docs.microsoft.com/en-us/powershell/scripting/samples/sample-scripts-for-administration?view=powershell-6
+
+## References
 https://www.guru99.com/powershell-tutorial.html
 
 https://www.tutorialspoint.com/powershell/powershell_overview.htm
