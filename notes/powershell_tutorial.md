@@ -192,6 +192,20 @@ DSC has monitoring and reporting built-in. If a system is no longer compliant, D
 
 https://docs.microsoft.com/en-us/powershell/scripting/samples/sample-scripts-for-administration?view=powershell-6
 
+## Working with objects
+
+### Viewing Object Structure (Get-Member)
+
+Because objects play such a central role in Windows PowerShell, there are several native commands designed to work with arbitrary object types. 
+- The most important one is the ```Get-Member``` command.
+- The simplest technique for analyzing the objects that a command returns is to pipe the output of that command to the ```Get-Member``` cmdlet. 
+
+To see all the members of a Process object and page the output so you can view all of it, type:
+```Get-Process | Get-Member | Out-Host -Paging```
+
+We can make this long list of information more usable by filtering for elements we want to see.
+```Get-Process | Get-Member -MemberType Properties```
+
 ## References
 https://www.guru99.com/powershell-tutorial.html
 
