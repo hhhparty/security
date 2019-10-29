@@ -24,7 +24,7 @@
 - /var/log/boot.log
   - 记录系统初始化、启动过程的信息(通常由系统初始化脚本/etc/init.d/bootmisc.sh发出)
 - /var/log/dmesg
-  - 记录Linux kernel ring的缓存信息，主要与硬件状态和驱动线管。
+  - 记录Linux kernel ring的缓存信息，主要与硬件状态和驱动程序。
 - /var/log/kern.log
   - 记录内核信息，可用于发现内核相关错误和警告。对于自定义内核而言，十分重要。
 - /var/log/faillog
@@ -45,7 +45,7 @@
 
 #### 查看登录信息
 
-如果想查看最近的某用户账户的登录信息，可以使用last命令。last工具将/etc/log/wtmp文件按照某种格式显示出来。
+如果想查看最近的某用户账户的登录信息，可以使用last命令。last工具将/var/log/wtmp文件按照某种格式显示出来。
 ```last```
 语法：
 ```last [-adRx][-f ][-n ][帐号名称...][终端机编号...]```
@@ -61,7 +61,7 @@
 - -t，  显示YYYYMMDDHHMMSS之前的信息
 
 结果格式：
-```条目格式 用户名 终端位置 登录ip或者内核 开始时间 结束时间 持续时间 ```
+```用户名 终端位置 登录ip或者内核 开始时间 结束时间 持续时间 ```
 
 其中，结束时间内容可以为：
 - still login in 还未退出  
@@ -165,7 +165,7 @@ Acct是一个可以在Linux系统上用于监视用户活动的开源应用。�
 这个工具需要安装，可以使用下列命令：
 ```sudo apt install acct ```
 
-如果是基于rpm的Linux发行版，可以运行```sudo apt install pacct ```
+如果是基于rpm的Linux发行版，可以运行```sudo rpm install pacct ```
 
 ACCT包提供了几个监控流程活动。
 

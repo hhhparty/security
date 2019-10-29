@@ -448,7 +448,7 @@ pwd
 #### 对/var/tmp的安全设置
 
 - 若/var/tmp是独立分区，安装/tmp的设置方法是修改/etc/fstab文件即可；
-- 若/var/tmp是/var下的一个目录，那么可以讲/var/tmp目录下所有数据移动到/tmp分区下，然后在/var下做一个指向/tmp的软连接即可。例如：
+- 若/var/tmp是/var下的一个目录，那么可以将/var/tmp目录下所有数据移动到/tmp分区下，然后在/var下做一个指向/tmp的软连接即可。例如：
   - ```mv /var/tmp/*  /tmp```
   - ``` ln -s /tmp /var/tmp```
 
