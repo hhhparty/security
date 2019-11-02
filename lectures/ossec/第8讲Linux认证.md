@@ -4,6 +4,8 @@
 - 用户认证和登录
 - 使用 acct 监视用户行为
 - 使用 PAM 定制认证过程
+- ssh远程登陆认证
+- 配置kerberos服务器
 
 ## 1 用户认证和登录
 
@@ -163,7 +165,7 @@ Acct是一个可以在Linux系统上用于监视用户活动的开源应用。�
 ### 2.1 安装ACCT
 
 这个工具需要安装，可以使用下列命令：
-```sudo apt install acct ```
+``` sudo apt install acct ```
 
 如果是基于rpm的Linux发行版，可以运行```sudo rpm install pacct ```
 
@@ -492,3 +494,339 @@ int main(int argc, char *argv[]) {
 	return retval == PAM_SUCCESS ? 0 : 1;
 }
 ```
+
+## ssh远程登陆认证
+
+这一部分介绍以下几方面知识：
+- 使用SSH远程访问服务器/主机
+- 启用/取消SSH的root登录
+- 限制SSH基于密码登录的远程访问
+- 远程复制文件
+
+### 使用SSH远程访问服务器/主机
+
+SSH，即Secure Shell，是用于安全登录远程系统的协议，是访问远程Linux系统最常用的方法。
+
+SSH是一种协议，实现该协议的软件工具不止一个，我们可以使用免费的一款名叫OpenSSH的软件。在Linux系统中安装好OpenSSH后，就可以使用命令“ssh”启动它。
+
+如果系统中还没有安装SSH软件，那么必须安装SSH的客户端和服务器端软件。
+
+在作为SSH服务器的Ubuntu上安装OpenSSH服务器端程序的命令如下：
+```sudo  apt  install  openssh-server```
+
+在作为SSH客户端的Ubuntu上安装OpenSSH的客户端程序，命令如下：
+```sudo  apt  install  openssh-client```
+
+新版本的OpenSSH会在安装完毕后自行启动SSH服务，如果它未能正常启动，我们可以执行下列命令手动启动：
+```sudo  service  ssh  start```
+
+现在我们试着使用SSH从客户端登录服务器，在客户端主机的终端上执行下列命令：
+```ssh  服务器的ip地址```
+
+如果我们想使用不同的用户名远程登录服务器，则可以运行命名：
+```ssh  用户名@服务器的ip地址```
+
+### ssh配置
+
+配置openssh通过配置文件实习，有两个配置文件：
+- ssh_config，针对客户端的配置文件
+- sshd_config，针对服务端的配置文件
+
+为满足ssh远程访问的认证需求，需要配置ssh，其主配置文件是/etc/ssh/sshd_config。
+
+在进行任何修改之前，请先备份原始配置文件，命令如下：
+```sudo cp /etc/ssh/sshd_config{,.bak}```
+
+然后使用vi或nano等文本编辑器打开配置文件/etc/ssh_config，基本内容如下：
+```
+Host *
+#   ForwardAgent no 
+#   ForwardX11 no
+#   ForwardX11Trusted yes
+#   RhostsRSAAuthentication no
+#   RSAAuthentication yes
+#   PasswordAuthentication yes
+#   HostbasedAuthentication no
+#   GSSAPIAuthentication no
+#   GSSAPIDelegateCredentials no
+#   GSSAPIKeyExchange no
+#   GSSAPITrustDNS no
+#   BatchMode no
+#   CheckHostIP yes
+#   AddressFamily any
+#   ConnectTimeout 0
+#   StrictHostKeyChecking ask
+#   IdentityFile ~/.ssh/identity
+#   IdentityFile ~/.ssh/id_rsa
+#   IdentityFile ~/.ssh/id_dsa
+#   IdentityFile ~/.ssh/id_ecdsa
+#   IdentityFile ~/.ssh/id_ed25519
+#   Port 22 #连接端口地址，建议修改为不常用地址，例如43415
+#   Protocol 2
+#   Cipher 3des
+#   Ciphers aes128-ctr,aes192-ctr,aes256-ctr,arcfour256,arcfour128,aes128-cbc,3des-cbc
+#   MACs hmac-md5,hmac-sha1,umac-64@openssh.com,hmac-ripemd160
+#   EscapeChar ~
+#   Tunnel no
+#   TunnelDevice any:any
+#   PermitLocalCommand no
+#   VisualHostKey no
+#   ProxyCommand ssh -q -W %h:%p gateway.example.com
+#   RekeyLimit 1G 1h
+    SendEnv LANG LC_*
+    HashKnownHosts yes
+    GSSAPIAuthentication yes
+    GSSAPIDelegateCredentials no
+
+```
+说明：
+- "Host"只对匹配后面字串的计算机有效，“*”表示所有的计算机。
+  - Host下面缩进的选项都适用于该设置，可以指定某计算机替换*号使下面选项只针对该算机器生效。
+- “ForwardAgent” 设置连接是否经过验证代理（如果存在）转发给远程计算机。
+- "ForwardX11"设置X11连接是否被自动重定向到安全的通道和显示集（DISPLAY set）。
+- "RhostsAuthentication"设置是否使用基于rhosts的安全验证。
+- "RhostsRSAAuthentication"设置是否使用用RSA算法的基于rhosts的安全验证。
+- "RSAAuthentication"设置是否使用RSA算法进行安全验证。
+- "PasswordAuthentication"设置是否使用口令验证。
+- "FallBackToRsh"设置如果用ssh连接出现错误是否自动使用rsh，由于rsh并不安全，所以此选项应当设置为"no"。
+- "UseRsh"设置是否在这台计算机上使用"rlogin/rsh"，原因同上，设为"no"。
+- "BatchMode"：批处理模式，一般设为"no"；如果设为"yes"，交互式输入口令的提示将被禁止，这个选项对脚本文件和批处理任务十分有用。
+- "CheckHostIP"设置ssh是否查看连接到服务器的主机的IP地址以防止DNS欺骗。建议设置为"yes"。
+- "StrictHostKeyChecking"如果设为"yes"，ssh将不会自动把计算机的密匙加入"$HOME/.ssh/known_hosts"文件，且一旦计算机的密匙发生了变化，就拒绝连接。
+- "IdentityFile"设置读取用户的RSA安全验证标识。
+- "Port"设置连接到远程主机的端口，ssh默认端口为22。
+- “Cipher”设置加密用的密钥，blowfish可以自己随意设置。
+- “EscapeChar”设置escape字符。
+- 注意：带“#”表示该句为注释，也表示系统默认设置。
+
+此外，还有配置文件/etc/sshd_config。
+
+```
+# What ports, IPs and protocols we listen for
+Port 22
+# Use these options to restrict which interfaces/protocols sshd will bind to
+#ListenAddress ::
+#ListenAddress 0.0.0.0
+Protocol 2
+# HostKeys for protocol version 2
+HostKey /etc/ssh/ssh_host_rsa_key
+HostKey /etc/ssh/ssh_host_dsa_key
+HostKey /etc/ssh/ssh_host_ecdsa_key
+HostKey /etc/ssh/ssh_host_ed25519_key
+#Privilege Separation is turned on for security
+UsePrivilegeSeparation yes
+
+# Lifetime and size of ephemeral version 1 server key
+KeyRegenerationInterval 3600
+ServerKeyBits 1024
+
+# Logging
+SyslogFacility AUTH
+LogLevel INFO
+
+# Authentication:
+LoginGraceTime 120
+PermitRootLogin prohibit-password
+StrictModes yes
+
+RSAAuthentication yes
+PubkeyAuthentication yes
+#AuthorizedKeysFile     %h/.ssh/authorized_keys
+
+# Don't read the user's ~/.rhosts and ~/.shosts files
+IgnoreRhosts yes
+# For this to work you will also need host keys in /etc/ssh_known_hosts
+RhostsRSAAuthentication no
+# similar for protocol version 2
+HostbasedAuthentication no
+# Uncomment if you don't trust ~/.ssh/known_hosts for RhostsRSAAuthentication
+#IgnoreUserKnownHosts yes
+
+# To enable empty passwords, change to yes (NOT RECOMMENDED)
+PermitEmptyPasswords no
+
+# Change to yes to enable challenge-response passwords (beware issues with
+# some PAM modules and threads)
+ChallengeResponseAuthentication no
+
+# Change to no to disable tunnelled clear text passwords
+#PasswordAuthentication yes
+
+# Kerberos options
+#KerberosAuthentication no
+#KerberosGetAFSToken no
+#KerberosOrLocalPasswd yes
+#KerberosTicketCleanup yes
+
+# GSSAPI options
+#GSSAPIAuthentication no
+#GSSAPICleanupCredentials yes
+
+X11Forwarding yes
+X11DisplayOffset 10
+PrintMotd no
+PrintLastLog yes
+TCPKeepAlive yes
+#UseLogin no
+
+#MaxStartups 10:30:60
+#Banner /etc/issue.net
+
+# Allow client to pass locale environment variables
+AcceptEnv LANG LC_*
+
+Subsystem sftp /usr/lib/openssh/sftp-server
+
+UsePAM yes
+
+```
+
+说明：
+- "ListenAddress”设置sshd服务器绑定的IP地址。
+- "HostKey”设置包含计算机私人密匙的文件。
+- "ServerKeyBits”定义服务器密匙的位数。
+- "LoginGraceTime”设置如果用户不能成功登录，在切断连接之前服务器需要等待的时间（以秒为单位）。
+- "KeyRegenerationInterval”设置在多少秒之后自动重新生成服务器的密匙（如果使用密匙）。重新生成密匙是为了防止用盗用的密匙解密被截获的信息。
+- "PermitRootLogin”设置是否允许root通过ssh登录。这个选项从安全角度来讲应设成"no"。
+- "IgnoreRhosts”设置验证的时候是否使用“rhosts”和“shosts”文件。
+- "IgnoreUserKnownHosts”设置ssh daemon是否在进行RhostsRSAAuthentication安全验证的时候忽略用户的"$HOME/.ssh/known_hosts”
+- "StrictModes”设置ssh在接收登录请求之前是否检查用户家目录和rhosts文件的权限和所有权。这通常是必要的，因为新手经常会把自己的目录和文件设成任何人都有写权限。
+- "X11Forwarding”设置是否允许X11转发。
+- "PrintMotd”设置sshd是否在用户登录的时候显示“/etc/motd”中的信息。
+- "SyslogFacility”设置在记录来自sshd的消息的时候，是否给出“facility code”。
+- "LogLevel”设置记录sshd日志消息的层次。INFO是一个好的选择。查看sshd的man帮助页，已获取更多的信息。
+- "RhostsAuthentication”设置只用rhosts或“/etc/hosts.equiv”进行安全验证是否已经足够了。
+- "RhostsRSA”设置是否允许用rhosts或“/etc/hosts.equiv”加上RSA进行安全验证。
+- "RSAAuthentication”设置是否允许只有RSA安全验证。
+- "PasswordAuthentication”设置是否允许口令验证。
+- "PermitEmptyPasswords”设置是否允许用口令为空的帐号登录。
+- "AllowUsers”的后面可以跟任意的数量的用户名的匹配串，这些字符串用空格隔开。主机名可以是域名或IP地址。
+
+ 
+#### 改变默认端口
+
+可以看到sshd服务默认的入站连接监听端口为22。
+
+为了加强安全性，防止端口扫描工具对sshd服务的扫描，我们可以将/etc/sshd_config文件中端口号设置为某个非标准的端口号，例如：43415。
+
+修改后要重启sshd服务，配置才能生效。
+
+之后用户在客户端连接该SSH服务器时，需要运行下列带端口参数的命令：
+```ssh  -p  端口号  服务器的ip地址```
+
+
+#### 禁止root账户的SSH 登录
+
+Linux系统默认存在root账户，并且默认是启用的。
+
+如果未授权用户能够以root身份经SSH访问Linux系统，那整个系统将暴露在攻击者面前。
+
+使用文本编辑器打开SSH服务器的主配置文件/etc/ssh/sshd_config，命令如下：
+```sudo  nano  /etc/ssh/sshd_config```
+
+在配置文件中找到含有“PermitRootLogin  yes”的一行。将“yes”改写为“no”，即“PermitRootLogin  no”。
+
+完成上述步骤后，使用下列命令重新启动SSH服务：
+```sudo  service  ssh  restart```
+
+现在让我们尝试以root身份登录SSH服务器。由于之前的设置，访问会被拒绝，而SSH客户端将报告一个“Permission denied”错误。
+
+如果我们仍想以root身份登录SSH服务器时，那么我们必须首先以普通用户登录，然后使用“su”命令切换为root身份，如下图所示。如果登录时使用的用户未被写在/etc/sudoers文件中，那么该用户就不能切换为root，这样能够防止用户越权，使系统更加安全。
+
+#### 标准用户访问设置
+
+假设系统中有许多用户，而我们需要编辑/etc/ssh/sshd_config文件仅允许一部分用户使用SSH服务。
+
+使用下列命令打开配置文件：
+```sudo nano /etc/ssh/sshd_config```
+
+在配置文件中增加如下配置，允许user1和user2使用SSH服务：
+```AllowUsers  user1 user2```
+
+之后重启SSH服务，使配置生效。
+```sudo service ssh restart```
+
+现在，当我们尝试以user1、user2登录SSH服务器时，登录是成功的。其他用户登录时，由于没有被增加到配置文件中，所以登录失败，客户端返回“Permission denied”的错误消息。
+
+#### 基于密钥加强SSH远程访问的安全性
+
+基于密钥的认证方法能够加强SSH远程访问的安全性。
+
+在使用基于密钥的认证方法之前，需要先创建一对密钥：一个私钥和一个公钥。
+
+1.在客户端或本地系统中，我们执行下列命令生成SSH密钥对：
+```ssh-keygen  -t  rsa```
+
+2.在生成密钥时，可以采用默认值或根据自己需要进行改变。生成密钥程序还会要求键入一个密码，你可以键入任何字符，或者什么都不输入，该密码用于保护私钥文件。
+
+3.密钥对生成后将保存在本地目录“~./ssh/”中，进入该目录并使用“ls -l”命令可以查看密钥文件的细节。
+
+4.现在，我们需要将公钥文件拷贝到远程SSH服务器上，可以运行下列命令完成这一操作（假设远程SSH服务器的ip地址为192.168.1.101）：
+```ssh-copy-id 192.168.1.101```
+
+5.上述命令的执行会在SSH服务器与客户端间建立一个SSH会话，并且提示你键入用户账户密码。键入正确的密码后，公钥文件将被拷贝到远程服务器上。
+
+6.当公钥文件成功拷贝到服务器上后，再次使用命令“ssh  192.168.1.101”尝试登录SSH服务器
+
+我们发现，登录时要求输入私钥文件的密码，这是由于我们在创建SSH密钥对时配置了密码字段。如果在创建密钥对时没有输入密钥，那么这里就不会提示输入密码而直接登录到远程SSH服务器。
+
+## 配置kerberos服务器
+
+<img src="images/08/Kerberos.svg" width="480" />
+
+Kerberos是一种在不可信网络环境中使用的安全认证协议，它使用安全密钥实现加密认证和建立与第三方的信任关系。它基于对称密钥和可信的第三方实现安全认证。
+
+### 基本原理
+
+客户端向服务器（AS）进行身份验证，该服务器将用户名转发到密钥分发中心 （KDC）。KDC发行带有时间戳的票证授予票证（TGT），并使用票证授予服务（TGS）的密钥对其加密，然后将加密结果返回给用户的工作站。
+
+
+下面详细描述该协议：
+
+一.用过登录
+- 1.用户在客户端计算机上输入用户名和密码。
+- 2.客户端将密码转换为对称密码的密钥。根据使用的密码软件，它要么使用内置的密钥调度，要么使用单向哈希。
+
+二.客户端认证
+- 1.客户端将用户ID 的明文消息发送给AS（身份验证服务器），代表用户请求服务。（注意：密钥和密码均不会发送到AS。）
+- 2.AS检查客户端是否在其数据库中。如果是，则AS通过对在数据库（例如Windows Server中的Active Directory）中找到的用户的密码进行哈希处理来生成密钥，并将以下两条消息发送回客户端：
+	- 消息A：使用客户端/用户的私钥加密的客户端/ TGS会话密钥。
+	- 消息B：使用TGS的密钥加密的票证授予票证（TGT，其中包括客户端ID，客户端网络地址，票证有效期和客户端/ TGS会话密钥）。
+- 3.一旦客户端收到消息A和B，它就会尝试使用从用户输入的密码生成的密钥解密消息A。如果用户输入的密码与AS数据库中的密码不匹配，则客户端的密钥将不同，因此无法解密消息A。使用有效的密码和密钥，客户端将解密消息A以获取客户端/ TGS会话密钥。该会话密钥用于与TGS进行进一步的通信。（注意：客户端无法解密消息B，因为它是使用TGS的密钥加密的。）此时，客户端具有足够的信息可以向TGS进行身份验证。
+
+三.客户服务授权
+- 1.请求服务时，客户端将以下消息发送到TGS：
+	- 消息C：由消息B的TGT和所请求服务的ID组成。
+  - 消息D：身份验证器（由客户端ID和时间戳组成），已使用客户端/ TGS会话密钥加密。
+- 2.一旦收到消息C和D，TGS就会从消息C中检索消息B。它使用TGS密钥解密消息B。这为它提供了“客户端/ TGS会话密钥”。TGS使用此密钥解密消息D（身份验证器），并比较消息C和D中的客户端ID（如果它们匹配），服务器将以下两个消息发送给客户端：
+	- 消息E：使用服务的秘密密钥加密的客户端到服务器票证（包括客户端ID，客户端网络地址，有效期和客户端/服务器会话密钥）。
+	- 消息F：使用客户端/ TGS会话密钥加密的客户端/服务器会话密钥。
+
+四.客户服务请求
+- 1.从TGS收到消息E和F后，客户端将具有足够的信息以向服务服务器（SS）进行身份验证。客户端连接到SS并发送以下两条消息：
+	- 消息E：来自上一步（客户端到服务器票证，使用服务的秘密密钥加密）。
+  - 消息G：一个新的身份验证器，其中包括客户端ID，时间戳记，并使用“ 客户端/服务器会话密钥”进行了加密。
+- 2.SS使用其自己的密钥来解密票证（消息E）以检索客户端/服务器会话密钥。如果会话与服务器匹配，则SS使用会话密钥对身份验证器进行解密，并比较消息E和G中的客户机ID，如果服务器将以下消息发送给客户机，以确认其真实身份和服务客户​​机的意愿：
+	- 消息H：在客户端的Authenticator中找到的时间戳（在版本4中加1，但在版本5中不是必需的），已使用客户端/服务器会话密钥进行了加密。
+- 3.客户端使用客户端/服务器会话密钥解密确认（消息H），并检查时间戳是否正确。如果是这样，则客户端可以信任服务器并可以开始向服务器发出服务请求。
+- 4.服务器将请求的服务提供给客户端。
+
+
+### 缺点和局限性
+- 单点故障：它要求中央服务器具有连续可用性。当Kerberos服务器关闭时，新用户无法登录。这可以通过使用多个Kerberos服务器和后备身份验证机制来缓解。
+- Kerberos具有严格的时间要求，这意味着所涉及主机的时钟必须在配置的限制内同步。票证具有时间可用性期限，并且如果主机时钟未与Kerberos服务器时钟同步，则身份验证将失败。MIT的默认配置要求时钟时间间隔不得超过五分钟。在实践中网络时间协议守护程序通常用于保持主机时钟同步.
+- 管理协议未标准化，并且在服务器实现之间有所不同。密码更改在RFC 3244中描述。
+- 在采用对称加密的情况下（Kerberos可以使用对称或非对称（公钥）加密工作），由于所有身份验证均由集中式密钥分发中心（KDC）控制，因此这种身份验证基础结构的破坏将使攻击者可以假冒任何用户。
+- 每个需要不同主机名的网络服务都将需要其自己的Kerberos密钥集。这使虚拟主机和群集变得复杂。
+- Kerberos要求用户帐户，用户客户端和服务器上的服务都必须与Kerberos令牌服务器具有可信关系（所有必须位于同一Kerberos域中或彼此之间具有信任关系的域中）。Kerberos无法用于用户想要从未知/不受信任的客户端连接到服务的场景，如典型的Internet或云计算机场景，其中身份验证提供程序通常不了解用户客户端系统。
+- 所需的客户端信任使创建分阶段环境（例如，用于测试环境，预生产环境和生产环境的单独域）变得困难：需要创建防止严格隔离环境域的域信任关系，或者需要其他用户客户端。为每个环境提供。
+
+### 在ubuntu上建立Kerberos 服务器
+
+为了演示Kerberos的安装和运行，我们需要3个Ubuntu Linux。它们之间要能相互通信，并且要有精确的系统时钟。这3个Linux系统的主机名（hostname）分别命名为（主机名的修改可以通过编辑/etc/hostname文件实现）：
+- Kerberos服务器：mykerberos.com
+- SSH服务器：sshserver.com
+- 客户端：sshclient.com
+
+具体操作过程参考实验手册。
+
