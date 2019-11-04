@@ -1,28 +1,113 @@
-# 实验 12 Linux中的LDAP统一认证实验
+# 实验 12 Linux 网络认证实验
 
 ## 实验目的
 
-掌握 Linux 中配置 LDAP统一认证的方法
+- 掌握 Linux 中配置Kerberos认证服务器的方法，理解基于Kerberos的网络认证过程。
+- 掌握 Linux中配置LDAP服务器的方法，理解基于LDAP的网络认证过程。
+- 掌握 Linux中配置SAMBA+LDAP服务器的方法，理解基于SAMBA+LDAP的网络认证过程。
 
 ## 实验内容
 
-- LDAP server 安装与配置
-- LDAP client 安装与配置
+- Linux中 Kerberos 认证服务器安装、配置、应用。
+- Linux中 LDAP 认证服务器安装、配置、应用。
+- Linux中 SAMBA+LDAP 认证服务器安装、配置、应用。
 ## 实验前提
 
 - 准备好 ubuntu server 1604 虚拟机的克隆版本
 - 编辑系统文件可以使用nano或vi工具
 
-如果对vi/vim编辑器不熟悉，可以参考下图：
-![vim-vi-workmodel](images/lab01/vim-vi-workmodel.png)
-
-![vi-vim-cheat-sheet-sch](images/lab01/vi-vim-cheat-sheet-sch.gif)
-
 ## 实验步骤
 
-### 一. LDAP server 安装与配置
+## 一.Linux中 Kerberos 认证服务器安装、配置、应用。
 
-0.使用ubuntu linux的原版快照（未安装ldap server即可），克隆一份ubuntu linux server。
+1.使用ubuntu linux 1604虚拟机的原版快照，建立一个链接型克隆，使用该克隆虚拟机完成下列实验步骤。
+
+2.在虚拟机控制台中运行```ifconfig```，获知该虚拟机的ip地址。下面以10.10.10.129为例。
+
+3.更新apt安装源，执行命令```sudo apt update```。
+
+4.接下来，我们将生成一个含有以下组件的MIT kerberos 域：
+- Realm: KBR_EXAMPLE.COM
+- Primary KDC: kdc01.kbr_example.com (10.10.10.129)
+- Secondary KDC: kdc02.kbr_example.com (10.10.10.130)
+- User principal: leo
+- Admin principal: leo/admin
+
+4.安装Kerberos服务器。在主机mykerberos.com中运行以下命令：
+```sudo  apt  install  krb5-admin-server  krb5-kdc```
+	命令执行过程如下：
+ 
+1. 安装过程中需要根据提示键入一些细节信息。
+	对于问题“默认Kerberos域（Default Kerberos version 5 realm）”，在本例中键入“MYKERBEROS.COM” （如下图所示）。
+ 
+3. 对于问题“你的Kerberos服务器（Kerberos servers for your realm）”，在本例中我们键入“mykerberos.com”。
+ 
+4. 之后安装程序还会要求设置“管理服务器（Administrative server for your realm）”，同样键入“mykerberos.com”（译者注：在大型网络中，Kerberos服务器与管理服务器通常是不同的，但在本例中我们设置为同一台服务器）。
+ 
+5. 当我们输入上述必要信息后，这一阶段的安装过程将完成。接下来要在当前主机mykerberos.com中生成新的Kerberos域（Realm），我们可以运行下列命令：
+    sudo  krb5_newrealm
+运行命令的输出结果如下图所示：
+ 
+6. 在生成新域的过程中，需要为新建的Kerberos数据库（KDC database）的设置访问密码，这可以根据自己的偏好进行设定。
+7. 接下来我们需要编辑/etc/krb5.confand文件（译者注：新版本的krb5配置文件为/etc/krb5.conf），并参考下图对文件中的“libdefaults”配置项进行修改。如果文件中没有这一行，就自己添加进去。
+ 
+8. 参考下图，对/etc/krb5.confand文件中的“realms”配置项进行修改：
+ 
+9. 接着修改/etc/krb5.confand文件中的“domain_realm”配置项，键入下列语句：
+mykerberos.com = MYKERBEROS.COM
+.mykerberos.com = MYKERBEROS.COM
+修改后，文件内容如下图所示：
+ 
+10. 对/etc/krb5.confand文件完成编辑后，我们需要向Kerberos数据库中增加规则，用来描述网络中的服务和用户。每个用户都需要在数据库中设置规则后才能使用Kerberos认证，这一步骤可以使用kadmin.local工具来实现。运行下列命令启动kadmin.local：
+sudo  kadmin.local
+命令执行后会进入kadmin.local命令环境，如下图所示：
+ 
+11. 如果想查看已经存在的规则，可以运行下列命令：
+    listprincs
+12. 现在试着为某个用户增加规则，可以使用“addprinc”命令。本例中将以增加tajinder用户为例。运行下图所示命令：
+ 
+13. 为了赋予root账户管理员（admin）权限，使用下图所示命令：
+ 
+14. 如果我们将管理员权限赋予每个用户，那么取消文件/etc/krb5kdc/kadm5.acl中“* / admin”这一行前面的注释标记即可。
+15. 要检查上面设置的规则是否被正确应用时，可以使用下列命令：
+kinit
+16. 在主机mykerberos.com中完成以上Kerberos系统的安装配置工作后，我们将打开客户端主机sshclient.com，安装Kerberos的客户端程序，可以使用下图所示命令：
+
+ 
+17. 客户端安装过程中会要求回答一些与安装kerberos服务器程序时相同的问题，这时我们键入前面介绍过的相同内容即可。
+18. 完成客户端安装后，需要使用ping命令检查否能从sshclient.com主机连通mykerberos. com服务器。
+19. 现在，我们可以根据之前在mykerberos.com服务器上设置的规则获得客户端票据，使用下列命令查看：
+ 
+如果上述命令运行无错误，那么意味着Kerberos工作正常。
+完成上面步骤之后，我们切换到第三个Linux主机上，即SSH服务器sshserver.com。我们需要在这台机器上安装SSH服务器端程序和krb5-config程序。需要执行的命令如下图所示：
+ 
+这里也会被询问一些与上面相同的问题，按照之前的回答键入即可。
+20. 命令执行完后，需要编辑/etc/ssh/sshd_config文件，并使下列几行有效：
+ 
+    21. 去掉上述几行前的“#”号并改变其值为“yes”，保持文件并退出（译者注：即设置“GSSAPIAuthentication yes”和“GSSAPICleanupCredentials yes”）。之后需要重新启动SSH服务，运行下列命令：
+sudo service ssh restart
+22. 接下来回到Kerberos服务器（主机mykerberos.com），我们将配置Kerberos服务器使其能与SSH服务器配合工作。在Kerberos服务器上运行“sudo kadmin.local”命令，启动kadmin.local工具，然后执行下列命令：
+ 
+23. 上述命令为SSH服务器增加了规则，接下来，我们运行下图中的命令，生成密钥文件：
+ 
+24. 将密钥文件从Kerberos服务器拷贝到SSH服务器，可以使用下列命令：
+ 
+25. 密钥文件拷贝完成后，需要将它从SSH服务器sshserver.com的/tmp/目录下移动到/etc/directory（译者注：登录SSH服务器sshserver.com完成此操作）。
+26. 再次登录客户端（主机sshclient.com），编辑/etc/ssh/ssh_config文件，使其包含下列内容：
+GSSAPIAuthentication  yes
+GSSAPIDelegateCredentials  yes
+27. 为了在客户端上获取Kerberos认证票据，运行下列程序：
+kinit  tajinder
+28. 上述命令运行后，尝试使用命令ssh从客户端（主机sshclient.com）登录SSH服务器（主机sshserver.com）：
+ 
+如上图所示结果，我们没有要求键入密码但通过了认证。
+
+
+### 二.Linux中 LDAP 认证服务器安装、配置、应用。
+
+1.使用ubuntu linux 1604虚拟机的原版快照，建立一个链接型克隆，使用该克隆虚拟机完成下列实验步骤。
+
+
 
 1.安装LDAP及相关操作工具
 ```sudo apt install slapd ldap-utils```
