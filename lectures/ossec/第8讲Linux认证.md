@@ -4,7 +4,7 @@
 - 用户认证和登录
 - 使用 acct 监视用户行为
 - 使用 PAM 定制认证过程
-- ssh远程登陆认证
+- ssh 远程登陆认证
 - 配置kerberos服务器
 
 ## 1 用户认证和登录
@@ -829,4 +829,104 @@ Kerberos是一种在不可信网络环境中使用的安全认证协议，它使
 - 客户端：sshclient.com
 
 具体操作过程参考实验手册。
+
+## LDAP 服务支持的网络身份认证
+
+### 什么是LDAP ?
+LDAP（Light Directory Access Portocol），它是基于X.500标准的轻量级目录访问协议。
+
+目录是一个为查询、浏览和搜索而优化的数据库，它成树状结构组织数据，类似文件目录一样。
+
+目录数据库和关系数据库不同，它有优异的读性能，但写性能差，并且没有事务处理、回滚等复杂功能，不适于存储修改频繁的数据。所以目录天生是用来查询的，就好象它的名字一样。
+
+LDAP目录服务是由目录数据库和一套访问协议组成的系统。
+
+### 为什么要使用LDAP ?
+
+- LDAP是开放的Internet标准，支持跨平台的Internet协议，在业界中得到广泛认可的。
+- 通过LDAP做简单的配置就可以与服务器做认证交互。
+- 可以大大降低重复开发和对接的成本。
+
+下面的例子是开源系统（YAPI）只需做一下简单的几步配置就可以基于LDAP实现单点登录认证。
+```
+{
+"ldapLogin": {
+    	"enable": true,
+      	"server": "ldap://l-ldapt1.ops.dev.cn0.qunar.com",
+      	"baseDn": "CN=Admin,CN=Users,DC=test,DC=com",
+      	"bindPassword": "password123",
+      	"searchDn": "OU=UserContainer,DC=test,DC=com",
+      	"searchStandard": "mail"
+   }
+}
+```
+<img src="images/08/ldapex01.png" width="480" />
+
+### LDAP 常见产品
+
+|厂商|产品|介绍|
+|-|-|-|
+|SUN|SUNONE Directory Server|基于文本数据库的存储，速度快 。|
+|IBM|IBM Directory Server|基于DB2 的的数据库，速度一般。|
+|Novell|Novell Directory Server|基于文本数据库的存储，速度快,不常用到。|
+|Microsoft |Microsoft Active Directory|基于WINDOWS系统用户，对大数据量处理速度一般，但维护容易，生态圈大，管理相对简单。|
+|Opensource|Opensource|OpenLDAP 开源的项目，速度很快，但是非主 流应用。|
+
+### LDAP的基本模型
+
+每一个系统、协议都会有属于自己的模型，LDAP也不例外，在了解LDAP的基本模型之前我们需要先了解几个LDAP的目录树概念：
+
+#### 目录树概念
+
+- 目录树：在一个目录服务系统中，整个目录信息集可以表示为一个目录信息树，树中的每个节点是一个条目。
+
+- 条目：每个条目就是一条记录，每个条目有自己的唯一可区别的名称（DN）。
+
+- 对象类：与某个实体类型对应的一组属性，对象类是可以继承的，这样父类的必须属性也会被继承下来。
+
+- 属性：描述条目的某个方面的信息，一个属性由一个属性类型和一个或多个属性值组成，属性有必须属性和非必须属性。
+
+|关键字|英文全称|含义|
+|-|-|-|
+|dc|Domain Component|域名部分，其格式是将完整的域名分成几部分，如域名为example.com变成dc=example,dc=com（一条记录的所属位置）|
+|uid|User Id|用户ID songtao.xu（一条记录的ID）|
+|ou|Organization Unit|组织单位，组织单位可以包含其他各种对象（包括其他组织单元），如“oa组”（一条记录的所属组织）|
+|cn|Common Name|公共名称，如“Thomas Johansson”（一条记录的名称）|
+|sn|Surname|姓，如“许”|
+|dn|Distinguished Name|“uid=songtao.xu,ou=oa组,dc=example,dc=com”，一条记录的位置（唯一）|
+|rdn|Relative dn|相对辨别名，类似于文件系统中的相对路径，它是与目录树结构无关的部分，如“uid=tom”或“cn= Thomas Johansson”|
+
+<img src="images/08/LDAP.jpg" width="480" />
+
+下面的例子，显示了一个由11个属性组成的条目（entry）：
+```
+dn: cn=John Doe,dc=example,dc=com
+cn: John Doe
+givenName: John
+sn: Doe
+telephoneNumber: +1 888 555 6789
+telephoneNumber: +1 888 555 1232
+mail: john@example.com
+manager: cn=Larry Smith,dc=example,dc=com
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+```
+#### LDAP的使用
+
+如何访问LDAP的数据库服务器? 又如何使用LDAP实现认证呢?
+
+统一身份认证主要是改变原有的认证策略，使需要认证的软件都通过LDAP进行认证，在统一身份认证之后，用户的所有信息都存储在AD Server中。终端用户在需要使用公司内部服务的时候，都需要通过AD服务器的认证。
+
+<img src="images/08/LDAP认证.png" width="480" />
+
+那么程序中是如何访问的呢？ 一般经过下列步骤：
+- 1.Connect：连接到LDAP服务器
+- 2.Bind：绑定到LDAP服务器
+- 3.Execute：执行某项操作
+- 4.Close：关闭与LDAP的连接
+
+#### LDAP在ubuntu linux中的认证应用
+
 

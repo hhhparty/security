@@ -237,7 +237,11 @@ ldapwhoami -H ldap:// -x
 7.开始安装phpldapadmin软件包。
 
 它可以让管理员使用web管理接口管理LDAP服务。
-```sudo apt-get install phpldapadmin```
+```
+sudo apt update
+
+sudo apt-get install phpldapadmin
+```
 
 8.打开phpldapadmin的配置文件设定一些参数值：
 ```
