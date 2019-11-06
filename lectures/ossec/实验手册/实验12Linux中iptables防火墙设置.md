@@ -1,4 +1,4 @@
-# 实验11 Linux中的iptables防火墙设置
+# 实验 12 Linux中的iptables防火墙设置
 
 ## 实验目的
 
@@ -169,7 +169,9 @@ sudo iptables -A INPUT -i ens33 -p tcp -m state --state NEW -m multiport --dport
 
 27.基于时间的规则
 ```
-sudo iptables -A FORWARD -p tcp -m multiport --dport http,https -o ens33 -i ens33 -m time --timestart 21:30 --timestop 22:30 --days Mon,Tue,Wed,Thu,Fri -j ACCEPT
+sudo iptables -A FORWARD -p tcp -m multiport --dport http,https -o ens33 
+ -i ens33 -m time --timestart 21:30 --timestop 22:30 
+ --days Mon,Tue,Wed,Thu,Fri -j ACCEPT
 ```
 
 28.SYN-FLOOD保护

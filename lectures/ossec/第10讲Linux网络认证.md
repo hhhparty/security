@@ -5,8 +5,6 @@
 - SAMBA 与 LDAP 结合性统一认证
 - kerberos 统一认证
 
-
-
 ## kerberos 统一认证
 
 <img src="images/08/Kerberos.svg" width="480" />

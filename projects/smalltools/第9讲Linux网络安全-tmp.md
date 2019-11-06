@@ -9,7 +9,7 @@
 - 拦截入站流量
 - 配置使用TCP Wrapper
 
-## 管理TCP/IP网络
+##  1 管理TCP/IP网络
 
 当计算机之间彼此连接、形成网络，开始相互交换信息与资源时，管理网络信息就成为系统管理员的一项重要任务。
 
@@ -18,7 +18,7 @@
 - DNS配置
 - 网关配置
 
-### 以太网卡（Ethernet Interface）配置
+###  1.1 以太网卡（Ethernet Interface）配置
 
 在Ubuntu Linux中，以太网卡的命名使用 eno1、ens33等命名。
 
@@ -52,7 +52,6 @@ auto lo
 iface lo inet loopback
 
 # The primary network interface
-auto ens33
 iface ens33 inet static
 address 10.10.10.199
 netmask 255.255.255.0
@@ -60,7 +59,7 @@ gateway 10.10.10.2
 ```
 保存后，重启Linux服务器，然后运行下列命令：```sudo ifup ens33 ```，之后可以发现ip地址已经改变为静态的。
 
-### DNS配置
+###  1.2 DNS配置
 
 Ubuntu Linux server的DNS配置可以设定在网卡配置文件中。执行命令，打开文件。
 
@@ -81,14 +80,14 @@ dns地址可以在/etc/network/interfaces文件中配置，也可以在/etc/reso
 
 >注意不要直接修改/etc/resolv.conf这个文件，因为重启网络后，这里面的内容会重新生成。
 
-### 网关配置
+###  1.3 网关配置
 
 首选需要检查路由信息。
 ```netstat -rn```
 
 网关信息也在/etc/network/interfaces中配置。
 
-## SSH 远程登陆认证
+##  2 SSH 远程登陆认证
 
 这一部分介绍以下几方面知识：
 - 使用SSH远程访问服务器/主机
@@ -96,7 +95,7 @@ dns地址可以在/etc/network/interfaces文件中配置，也可以在/etc/reso
 - 限制SSH基于密码登录的远程访问
 - 远程复制文件
 
-### 使用SSH远程访问服务器/主机
+###  2.1 使用SSH远程访问服务器/主机
 
 SSH，即Secure Shell，是用于安全登录远程系统的协议，是访问远程Linux系统最常用的方法。
 
@@ -119,22 +118,18 @@ SSH是一种协议，实现该协议的软件工具不止一个，我们可以�
 如果我们想使用不同的用户名远程登录服务器，则可以运行命名：
 ```ssh  用户名@服务器的ip地址```
 
-### SSH配置
+###  2.2 SSH配置
 
-配置openssh通过配置文件实现的。有两个配置文件：
+配置openssh通过配置文件实习，有两个配置文件：
 - ssh_config，针对客户端的配置文件
 - sshd_config，针对服务端的配置文件
 
 为满足ssh远程访问的认证需求，需要配置ssh，其主配置文件是/etc/ssh/sshd_config。
 
 在进行任何修改之前，请先备份原始配置文件，命令如下：
-```sudo cp /etc/ssh/ssh_config{,.bak}```
-
-或
-
 ```sudo cp /etc/ssh/sshd_config{,.bak}```
 
-先使用vi或nano等文本编辑器打开配置文件/etc/ssh_config，基本内容如下：
+然后使用vi或nano等文本编辑器打开配置文件/etc/ssh_config，基本内容如下：
 ```
 Host *
 #   ForwardAgent no 
@@ -196,7 +191,7 @@ Host *
 - “EscapeChar”设置escape字符。
 - 注意：带“#”表示该句为注释，也表示系统默认设置。
 
-接着，我们分析配置文件/etc/sshd_config。
+此外，还有配置文件/etc/sshd_config。
 
 ```
 # What ports, IPs and protocols we listen for
@@ -300,7 +295,7 @@ UsePAM yes
 - "AllowUsers”的后面可以跟任意的数量的用户名的匹配串，这些字符串用空格隔开。主机名可以是域名或IP地址。
 
  
-#### 改变默认端口
+####  2.2.1 改变默认端口
 
 可以看到sshd服务默认的入站连接监听端口为22。
 
@@ -312,7 +307,7 @@ UsePAM yes
 ```ssh  -p  端口号  服务器的ip地址```
 
 
-#### 禁止root账户的SSH 登录
+####  2.2.2 禁止root账户的SSH 登录
 
 Linux系统默认存在root账户，并且默认是启用的。
 
@@ -330,7 +325,7 @@ Linux系统默认存在root账户，并且默认是启用的。
 
 如果我们仍想以root身份登录SSH服务器时，那么我们必须首先以普通用户登录，然后使用“su”命令切换为root身份，如下图所示。如果登录时使用的用户未被写在/etc/sudoers文件中，那么该用户就不能切换为root，这样能够防止用户越权，使系统更加安全。
 
-#### 标准用户访问设置
+####  2.2.3 标准用户访问设置
 
 假设系统中有许多用户，而我们需要编辑/etc/ssh/sshd_config文件仅允许一部分用户使用SSH服务。
 
@@ -345,7 +340,7 @@ Linux系统默认存在root账户，并且默认是启用的。
 
 现在，当我们尝试以user1、user2登录SSH服务器时，登录是成功的。其他用户登录时，由于没有被增加到配置文件中，所以登录失败，客户端返回“Permission denied”的错误消息。
 
-#### 基于密钥加强SSH远程访问的安全性
+####  2.2.4 基于密钥加强SSH远程访问的安全性
 
 基于密钥的认证方法能够加强SSH远程访问的安全性。
 
@@ -367,9 +362,7 @@ Linux系统默认存在root账户，并且默认是启用的。
 
 我们发现，登录时要求输入私钥文件的密码，这是由于我们在创建SSH密钥对时配置了密码字段。如果在创建密钥对时没有输入密钥，那么这里就不会提示输入密码而直接登录到远程SSH服务器。
 
----
-
-##  使用 IPTABLES 配置防火墙
+##  3  使用 IPTABLES 配置防火墙
 
 IPTABLES 是Linux中设置的一款常见软件防火墙工具。
 
@@ -377,7 +370,7 @@ IPTABLES 其实不是真正的防火墙，我们可以把它理解成一个客�
 
 <img src="images/09/netfilter与iptables.jpg" width="480" />
 
-### iptables的规则（rules）
+###  3.1 iptables的规则（rules）
 
 IPTABLES 按“规则”办事。
 
@@ -397,7 +390,7 @@ IPTABLES（防火墙）的设置工作就是对规则的增加、修改、删除
 - QUEUE – 防火墙将数据包移交到用户空间
 - RETURN – 防火墙停止执行当前链中的后续Rules，并返回到调用链(the calling chain)中。
 
-### IPTABLES 的规则链（rule chains）
+###  3.2 IPTABLES 的规则链（rule chains）
 
 规则是单独的处理策略，但有时单一的规则无法应对复制的情况，所以考虑将规则们串成链。此时，一个数据包将顺序被规则链中的所有规则检查和执行动作。
 
@@ -406,7 +399,7 @@ IPTABLES（防火墙）的设置工作就是对规则的增加、修改、删除
 - OUTPUT链 – 处理向外发送的数据。
 - FORWARD链 – 将数据转发到本机的其他网卡设备上。
 
-### IPTABLES 的表
+###  3.3 IPTABLES 的表
 
 由于IPTABLES可以作为包过滤器、NAT转发器、数据操作工具等，所以iptables为完成不同的工作而设立了表（tables）。常见的表有：
 - Filter table
@@ -414,7 +407,7 @@ IPTABLES（防火墙）的设置工作就是对规则的增加、修改、删除
 - Mangle table
 - Raw table
 
-#### Filter表
+####  3.3.1 Filter表
 
 Filter表示iptables的默认表。如果没有自定义表，那么就默认使用filter表。
 
@@ -423,7 +416,7 @@ Filter表示iptables的默认表。如果没有自定义表，那么就默认使
 - OUTPUT链 – 处理向外发送的数据。
 - FORWARD链 – 将数据转发到本机的其他网卡设备上。
 
-#### NAT表
+####  3.3.2 NAT表
 
 NAT表有三种内建链：
 - PREROUTING链
@@ -437,7 +430,7 @@ NAT表有三种内建链：
 - OUTPUT链
   - 处理本机产生的数据包。
 
-#### Mangle表
+####  3.3.3 Mangle表
 
 Mangle表用于指定如何处理数据包。
 
@@ -448,7 +441,7 @@ Mangle表用于指定如何处理数据包。
 - INPUT
 - POSTROUTING
 
-#### Raw表
+####  3.3.4 Raw表
 
 Raw表用于处理异常，它具有2个内建链：
 - PREROUTING 
@@ -458,16 +451,16 @@ Raw表用于处理异常，它具有2个内建链：
 
 ---
 
-### IPTABLES命令
+###  3.4 IPTABLES命令
 
-#### 查看当前系统默认启动的IPTABLES模块
+####  3.4.1 查看当前系统默认启动的IPTABLES模块
 
 为了了解当前iptables的功能，可以使用“lsmod”命令查看当前系统默认启动的iptables模块有哪些。
 ```sudo lsmod | grep ip_tables```
 
-#### IPTABLES命令格式
+####  3.4.2 IPTABLES命令格式
 
-IPTABLES命令格式为```iptables [-ACDIRD...] [-t 表] <chain> <规则说明> [选项]```。
+IPTABLES命令格式为```iptables [-ACDIRD...] [-t 表] <chain> <规则说明> [选项】```。
 
 选项：
 - -A chain，向某个规则链(由chain指定)增加一条规则。
@@ -506,7 +499,7 @@ IPTABLES命令格式为```iptables [-ACDIRD...] [-t 表] <chain> <规则说明> 
 - --set-counters PKTS BYTES	，表示在插入或增加规则时设置计数器
 - --version 或	-V，表示显示iptables的版本。
 
-#### 显示IPTABLES当前过滤规则
+####  3.4.3 显示IPTABLES当前过滤规则
 
 执行命令```sudo iptables -L```，可以查看当前iptables中的规则。
 
@@ -529,7 +522,7 @@ target     prot opt source               destination
 
 通常服务器初始建立时，iptables防火墙设置即为空。意味着允许所有流量流入、流出。
 
-#### 查看IPTABLES每条链的策略
+####  3.4.4 查看IPTABLES每条链的策略
 
 可以使用 ```sudo iptables -S``` 显示每条链的策略，策略规定了iptables每条链对数据包的默认处理方式。
 ```
@@ -554,7 +547,7 @@ target     prot opt source               destination
 
 ```
 
-#### 允许已建立的连接或会话
+####  3.4.5 允许已建立的连接或会话
 
 下面我们尝试增加一条规则，以保证当前所有在线的网络连接仍保持工作（这种操作常见于正在运行的服务器中，这使这些连接不会因当前设置而被阻塞）：
 ```sudo iptables  -A  INPUT  -m  conntrack  --ctstate  ESTABLISHED,RELATED  -j  ACCEPT```
@@ -573,7 +566,7 @@ target     prot opt source               destination
 ACCEPT     all  --  anywhere             anywhere             ctstate RELATED,ESTABLISHED
 
 ```
-#### 禁止或允许数据包经特定端口入站
+####  3.4.6 禁止或允许数据包经特定端口入站
 
 假设当前我们不允许SSH连接通过iptables防火墙，那么我们可以增加下列规则：
 ```
@@ -597,7 +590,7 @@ sudo iptables -A INPUT -p tcp --dport ssh -j ACCEPT
 sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT
 ```
 
-#### 保证LOOPBACK服务进程相互通信
+####  3.4.7 保证LOOPBACK服务进程相互通信
 
 为使当前服务器（本机）的功能保持正常，需要保证本机上的服务进程之间能够相互通信，不被iptable规则所阻塞。
 
@@ -612,19 +605,19 @@ sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT
 执行后，可运行下列命令查看详情：
 ```sudo iptables -L -v```
 
-#### 阻塞其他INPUT的数据包通过
+####  3.4.8 阻塞其他INPUT的数据包通过
 
 假定我们已经根据需要，允许INPUT的各种特定数据包通过防火墙；接下来我们还要阻塞其他的进入INPUT链的数据包。
 
 为实现这一点，可以追加下列规则：
 ```iptables  -A  INPUT  -j  DROP```
 
-#### 日志功能
+####  3.4.9 日志功能
 
 可以使用下列命令查看按规则处理的流量：
 ```sudo iptables -I INPUT 5 -m limit --limit 5/min -j LOG --log-prefix "iptables denied: " --log-level 7```
 
-#### 保存iptables现有设置
+####  3.4.10 保存iptables现有设置
 
 到目前为止我们增加到iptables中的规则都是临时性的，一旦系统重启动，这些规则将被清空。
 

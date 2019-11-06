@@ -52,7 +52,6 @@ auto lo
 iface lo inet loopback
 
 # The primary network interface
-auto ens33
 iface ens33 inet static
 address 10.10.10.199
 netmask 255.255.255.0
@@ -121,20 +120,16 @@ SSH是一种协议，实现该协议的软件工具不止一个，我们可以�
 
 ### SSH配置
 
-配置openssh通过配置文件实现的。有两个配置文件：
+配置openssh通过配置文件实习，有两个配置文件：
 - ssh_config，针对客户端的配置文件
 - sshd_config，针对服务端的配置文件
 
 为满足ssh远程访问的认证需求，需要配置ssh，其主配置文件是/etc/ssh/sshd_config。
 
 在进行任何修改之前，请先备份原始配置文件，命令如下：
-```sudo cp /etc/ssh/ssh_config{,.bak}```
-
-或
-
 ```sudo cp /etc/ssh/sshd_config{,.bak}```
 
-先使用vi或nano等文本编辑器打开配置文件/etc/ssh_config，基本内容如下：
+然后使用vi或nano等文本编辑器打开配置文件/etc/ssh_config，基本内容如下：
 ```
 Host *
 #   ForwardAgent no 
@@ -196,7 +191,7 @@ Host *
 - “EscapeChar”设置escape字符。
 - 注意：带“#”表示该句为注释，也表示系统默认设置。
 
-接着，我们分析配置文件/etc/sshd_config。
+此外，还有配置文件/etc/sshd_config。
 
 ```
 # What ports, IPs and protocols we listen for
@@ -367,8 +362,6 @@ Linux系统默认存在root账户，并且默认是启用的。
 
 我们发现，登录时要求输入私钥文件的密码，这是由于我们在创建SSH密钥对时配置了密码字段。如果在创建密钥对时没有输入密钥，那么这里就不会提示输入密码而直接登录到远程SSH服务器。
 
----
-
 ##  使用 IPTABLES 配置防火墙
 
 IPTABLES 是Linux中设置的一款常见软件防火墙工具。
@@ -467,7 +460,7 @@ Raw表用于处理异常，它具有2个内建链：
 
 #### IPTABLES命令格式
 
-IPTABLES命令格式为```iptables [-ACDIRD...] [-t 表] <chain> <规则说明> [选项]```。
+IPTABLES命令格式为```iptables [-ACDIRD...] [-t 表] <chain> <规则说明> [选项】```。
 
 选项：
 - -A chain，向某个规则链(由chain指定)增加一条规则。

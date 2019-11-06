@@ -13,25 +13,28 @@ class AuthServer1(BaseRequestHandler):
             self.request.send(msg)
 
 class AuthServer2():
-    def __init__(self,ip,port):
-        self.ip = ip
+    def __init__(self,host='localhost',port=50007):
+        self.host = host
         self.port = port
-        self.s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-        self.s.bind((self.ip,self.port))
-        print("Start authentication server...")
-        print("to listening authentication request in {}:{}...".format(self.ip,self.port))
-        
-        self.s.listen(10)
+        with socket.socket(socket.AF_INET,socket.SOCK_STREAM) as s:
+            s.bind(self.host,self.port)
+            print("Start authentication server...")
+            print("to listening authentication request in {}:{}...".format(self.host,self.port))
+            self.s = s
+            self.s.listen(10)
     def run(self):
         while True:
-            (clientsocket,address) = self.s.accept()
-            ct = client_thread(clientsocket)
-            ct.run()
+            (conn,address) = self.s.accept()
+            print("Connected by {} .".format(address))
+            data = conn.recv(1024)
+            #if not data:
+            #    break
+            conn.sendall(data)
 
 if __name__ == '__main__':
     #authserver = TCPServer(('',40001),AuthServer)
     #authserver.serve_forever()
-    authserver =  AuthServer2('',40001) #s.bind(('', 80)) specifies that the socket is reachable by any address the machine happens to have.
+    authserver =  AuthServer2() #s.bind(('', 80)) specifies that the socket is reachable by any address the machine happens to have.
     authserver.run()
 
     #todo https://docs.python.org/3/howto/sockets.html
