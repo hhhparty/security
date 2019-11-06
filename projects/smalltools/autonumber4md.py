@@ -5,7 +5,7 @@ import os
 import sys
 import re
 import datetime
-import time
+
 
 def addNumber(matched):
     print(matched.group())
@@ -19,9 +19,9 @@ def autoNumber(objFile):
     excount = 0
     
     with open(objFile,'r',encoding="utf-8") as rf:
-        
+        datestr = str(datetime.date.today()).replace('-','')
         tmp =  os.path.join(os.path.dirname(objFile) ,
-                os.path.basename(objFile).split('.')[0]+'-tmp'+'.md')
+                os.path.basename(objFile).split('.')[0] + datestr + '.md')
         with open(tmp,"w+",encoding="utf-8") as wf:
             for line in rf: 
                 newline = line
@@ -33,18 +33,18 @@ def autoNumber(objFile):
                     # so need to exclued comments markup: ``` and """ in md file.
                     if re.match(r'^#{2}\s',line):  
                         level1 += 1
-                        p = r'\1 ' + str(level1) +' '         
+                        p = r'\1' + str(level1) +' '         
                         newline = re.sub(r'(^#{2}\s)',p,line)
                         level2 = 0
                         level3 = 0
                     if re.match(r'^#{3}\s',line):
                         level2 += 1
-                        p = r'\1 ' + str(level1) +'.'+str(level2) +' '
+                        p = r'\1' + str(level1) +'.'+str(level2) +' '
                         newline = re.sub(r'(^#{3}\s)',p,line)
                         level3 = 0
                     if re.match(r'^#{4}\s',line):
                         level3 += 1
-                        p = r'\1 ' + str(level1) +'.'+str(level2)+'.'+str(level3) +' '
+                        p = r'\1' + str(level1) +'.'+str(level2)+'.'+str(level3) +' '
                         newline = re.sub(r'(^#{4}\s)',p,line)
                     
                 wf.write(newline)
@@ -57,4 +57,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    print(datetime.date.today())
