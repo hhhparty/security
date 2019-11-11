@@ -1,4 +1,10 @@
-"""Headings Auto Number in  Markdown
+"""autoOps4MD
+This program is a tool for automation operations of markdown file. 
+
+The function "autoNumber" search and number the headings with "##" , "###", "####" mark labels in the specified
+markdown files or directory which includes markdown files.
+
+The function "modiImageImportFormat" assign the images width="480" and make it  more suitable for display in browser.
 """
 
 import os

@@ -68,6 +68,7 @@ Kerberos是一种在不可信网络环境中使用的安全认证协议，它使
 ## LDAP 统一认证
 
 ### 什么是LDAP ?
+
 LDAP（Light Directory Access Portocol），它是基于X.500标准的轻量级目录访问协议。
 
 目录是一个为查询、浏览和搜索而优化的数据库，它成树状结构组织数据，类似文件目录一样。
@@ -97,6 +98,8 @@ LDAP目录服务是由目录数据库和一套访问协议组成的系统。
 ```
 <img src="images/08/ldapex01.png" width="480" />
 
+---
+
 ### LDAP 常见产品
 
 |厂商|产品|介绍|
@@ -104,8 +107,9 @@ LDAP目录服务是由目录数据库和一套访问协议组成的系统。
 |SUN|SUNONE Directory Server|基于文本数据库的存储，速度快 。|
 |IBM|IBM Directory Server|基于DB2 的的数据库，速度一般。|
 |Novell|Novell Directory Server|基于文本数据库的存储，速度快,不常用到。|
-|Microsoft |Microsoft Active Directory|基于WINDOWS系统用户，对大数据量处理速度一般，但维护容易，生态圈大，管理相对简单。|
+|Microsoft |Microsoft Active Directory|基于WINDOWS系统用户，对大数据量处理速度一般|
 |Opensource|Opensource|OpenLDAP 开源的项目，速度很快，但是非主 流应用。|
+
 
 ### LDAP的基本模型
 
@@ -113,25 +117,21 @@ LDAP目录服务是由目录数据库和一套访问协议组成的系统。
 
 #### 目录树概念
 
-- 目录树：在一个目录服务系统中，整个目录信息集可以表示为一个目录信息树，树中的每个节点是一个条目。
+- 目录树(LDAP Directory)：在一个目录服务系统中，整个目录信息集可以表示为一个目录信息树，树中的每个节点是一个条目。整个树是一个数据条目（Data Entry ）的树状结构。也称为目录信息树（Directory Information Tree, DIT)。
 
-- 条目：每个条目就是一条记录，每个条目有自己的唯一可区别的名称（DN）。
+- 条目（Data Entry ）：每个条目就是一条记录，每个条目有自己的唯一可区别的名称（DN）。条目（Data Entry ）是属性的集合。
+- 每个Data Entry，有一个唯一标识，它使用相互区别的Distinguished Name(DN 或 dn)；之后按顺序由相对区分名（RDN)，和父亲实体的DN组成。
+  
+- 属性(attribute)，描述条目的某个方面的信息，一个属性由一个属性类型（name/description）和一个或多个属性值(values)组成，属性有必须属性和非必须属性。每个属性，至少要定义为一个对象类（objectClass）
 
-- 对象类：与某个实体类型对应的一组属性，对象类是可以继承的，这样父类的必须属性也会被继承下来。
+- 对象类（objectClass）：与某个实体类型对应的一组属性，对象类是可以继承的，这样父类的必须属性也会被继承下来。
 
-- 属性：描述条目的某个方面的信息，一个属性由一个属性类型和一个或多个属性值组成，属性有必须属性和非必须属性。
+- 属性和对象类被定义在模式schemas中，schemas是一个对象类，可以考虑作为一个特殊类型的属性。
 
-|关键字|英文全称|含义|
-|-|-|-|
-|dc|Domain Component|域名部分，其格式是将完整的域名分成几部分，如域名为example.com变成dc=example,dc=com（一条记录的所属位置）|
-|uid|User Id|用户ID songtao.xu（一条记录的ID）|
-|ou|Organization Unit|组织单位，组织单位可以包含其他各种对象（包括其他组织单元），如“oa组”（一条记录的所属组织）|
-|cn|Common Name|公共名称，如“Thomas Johansson”（一条记录的名称）|
-|sn|Surname|姓，如“许”|
-|dn|Distinguished Name|“uid=songtao.xu,ou=oa组,dc=example,dc=com”，一条记录的位置（唯一）|
-|rdn|Relative dn|相对辨别名，类似于文件系统中的相对路径，它是与目录树结构无关的部分，如“uid=tom”或“cn= Thomas Johansson”|
-
+<img src="images/10/LDAP01.png" width="480" />
 <img src="images/08/LDAP.jpg" width="480" />
+
+---
 
 下面的例子，显示了一个由11个属性组成的条目（entry）：
 ```
@@ -148,6 +148,17 @@ objectClass: organizationalPerson
 objectClass: person
 objectClass: top
 ```
+
+|关键字|英文全称|含义|
+|-|-|-|
+|dc|Domain Component|域名部分，其格式是将完整的域名分成几部分， 如域名为example.com变成dc=example,dc=com|
+|uid|User Id|用户ID songtao.xu|
+|ou|Organization Unit|组织单位，组织单位可以包含其他各种对象（包括其他组织单元）|
+|cn|Common Name|公共名称，如“Thomas Johansson”|
+|sn|Surname|姓，如“许”|
+|dn|Distinguished Name|一条记录的位置（唯一）|
+|rdn|Relative dn|相对辨别名，类似于文件系统中的相对路径，它是与目录树结构无关的部分|
+
 #### LDAP的使用
 
 如何访问LDAP的数据库服务器? 又如何使用LDAP实现认证呢?
@@ -162,7 +173,58 @@ objectClass: top
 - 3.Execute：执行某项操作
 - 4.Close：关闭与LDAP的连接
 
-#### LDAP在ubuntu linux中的认证应用
+#### LDAP实践
+
+参考实验手册。
 
 
 ## SAMBA + LDAP 统一认证
+
+### 什么是 SAMBA ?
+
+Samba是在Linux和UNIX系统上实现SMB协议的一个免费软件，由服务器及客户端程序构成。
+
+Samba常用于Linux/Unix与Windows之间的互操作。
+ 
+Samba能将Linux / Unix服务器和桌面无缝集成到Active Directory环境中。它既可以充当域控制器，也可以充当常规域成员。
+
+Samba是根据GNU通用公共许可证许可的自由软件。
+
+> 参考：https://wiki.samba.org/index.php/Main_Page
+
+有关samba的一些重要目录：
+- /usr/share/doc/samba：包含SAMBA 的所有相关的技术手册。
+- /var/log/samba：存放SAMBA 预设的登录文件放置目录。
+- /usr/share/samba/codepages：放置各个语言的支持格式。举例来说，想让SAMBA 支持中文，那么就需要 codepage.950 这个档案的支持。在smb.conf 里面设定即可。
+### 使用samba实现W/L文件共享
+
+运行安装samba命令```sudo apt install samba```后，设定一些共享目录，就可以轻松实现文件共享了。
+
+创建目录:
+- ```mkdir -p /srv/samba/guest/```
+- ```mkdir -p /srv/samba/demo/```
+
+启动服务:
+- ```systemctl start nmb.service```
+- ```systemctl start smb.service```
+  
+这时你就会发现共享可以访问了，
+
+
+
+
+
+```
+[global]
+        map to guest = Bad User
+
+        log file = /var/log/samba/%m
+        log level = 1
+
+[guest]
+        # This share allows anonymous (guest) access
+        # without authentication!
+        path = /srv/samba/guest/
+        read only = no
+        guest ok = yes
+```
