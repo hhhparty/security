@@ -22,7 +22,7 @@ All rights reserved. 保留所有权利，目前不接受任何转载。
 
 ---
 
-### [ossec：“操作系统安全”课程](https://github.com/hhhparty/security/tree/master/lectures/ossec)
+### [ossec：“操作系统安全”课程](https://github.com/hhhparty/security/tree/master/courses/ossec)
 
 
 #### 内容列表
@@ -53,7 +53,7 @@ All rights reserved. 保留所有权利，目前不接受任何转载。
 
 ---
 
-### [cyberhack：“网络攻防技术”课程](https://github.com/hhhparty/security/tree/master/lectures/cyberhack)
+### [cyberhack：“网络攻防技术”课程](https://github.com/hhhparty/security/tree/master/courses/cyberhack)
 
 #### 内容列表
 - 第01讲 网络空间安全现状与网络攻防基本流程
@@ -77,7 +77,7 @@ All rights reserved. 保留所有权利，目前不接受任何转载。
 
 ---
 
-### [webcrawler：“网络爬虫与数据采集” 课程](https://github.com/hhhparty/security/tree/master/lectures/webcrawler)
+### [webcrawler：“网络爬虫与数据采集” 课程](https://github.com/hhhparty/security/tree/master/courses/webcrawler)
 
 #### 内容列表
 - 第1章 网络数据采集概述
