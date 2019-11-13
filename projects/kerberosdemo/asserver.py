@@ -31,6 +31,8 @@ class AuthServer2():
             #    break
             conn.sendall(data)
 
+
+
 if __name__ == '__main__':
     #authserver = TCPServer(('',40001),AuthServer)
     #authserver.serve_forever()
