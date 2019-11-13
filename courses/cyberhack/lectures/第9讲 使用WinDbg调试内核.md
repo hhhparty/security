@@ -74,6 +74,10 @@ Windows会为每个驱动创建一个驱动对象，并以参数形式将其传�
 - 然后配置VMware使虚拟机与宿主系统之间有一条虚拟化的串口；
 - 同时还应该配置宿主操作系统的 WinDbg。
 
+### 虚拟机（被调试者）的设置
+
+#### 设置虚拟机（以windowxp为例）
+
 虚拟操作系统的设置是编辑 C:\boot.ini (Windows XP)下请确保文件夹选项设置为显示隐藏文件)，
 该文件在系统中通常是隐藏的。建议在编辑boot.ini文件之前，为你的虚拟操作系统做一个快照，如
 果配置文件错误或者损坏了boot.ini，你可以使用快照还原系统。
@@ -95,6 +99,8 @@ multi(0)disk(0)rdisk(0)partition(1)\WINDOWS="Microsoft Windows XP Professional w
 
 >注意:操作系统以调试模式启动，并不意味着需要连接调试器，在没有连接调试器的情况下，系统也会正常运行。
 
+#### 为虚拟机增加串口设备
+
 下一步，需要设置VMware,在虚拟操作系统和宿主操作系统之间创建一个虚拟连接。为此，我们
 在VMware上添加一个新的设备来使用宿主系统中的一个命名管道上的串口。
 
@@ -102,7 +108,9 @@ multi(0)disk(0)rdisk(0)partition(1)\WINDOWS="Microsoft Windows XP Professional w
 - 1.单击VMWare Settings，然后会弹出VMware设置对话框。
 - 2.在VMware设置对话框中，单击右下角的Add按钮，在弹出的设备类型选择窗口中选择Serial Port,然后单击下一步。
 - 3.在请求串口类型的对话框中，选择Output to Named Pipe，然后单击下一步。
-- 4.在接下来的窗口中，输入```\\.\pipe\com_1```对管道进行命名，然后选择This end is the server 和 The other end is an application。
+- 4.在接下来的窗口中，输入```\\.\pipe\com_1```对管道进行命名，然后选择：
+  - This end is the server 该端是服务器
+  - The other end is an application 另一端是应用程序
 - 5.选择轮询时主动放弃CPU。
 - 当完成串口的添加后，虚拟机的设置对话框应该与下图中所示的串口设备的配置类似。
 
@@ -110,8 +118,10 @@ multi(0)disk(0)rdisk(0)partition(1)\WINDOWS="Microsoft Windows XP Professional w
 
 完成虚拟机的配置后启动虚拟机。
 
+### 宿主机（调试器）的设置
+
 在宿主操作系统中，使用下列步骤使WinDbg连接虚拟机并开始调试内核。
-- 1.启动WinDbgo
+- 1.启动WinDbg
 - 2.选择File--Kernel Debug单击COM标签，然后输入文件名和先前在oot.ini文件中设置的波特率，本例中我们设置为115200
 - 3.选中Pipe复选框后确定。
 
@@ -123,3 +133,13 @@ multi(0)disk(0)rdisk(0)partition(1)\WINDOWS="Microsoft Windows XP Professional w
 如果虚拟操作系统处于运行状态，调试器会在数秒内连接到虚拟机操作系统。如果虚拟操作系统没有运行，调试器将处于等待，直到虚拟操作系统启动，启动过程中调试器将连接到被调试系统。
 
 调试器连接后，为了更加个面地获取到调试过程发生的事件，建议在调试过程中启用详细信息输出功能。启用详细信息输出功能后，每当驱动程序被加载和卸载时，你将会得到通知。这些信息在某些情况下可以帮助你识别恶意驱动的加载。
+
+## 使用 WinDbg
+
+WinDbg的大部分功能通过命令行接口提供，本节将涵盖一些较重要的命令。
+
+### 从内存中读取
+
+WinDbg的内存窗口支持直接通过命令来查看浏览内存。
+
+- 命令d是用来读取如程序数据、堆栈等内存信息。
