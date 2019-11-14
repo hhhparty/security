@@ -2,8 +2,13 @@ import socket
 import sys
 import hashlib
 
+#
+SERVER_HOST = "127.0.0.1"
+SERVER_PORT = 55100
+BUFFER_SIZE = 1024
+
 class TCPClient():
-    def __init__(self,name='tcpclient',host='localhost',port=55100):
+    def __init__(self,name='tcpclient_1',host='localhost',port=55100):
         """
         To initialize socket client 
         """
@@ -22,9 +27,9 @@ class TCPClient():
 
         msg = input(">>")
 
-        while msg != "q":
+        while msg.upper() not in ["QUIT","EXIT"]:
             self.s.send(msg.encode())
-            data = self.s.recv(1024).decode()
+            data = self.s.recv(BUFFER_SIZE).decode()
 
             print('Received from server: '+ data)
             msg = input(">>")
@@ -42,7 +47,10 @@ class TCPClient():
         print("The pwd sha256 hashcode is ",pwdhc.hexdigest())
 
 if __name__ == '__main__':
-    client = TCPClient()
-    #
+    client = TCPClient(name="tcpclient_1")
+    client.login()
+    client.run()
+
+    client = TCPClient(name="tcpclient_2")
     client.login()
     client.run()
