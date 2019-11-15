@@ -79,11 +79,20 @@ All rights reserved. 保留所有权利，目前不接受任何转载。
 
 ### [webcrawler：“网络爬虫与数据采集” 课程](https://github.com/hhhparty/security/tree/master/courses/webcrawler)
 
-#### 内容列表
+#### 讲义 Lectures 
 - 第1章 网络数据采集概述
 - 第2章 网络爬取相关的Web技术
 - 第3章 Web页面爬取
+- 第4章 Web页面内容解析
 
+#### 实验指导 experiment_instructions
+
+>格式为jupyter notebook
+
+- 第3章Web页面爬取实验-BasicWebCrawler
+- 第3章Web页面爬取案例
+- 第4章Web内容解析实验
+- 第4章Web内容解析案例
 
 ps: 资源库目前尚不完整，正在补充更新...
 
