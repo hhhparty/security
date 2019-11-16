@@ -4,28 +4,15 @@ This repository is a collection of lectures, notes, and tools about security.
 All rights reserved. 保留所有权利，目前不接受任何转载。
 
 # 资源库介绍
+
 该资源库用于收集个人的教学讲义、学习笔记、安全小工具。
 
 ## 资源目录（Directories）：
 
-- lectures：some my teaching lecutures in this directory。这个目录中存放了我的教学讲义。
-
-- note：some my learning notes in this directory. 这个目录中存放了我的学习笔记。
-
-- interview：some interview questions from github and other websites in this directory. 这个目录中存放了一些面试题。
-
-- articles: some papers or ebooks in this directory.
-
----
-
-## lectures 教学讲义
-
----
-
 ### [ossec：“操作系统安全”课程](https://github.com/hhhparty/security/tree/master/courses/ossec)
 
+#### [讲义](https://github.com/hhhparty/security/tree/master/courses/ossec/lectures)
 
-#### 内容列表
 - 第01讲 操作系统安全概述
 - 第02讲 Windows 中的访问控制
 - 第03讲 Windows威胁防护
@@ -37,7 +24,8 @@ All rights reserved. 保留所有权利，目前不接受任何转载。
 - 第09讲 Linux网络安全
 - 第10讲 Linux网络认证
 
-#### 实验列表
+#### [实验](https://github.com/hhhparty/security/tree/master/courses/ossec/experiment_instruction)
+
 - 实验01 理解Windows的安全标识符（SID)
 - 实验02 Windows用户组查看与安全策略设置
 - 实验03 创建一个Windows server 域的控制器
@@ -55,7 +43,8 @@ All rights reserved. 保留所有权利，目前不接受任何转载。
 
 ### [cyberhack：“网络攻防技术”课程](https://github.com/hhhparty/security/tree/master/courses/cyberhack)
 
-#### 内容列表
+#### [讲义](https://github.com/hhhparty/security/tree/master/courses/cyberhack/lectures)
+
 - 第01讲 网络空间安全现状与网络攻防基本流程
 - 第02讲 信息收集与网络扫描
 - 第03讲 密码破解
@@ -66,7 +55,8 @@ All rights reserved. 保留所有权利，目前不接受任何转载。
 - 第08讲 代码动态分析技术进阶
 - 第09讲 使用WindDbg调试内核
 
-#### 实验列表
+#### [实验](https://github.com/hhhparty/security/tree/master/courses/cyberhack/experiment_instruction)
+
 - 实验01 信息收集技术实验
 - 实验02 Nmap扫描器应用
 - 实验03 密码破解实验
@@ -79,13 +69,14 @@ All rights reserved. 保留所有权利，目前不接受任何转载。
 
 ### [webcrawler：“网络爬虫与数据采集” 课程](https://github.com/hhhparty/security/tree/master/courses/webcrawler)
 
-#### 讲义 Lectures 
+#### [讲义](https://github.com/hhhparty/security/tree/master/courses/webcrawler/lectues)
+
 - 第1章 网络数据采集概述
 - 第2章 网络爬取相关的Web技术
 - 第3章 Web页面爬取
 - 第4章 Web页面内容解析
 
-#### 实验指导 experiment_instructions
+#### [实验](https://github.com/hhhparty/security/tree/master/courses/webcrawler/experiment_instruction)
 
 >格式为jupyter notebook
 
