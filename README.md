@@ -1,11 +1,8 @@
-# Repository Introduce 
-This repository is a collection of lectures, notes, and tools about security.
+# 资源库介绍 （ Repository Introduce ）
 
-All rights reserved. 保留所有权利，目前不接受任何转载。
+该资源库用于收集个人的教学讲义、学习笔记、安全小工具。This repository is a collection of lectures, notes, and tools about security.
 
-# 资源库介绍
-
-该资源库用于收集个人的教学讲义、学习笔记、安全小工具。
+**All rights reserved. 保留所有权利，目前不接受任何转载。**
 
 ## 资源目录（Directories）：
 
@@ -87,3 +84,4 @@ All rights reserved. 保留所有权利，目前不接受任何转载。
 
 ps: 资源库目前尚不完整，正在补充更新...
 
+**All rights reserved. 保留所有权利，目前不接受任何转载。**
