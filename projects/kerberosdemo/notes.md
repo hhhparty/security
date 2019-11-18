@@ -92,7 +92,7 @@ Request handler类必须区分数据报或流服务（datagram or stream service
 
 另一方面，如果你建立一个HTTP server，其所有数据存储在外部，例如一个文件系统中。那么当一个“长期”请求正在被处理时，同步类将基本上将使服务变得像个聋子。这里一个threading 或 forking 服务器将是正确选择。
 
-In some cases, it may be appropriate to process part of a request synchronously, but to finish processing in a forked child depending on the request data. This can be implemented by using a synchronous server and doing an explicit fork in the request handler class handle() method.
+有些情况下，同步处理部分请求可能是合适或需要的，但要在一个forked子服务中完成操作取决于请求数据。这可能要在request handler类的handle()方法中，使用一个同步服务器并且完成一个显示的fork来实现。
 
 Another approach to handling multiple simultaneous requests in an environment that supports neither threads nor fork() (or where these are too expensive or inappropriate for the service) is to maintain an explicit table of partially finished requests and to use selectors to decide which request to work on next (or whether to handle a new incoming request). This is particularly important for stream services where each client can potentially be connected for a long time (if threads or subprocesses cannot be used). See asyncore for another way to manage this.
 

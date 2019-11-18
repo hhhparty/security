@@ -6,6 +6,8 @@ import hashlib
 SERVER_HOST = "127.0.0.1"
 SERVER_PORT = 55100
 BUFFER_SIZE = 1024
+MSG_KRB_USERID = 'MSG_KRB_USERID'
+MSG_KRB_USERPWD = 'MSG_KRB_USERPASSWORD'
 
 class TCPClient():
     def __init__(self,name='tcpclient_1',host='localhost',port=55100):
@@ -24,33 +26,27 @@ class TCPClient():
         print("connect successfully.")
 
     def run(self):
-
-        msg = input(">>")
-
+        msg = input(self.name + ">>")
         while msg.upper() not in ["QUIT","EXIT"]:
             self.s.send(msg.encode())
-            data = self.s.recv(BUFFER_SIZE).decode()
-
+            data = self.s.recv(BUFFER_SIZE).decode()            
             print('Received from server: '+ data)
-            msg = input(">>")
+            msg = input((self.name + ">>"))
+
         self.s.close()
-    
+
     def login(self):
         uid = input("User ID:")
         pwd = input("User password:")
-        loginstr = "uid="+uid
+        loginstr = MSG_KRB_USERID +"=" + uid
         
         print("Kerberos protocol step 1: to send uid to AS SERVER with the plain text: {}".format(uid))
-        self.s.send(loginstr.encode())
+        self.s.send(loginstr.encode('utf-8'))
 
-        pwdhc = hashlib.sha256(pwd.encode())
+        pwdhc = hashlib.sha256(pwd.encode('utf-8'))
         print("The pwd sha256 hashcode is ",pwdhc.hexdigest())
 
 if __name__ == '__main__':
     client = TCPClient(name="tcpclient_1")
-    client.login()
-    client.run()
-
-    client = TCPClient(name="tcpclient_2")
     client.login()
     client.run()

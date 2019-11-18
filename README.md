@@ -1,8 +1,8 @@
-# 资源库介绍 （ Repository Introduce ）
+# 资源库介绍 （ Introduce ）
 
 该资源库用于收集个人的教学讲义、学习笔记、安全小工具。This repository is a collection of lectures, notes, and tools about security.
 
-**All rights reserved. 保留所有权利，目前不接受任何转载。**
+**All rights reserved. 保留所有权利，目前不接受任何转载。如果您喜欢这些内容请 Star，而不要 Fork，由衷感谢。If you like, please Star but not Fork, thanks.**
 
 ## 资源目录（Directories）：
 

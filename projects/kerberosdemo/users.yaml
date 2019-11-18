@@ -1,0 +1,7 @@
+users:
+    -
+        - uid:"leo"
+        - pwd:"123"
+    -
+        - uid:"neo"
+        - pwd:"456"
