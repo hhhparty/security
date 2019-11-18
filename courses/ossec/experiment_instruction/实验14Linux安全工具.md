@@ -1,0 +1,408 @@
+# 实验 14 Linux 安全工具
+
+## 实验目的
+
+掌握 Linux 中的多款安全工具。
+
+## 实验内容
+
+- 安装、配置、应用sXid
+- 安装、配置、应用PortSentry
+- 安装、配置、应用chkrootkit
+- 安装、配置、应用RKHunter
+
+## 实验前提
+
+- 准备好 ubuntu server 1604 虚拟机的克隆版本
+- 编辑系统文件可以使用nano或vi工具
+
+## 实验步骤
+
+### 安装、配置、应用sXid
+
+1.安装可以使用命令：```sudo apt install sxid```。
+
+2.安装完成后，根据需求编辑```/etc/sxid.conf```文件。
+
+可在任一编辑器中打开该文件，如下所示：```sudo nano /etc/sxid.conf```。
+
+在配置文件中，查找下面截图中的文字行：
+
+```
+# Configuration file for sXid
+# Note that all directories must be absolute with no trailing /'s
+
+# Where to begin our file search
+# 可以为SEARCH选项定义一系列用空格隔开的目录，作为sXID搜索的起始点。
+SEARCH = "/"
+
+# Which subdirectories to exclude from searching
+# 如果希望把某目录排除在搜索之外，可以通过EXCLUDE选项指定。
+# 假设要搜索目录/usr/local/share但又把/usr/ local目录排除了，
+# 那么仍会搜索/usr/local/share。
+# 这种方式在排除主目录但指定其中一个特定子目录时非常有用。
+EXCLUDE = "/cdrom /floppy /media /mnt /proc /sys"
+
+# Who to send reports to
+# 这里可以修改为 当前工作用户名
+EMAIL = "root" 
+
+# Always send reports, even when there are no changes?
+# 如果希望在sxid没监控到变化时仍能记录日志，那么将ALWAYS_NOTIFY设为”yes”
+ALWAYS_NOTIFY = "no"
+
+# Where to keep interim logs. This will rotate 'x' number of
+# times based on KEEP_LOGS below
+LOG_FILE = "/var/log/sxid.log"
+
+# How many logs to keep
+# 可以将KEEP_LOGS赋值改为用户选择的数值，该数值定义了保存的日志文件数量。
+KEEP_LOGS = "5"
+
+# Rotate the logs even when there are no changes?
+ALWAYS_ROTATE = "no"
+
+# Directories where +s is forbidden (these are searched
+# even if not explicitly in SEARCH), EXCLUDE rules apply
+FORBIDDEN = "/home /tmp"
+
+# Remove (-s) files found in forbidden directories?
+ENFORCE = "no"
+
+# This implies ALWAYS_NOTIFY. It will send a full list of
+# entries along with the changes
+LISTALL = "no"
+
+# Ignore entries for directories in these paths
+# (this means that only files will be recorded, you
+# can effectively ignore all directory entries by
+# setting this to "/"). The default is /home since
+# some systems have /home g+s.
+IGNORE_DIRS = "/home"
+
+# File that contains a list of (each on it's own line)
+# other files that sxid should monitor. This is useful
+# for files that aren't +s, but relate to system
+# integrity (tcpd, inetd, apache...).
+# EXTRA_LIST = "/etc/sxid.list"
+
+# Mail program. This changes the default compiled in
+# mailer for reports. You only need this if you have changed
+# it's location and don't want to recompile sxid.
+# MAIL_PROG = "/usr/bin/mail"
+
+```
+
+3.当编辑完成后，保存并关闭文件。
+
+4.使用下列命令运行sXid，检查当前系统。
+```sxid -c /etc/sxid.conf -k```
+
+![sxiddemo](images/10/sxiddemo.png)
+
+- 选项“-c”用于指定配置文件，否则将使用缺省值的配置文件，
+- 选项“-k”用于运行sXid工具。
+
+### 安装、配置、应用PortSentry
+
+1.使用下述命令安装：
+```sudo apt install portsentry```
+
+![portsentryconf](images/10/portsentryconf.png)
+
+2.安装结束后，portsentry自动开始监视TCP及UDP端口。
+
+3.可以使用下述命令/var/log/syslog进行检查，来验证portsentry是否对端口进行监视：
+```grep portsentry /var/log/syslog```
+
+用户可以在日志中查看与portsentry相关的消息。
+
+4.在服务器系统上通过编辑```/etc/portsentry/portsentry.conf```文件来配置portsentry。
+
+- 下面的设置表示portsentry监控的端口。
+```
+# Use these if you just want to be aware:
+TCP_PORTS="1,11,15,79,111,119,143,540,635,1080,1524,2000,5742,6667,12345,12346,20034$
+UDP_PORTS="1,7,9,69,161,162,513,635,640,641,700,37444,34555,31335,32770,32
+```
+
+- 下面的选项是高级隐秘扫描检查选项，指定某个端口启用高级检查。
+```
+# Advanced Stealth Scan Detection Options
+ADVANCED_PORTS_TCP="1024"
+ADVANCED_PORTS_UDP="1024"
+# Default TCP ident and NetBIOS service
+ADVANCED_EXCLUDE_TCP="113,139"
+# Default UDP route (RIP), NetBIOS, bootp broadcasts.
+ADVANCED_EXCLUDE_UDP="520,138,137,67"
+```
+
+
+- 下面的选项是配置文件中的一些配置设定文件
+```
+# Configuration Files
+# Hosts to ignore
+# IGNORE文件记录允许合法扫描服务的主机地址
+IGNORE_FILE="/usr/local/psionic/portsentry/portsentry.ignore"
+# Hosts that have been denied (running history)
+# History文件中保留入侵主机的 IP 地址
+HISTORY_FILE="/usr/local/psionic/portsentry/portsentry.history"
+# Hosts that have been denied this session only (temporary until next restart)
+# BLOCKED文件中是已经被阻止连接的主机 IP 记录
+BLOCKED_FILE="/usr/local/psionic/portsentry/portsentry.blocked"
+```
+
+- 下面的选项是设置路由重定向规则（Dropping Routes）
+
+设置一条虚拟的路由记录，把数据包重定向到一个不存在的主机，根据不同的操作系统，选择不同的命令。软件作者已在注释中说明，请不要使用333.444.555.666，而是使用本地子网中一个不存在的地址；在一些主机上，使用127.0.0.1有着相同的效果。
+
+```
+# Dropping Routes
+# Generic
+#KILL_ROUTE="/sbin/route add $TARGET$ 333.444.555.666"
+# Generic Linux
+KILL_ROUTE="/sbin/route add -host $TARGET$ gw 333.444.555.666"
+# Newer versions of Linux support the reject flag now. This
+# is cleaner than the above option.
+#KILL_ROUTE="/sbin/route add -host $TARGET$ reject"
+# Generic BSD (BSDI, OpenBSD, NetBSD, FreeBSD)
+#KILL_ROUTE="/sbin/route add $TARGET$ 333.444.555.666"
+# Generic Sun
+#KILL_ROUTE="/usr/sbin/route add $TARGET$ 333.444.555.666 1"
+# NEXTSTEP
+#KILL_ROUTE="/usr/etc/route add $TARGET$ 127.0.0.1 1"
+# FreeBSD
+#KILL_ROUTE="route add -net $TARGET$ -netmask 255.255.255.255 127.0.0.1 -blackhole"
+# Digital UNIX 4.0D (OSF/1 / Compaq Tru64 UNIX)
+#KILL_ROUTE="/sbin/route add -host -blackhole $TARGET$ 127.0.0.1"
+# Generic HP-UX
+#KILL_ROUTE="/usr/sbin/route add net $TARGET$ netmask 255.255.255.0 127.0.0.1"
+```
+
+- 下面的选项，用于设置与iptables的配合
+```
+##
+# Using a packet filter is the PREFERRED. The below lines
+# work well on many OS's. Remember, you can only uncomment *one*
+# KILL_ROUTE option.
+# ipfwadm support for Linux
+#KILL_ROUTE="/sbin/ipfwadm -I -i deny -S $TARGET$ -o"
+#
+# ipfwadm support for Linux (no logging of denied packets)
+#KILL_ROUTE="/sbin/ipfwadm -I -i deny -S $TARGET$"
+#
+# ipchain support for Linux
+#KILL_ROUTE="/sbin/ipchains -I input -s $TARGET$ -j DENY -l"
+#
+# ipchain support for Linux (no logging of denied packets)
+#KILL_ROUTE="/sbin/ipchains -I input -s $TARGET$ -j DENY"
+#
+
+
+# iptables support for Linux
+# 原始配置的下一行为注释状态，现在改为启用
+KILL_ROUTE="/usr/local/bin/iptables -I INPUT -s $TARGET$ -j DROP"
+
+
+#
+# For those of you running FreeBSD (and compatible) you can
+# use their built in firewalling as well.
+#
+#KILL_ROUTE="/sbin/ipfw add 1 deny all from $TARGET$:255.255.255.255 to any"
+#
+# For those running ipfilt (OpenBSD, etc.)
+# NOTE THAT YOU NEED TO CHANGE external_interface TO A VALID INTERFACE!!
+#
+#KILL_ROUTE="/bin/echo 'block in log on external_interface from $TARGET$/32 to any' | /sbin/ipf -f -"
+
+```
+
+或者，可以把攻击者的 IP 记录到/etc/hosts.deny中，利用 TCP_Wrappers机制防止被攻击。
+
+```
+# TCP Wrappers
+#
+KILL_HOSTS_DENY="ALL: $TARGET$"
+```
+
+- 下面的选项可以定制警告信息，警告攻击者
+
+```
+# Port Banner Section
+#
+#
+# Enter text in here you want displayed to a person tripping the PortSentry.
+# I *don't* recommend taunting the person as this will aggravate them.
+# Leave this commented out to disable the feature
+#
+# Stealth scan detection modes don't use this feature
+#
+#PORT_BANNER="** UNAUTHORIZED ACCESS PROHIBITED *** YOUR CONNECTION ATTEMPT HAS BEEN LOGGED. GO AWAY."
+```
+
+
+5.设置了上述配置，表示使用portsentry拦截10.10.10.146的扫描。保存后退出。
+
+6.然后运行命令重启portsentry服务，```systemctl restart portsentry.service```。
+
+7.开启监测模式
+
+PortSentry的启动检测模式。对应TCP和UDF两种协议方式，PortSentry分别有三种启动模式，即基本、秘密和高级秘密扫描检测模式，合计6个模式。
+
+- portsentry-tcp，TCP的基本端口绑定模式；
+- portsentry-udp，UDP的基本端口绑定模式；
+- portsentry-stcp，TCP的秘密扫描检测模式；
+- portsentry-sudp，UDP的秘密扫描检测模式；
+- portsentry-atcp，TCP的高级秘密扫描检测模式；
+- portsentry-audp，UDP的高级秘密扫描检测模式。
+
+一般情况下，建议使用秘密扫描检测模式或高级秘密扫描检测模式。
+
+使用高级秘密扫描检测模式（Advanced Stealth Scan Detection Mode），PortSentry会自动检查服务器上正在运行的端口， 然后把这些端口从配置文件中移去， 只监控其它的端口。这样会加快对端口扫描的反应速度，并且只占用很少的CPU时间，这种模式非常智能。
+
+启动命令：```/usr/local/psionic/portsentry/portsentry -atcp```
+
+
+8.然后尝试用扫描器扫描安装了portsentry的主机。打开kali 2019 虚拟机中的nmap，对安装了portsentry的ubuntu server进行扫描。
+
+例如，运行命令```nmap -sT -v 10.10.10.129```。也可以使用其他Nmap命令对运行着portsentry的系统执行TCP或UDP扫描。
+
+事实上，即使服务器系统运行着portsentry，Nmap也能成功扫描。还可以从客户端去ping 服务器，以查看在服务器上安装portsentry后是否还能ping通。
+
+9.查看日志，可以运行命令```sudo less /var/log/syslog |grep portsentry|grep  10.10.10.146|more```
+> 命令中用了一些条件过滤。
+![portsentrydemo01](images/10/portsentrydemo01.png)
+
+### 安装、配置、应用chkrootkit
+
+1.运行下列命令安装
+
+```
+sudo apt update
+sudo apt install chkrookit
+```
+
+2.Chkrookit的使用比较简单，直接执行```sudo chkrookit```命令即可开始检测系统。
+
+![chkrookit](images/10/chkrookit.png)
+
+Usage: 
+```/usr/sbin/chkrootkit [options] [test ...```
+
+Options:
+- -h , 显示帮助
+- -V , 显示版本
+- -l , 显示可用的测试
+- -d , 调试（debug）
+- -q , 安静模式
+- -x , 专家模式
+- -e , 排除已知的假正例样本文件或目录, quoted, space separated.
+- -r dir , 以 dir 为根目录
+- -p dir1:dir2:dirN 指定用于chkrootkit的额外命令目录
+- -n ，跳过 NFS mounted 目录
+
+3.chkrootkit如何检测一个中了木马的系统命令？
+
+以检查login命令为例，运行命令```sudo chkrookit login```。
+
+
+chkrootkit会在在中了木马的系统二进制文件中查找已知的“签名”。例如，某些中了木马的```ps```命令，可能会包含```/dev/ptyp```
+
+当然，攻击者可以修改rootkit源代码，来更改其签名以避免chkrootkit检测。那么我们可以参考下一个问题。
+
+4.chkrootkit可以检测修改过的（或新的）rootkit版本吗？
+
+如果chkrootkit在文件中找不到已知签名，则它不能自动确定这个文件是否已被rookit修改过。
+
+可以尝试以专家模式（-x 选项）运行chkrootkit。在这种模式下，用户可以检查二进制程序中可疑字符串，这些字符串可能帮助我们确定是否存在入侵行为。
+
+例如，可以通过以下方式看到很多字符串数据：
+
+```sudo chkrootkit -x | more```
+
+系统命令中的路径名：
+
+```sudo chkrootkit -x | grep '^/'```
+
+5.受感染的计算机上如何执行受信任的命令？
+
+建议采用以下替代方法之一：
+
+（1）使用```-p path```选项为您信任的二进制文件提供备用路径：
+
+```chkrootkit -p /cdrom/ bin```
+
+（2）将受感染机器的磁盘挂载到您信任的机器上，并使用```-r rootdir```选项指定新的rootdir ：
+
+```chkrootkit -r /mnt```
+
+
+6.为了避免被入侵，要系统开放前对系统进行备份
+
+可以运行以下步骤：
+
+（1）首先建立一个.commands隐藏文件。
+```sudo mkdir /usr/share/.commands```
+
+（2）将chkrootkit使用的系统命令备份到这个目录
+```sudo cp  `which  awk cut echo find grep id head ls netstat ps strings sed uname `  /usr/share/.commands``` 
+
+```/usr/local/chkrootkit/chkrootkit -p /usr/share/.commands```
+
+（3）打包这个备份目录，并把它传到安全的介质中。
+```cd /usr/share/```
+
+```tar zcvf commands.tar.gz  .commands```
+
+```rm -rf commands.tar.gz```
+
+### 安装、配置、应用RKHunter
+
+1.对于 Ubuntu，使用下列命令可以安装rkhunter，目前版本是1.4.2。
+```
+sudo apt update
+sudo apt install rkhunter
+```
+
+2.在配置邮件时，可以选择无配置或local only。
+![rkhunterinstall](images/10/rkhunterinstall.png)
+
+3.rkhunter命令后的参数很多，使用起来比较简单。
+
+运行命令```rkhunter```，可以看到其参数。主要的有：
+- ```-c，--check``` 必选参数，表示检查当前系统
+- ```--configfile <file> ```,表示使用特定的配置文件
+- ```--cronjob```，表示作为cron任务定期运行
+- ```--sk, --skip-keypress```，表示自动完成所有检测，跳过键盘输入。
+- ```--summary```，表示显示检测结果的统计信息。
+- ```--update```，检测更新内容。
+- ```-V, --version```，显示版本信息。
+
+下面举例：运行命令```sudo rkhunter -c```
+
+结果大致如下：
+
+![RKHunterdemo1](images/10/RKHunterdemo1.png)
+
+4.观察输出结果。
+
+通常结果会分为几个部分：
+- 第一部分，主要是进行系统命令的检查（主要是系统的二进制文件，这些文件最容易被rootkit攻击。）
+  - 显示为“Checking system commands...”
+- 第二部分，主要检测常见的rootkit程序。
+  - 显示为“Checking system commands...”
+- 第三部分，主要是一些特殊或附加的检测。例如：对rootkit文件或目录检测、对恶意软件检测以及对指定的内核模块检测。
+- 第四部分，主要对网络、系统端口、系统启动文件、系统用户和组配置、SSH配置、文件系统等进行检查。
+  - 显示为“Checking system commands...”
+- 第五部分，主要是对应用程序版本进行检测
+  - 显示为“Checking system commands...“
+- 第六部分，主要是对上面结果的总结。
+
+![RKHunterdemo2](images/10/RKHunterdemo2.png)
+
+在Linux中使用rthunter来检查，每项的检查结果都使用不同颜色显示：
+- 绿色表示没有问题
+- 红色表示需要注意
+
+5.如果需要每天运行，且不希望中间反复键入回车键，可以使用下列命令：
+```sudo rkhunter --ckeck --cronjob```
