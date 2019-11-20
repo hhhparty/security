@@ -1,12 +1,12 @@
 # 第11讲 Linux安全检测工具
 
 本讲主要内容：
-- Linux 安全工具
+- Linux 权限与端口检测工具
 - Linux 后门检测工具
 - Linux server 被攻击后的处理流程
 - Linux server 入侵分析
 
-## Linux 安全工具
+## Linux 权限与端口检测工具
 
 - s权限监视工具sXid
 - PortSentry
@@ -126,14 +126,14 @@ IGNORE_DIRS = "/home"
 
 在服务器系统上通过编辑```/etc/portsentry/portsentry.conf```文件来配置portsentry。
 
-- 下面的设置表示portsentry监控的端口。
+**下面的设置表示portsentry监控的端口。**
 ```
 # Use these if you just want to be aware:
 TCP_PORTS="1,11,15,79,111,119,143,540,635,1080,1524,2000,5742,6667,12345,12346,20034$
 UDP_PORTS="1,7,9,69,161,162,513,635,640,641,700,37444,34555,31335,32770,32
 ```
 
-- 下面的选项是高级隐秘扫描检查选项，指定某个端口启用高级检查。
+**下面的选项是高级隐秘扫描检查选项，指定某个端口启用高级检查。**
 ```
 # Advanced Stealth Scan Detection Options
 ADVANCED_PORTS_TCP="1024"
@@ -145,7 +145,7 @@ ADVANCED_EXCLUDE_UDP="520,138,137,67"
 ```
 
 
-- 下面的选项是配置文件中的一些配置设定文件
+**下面的选项是配置文件中的一些配置设定文件**
 ```
 # Configuration Files
 # Hosts to ignore
@@ -159,7 +159,7 @@ HISTORY_FILE="/usr/local/psionic/portsentry/portsentry.history"
 BLOCKED_FILE="/usr/local/psionic/portsentry/portsentry.blocked"
 ```
 
-- 下面的选项是设置路由重定向规则（Dropping Routes）
+**下面的选项是设置路由重定向规则（Dropping Routes）**
 
 设置一条虚拟的路由记录，把数据包重定向到一个不存在的主机，根据不同的操作系统，选择不同的命令。软件作者已在注释中说明，请不要使用333.444.555.666，而是使用本地子网中一个不存在的地址；在一些主机上，使用127.0.0.1有着相同的效果。
 
@@ -186,7 +186,8 @@ KILL_ROUTE="/sbin/route add -host $TARGET$ gw 333.444.555.666"
 #KILL_ROUTE="/usr/sbin/route add net $TARGET$ netmask 255.255.255.0 127.0.0.1"
 ```
 
-- 下面的选项，用于设置与iptables的配合
+**下面的选项，用于设置与iptables的配合**
+
 ```
 ##
 # Using a packet filter is the PREFERRED. The below lines
@@ -232,7 +233,7 @@ KILL_ROUTE="/usr/local/bin/iptables -I INPUT -s $TARGET$ -j DROP"
 KILL_HOSTS_DENY="ALL: $TARGET$"
 ```
 
-- 下面的选项可以定制警告信息，警告攻击者
+**下面的选项可以定制警告信息，警告攻击者**
 
 ```
 # Port Banner Section
@@ -286,19 +287,19 @@ PortSentry的启动检测模式。对应TCP和UDF两种协议方式，PortSentry
 ![backdoor](images/10/backdoor.png)
 
 
-在Linux系统中，可能存在着不止一种后门或木马，通常人们将它们分为：普通木马、rookit木马等。rookit木马更难被发现。
+在Linux系统中，可能存在着不止一种后门或木马，通常人们将它们分为：普通木马、rootkit木马等。rootkit木马更难被发现。
 
-### rookit后门分类
+### rootkit后门分类
 
 这里我们主要分为两类：
-- 文件系统级的rookit
-- 内核级别的rookit
+- 文件系统级的rootkit
+- 内核级别的rootkit
 
-#### 文件系统级的rookit
+#### 文件系统级的rootkit
 
-这里rookit后门主要通过修改文件系统来隐藏自己。它会代替或修改合法文件，将合法文件作为外壳，内部隐藏着后门程序。
+这里rootkit后门主要通过修改文件系统来隐藏自己。它会代替或修改合法文件，将合法文件作为外壳，内部隐藏着后门程序。
 
-常被这类rookit利用的系统程序有：
+常被这类rootkit利用的系统程序有：
 - login（最易被替换，因为可以收集合法用户身份信息）
 - ls
 - ps
@@ -309,7 +310,7 @@ PortSentry的启动检测模式。对应TCP和UDF两种协议方式，PortSentry
 
 如果以上文件都被替换，那么我们还能发现恶意代码么？显然就很困难了。
 
-文件系统级的rookit，对系统维护威胁很大，**目前比较有效的方法是定期对重要文件的完整性进行检查。**
+文件系统级的rootkit，对系统维护威胁很大，**目前比较有效的方法是定期对重要文件的完整性进行检查。**
 
 能够检查文件完整性的工具有很多，例如：
 - Tripwire
@@ -317,15 +318,15 @@ PortSentry的启动检测模式。对应TCP和UDF两种协议方式，PortSentry
 
 在服务器投入生产之处要建立检查基线，之后定期进行完整性检查与确认。
 
-#### 内核级别的rookit
+#### 内核级别的rootkit
 
-内核级别的rookit是更高级的入侵方式，它会使攻击者获得完整的控制权。
+内核级别的rootkit是更高级的入侵方式，它会使攻击者获得完整的控制权。
 
-![kernelrookit](images/10/kernelrookit.png)
+![kernelrootkit](images/10/kernelrootkit.png)
 
-内核级别的rookit，依附在Linux内核上，不对文件进行任何修改，因此很难检查。
+内核级别的rootkit，依附在Linux内核上，不对文件进行任何修改，因此很难检查。
 
-**目前对内核级的rookit没有很好的检查工具，只能在系统建设之处就做好防护规划，应用多层防护体系（P2DR 等模型的实现）来保护。**
+**目前对内核级的rootkit没有很好的检查工具，只能在系统建设之处就做好防护规划，应用多层防护体系（P2DR 等模型的实现）来保护。**
 
 
 ---
@@ -336,33 +337,32 @@ PortSentry的启动检测模式。对应TCP和UDF两种协议方式，PortSentry
 
 ### Linux 后门检测工具 chkrootkit
 
-![chkrookit](images/10/chkrookit.jpg)
+![chkrootkit](images/10/chkrootkit.jpg)
 
-Chkrootkit 是 Linux 下查找rookit后门的一个工具。http://www.chkrootkit.org/
+Chkrootkit 是 Linux 下查找rootkit后门的一个工具。http://www.chkrootkit.org/
 
 #### 安装
 
 - 对于 CentOS
 ```
 sudo yum update
-sudo yum -y install chkrookit
+sudo yum -y install chkrootkit
 ```
 
 - 对于 Ubuntu
-- 
 ```
 sudo apt update
-sudo apt install chkrookit
+sudo apt install chkrootkit
 ```
 
 #### 基本命令
 
-Chkrookit的使用比较简单，直接执行```sudo chkrookit```命令即可开始检测系统。
+Chkrootkit的使用比较简单，直接执行```sudo chkrootkit```命令即可开始检测系统。
 
-![chkrookit](images/10/chkrookit.png)
+![chkrootkit](images/10/chkrootkit.png)
 
 Usage: 
-```/usr/sbin/chkrootkit [options] [test ...```
+```/usr/sbin/chkrootkit [options] [test] ...```
 
 Options:
 - -h , 显示帮助
@@ -380,7 +380,7 @@ Options:
 
 ##### chkrootkit如何检测一个中了木马的系统命令？
 
-以检查login命令为例，运行命令```sudo chkrookit login```。
+以检查login命令为例，运行命令```sudo chkrootkit login```。
 
 
 chkrootkit会在在中了木马的系统二进制文件中查找已知的“签名”。例如，某些中了木马的```ps```命令，可能会包含```/dev/ptyp```
@@ -389,7 +389,7 @@ chkrootkit会在在中了木马的系统二进制文件中查找已知的“签�
 
 ##### chkrootkit可以检测修改过的（或新的）rootkit版本吗？
 
-如果chkrootkit在文件中找不到已知签名，则它不能自动确定这个文件是否已被rookit修改过。
+如果chkrootkit在文件中找不到已知签名，则它不能自动确定这个文件是否已被rootkit修改过。
 
 可以尝试以专家模式（-x 选项）运行chkrootkit。在这种模式下，用户可以检查二进制程序中可疑字符串，这些字符串可能帮助我们确定是否存在入侵行为。
 
@@ -424,7 +424,7 @@ awk，cut，echo，egrep，find，head，id，ls，netstat，ps，strings，sed�
 
 可以运行以下步骤：
 
-1.首先建立一个.commands隐藏文件。
+1.首先建立一个.commands隐藏文件夹。
 ```sudo mkdir /usr/share/.commands```
 
 2.将chkrootkit使用的系统命令备份到这个目录
@@ -447,13 +447,13 @@ RKHunter是一个检查系统是否感染rootkit的专业工具之一，它通�
 
 RKHunter的主要功能有：
 - 使用MD5校验测试，检查文件是否有改动
-- 检测rookit使用的二进制和系统工具文件
+- 检测rootkit使用的二进制和系统工具文件
 - 检测特洛伊木马程序的特征码
 - 检测常用程序的文件属性是否异常
 - 检测系统相关的测试
 - 检测隐藏文件
 - 检测可疑的核心模块LKM
-- 检测系统以启动的监听端口
+- 检测系统已启动的监听端口
 
 #### 安装
 

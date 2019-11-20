@@ -37,21 +37,24 @@ def autoNumber(srcFile,objFile):
                         # We don't auto number the headings in comments blocks 
                         # which is markuped by the pair of ``` or """,   
                         # so need to exclued comments markup: ``` and """ in md file.
-                        if re.match(r'^#{2}\s+[\d\.]*',line):  
+                        h2re = r'(^#{2})\s+[\d\.]*\s*'
+                        if re.match(h2re,line):  
                             level1 += 1
                             p = r'\1 ' + str(level1) +' '         
-                            newline = re.sub(r'(^#{2}\s+)[\d\.]*',p,line)
+                            newline = re.sub(h2re,p,line)
                             level2 = 0
                             level3 = 0
-                        if re.match(r'^#{3}\s+[\d\.]*',line):
+                        h3re = r'(^#{3})\s+[\d\.]*\s*'
+                        if re.match(h3re,line):
                             level2 += 1
                             p = r'\1 ' + str(level1) +'.'+str(level2) +' '
-                            newline = re.sub(r'(^#{3}\s+)[\d\.]*',p,line)
+                            newline = re.sub(h3re,p,line)
                             level3 = 0
-                        if re.match(r'^#{4}\s+[\d\.]*',line):
+                        h4re = r'(^#{4})\s+[\d\.]*\s*'
+                        if re.match(h4re,line):
                             level3 += 1
                             p = r'\1 ' + str(level1) +'.'+str(level2)+'.'+str(level3) +' '
-                            newline = re.sub(r'(^#{4}\s+)[\d\.]*',p,line)
+                            newline = re.sub(h4re,p,line)
                     # Some batch operations regardless of context
                     #    To auto modify image import block
                     newline = modiImageImportFormat(newline) 
@@ -71,9 +74,10 @@ def modiImageImportFormat(line):
         - line：a line of markdown file.
     """
     newline = line
-    if re.match(r'^!\[([\w\s]+)\]\(([\w\s/.]+)\)$',line):  
+    imageRegexStr = r'^!\[([\-\*\+\?\w\s\u4e00-\u9fa5]+)\]\(([\w\s/\.\-]+)\)$'
+    if re.match(imageRegexStr,line):  
         p = r'<img src="\2" width="480" alt="\1" />'
-        newline = re.sub(r'^!\[([\w\s]+)\]\(([\w\s/.]+)\)$',p,line)
+        newline = re.sub(imageRegexStr,p,line)
 
     return newline
 
@@ -105,8 +109,10 @@ def main():
         if os.path.isfile(args.file):
             
             srcFile = args.file
+            
             objFile =  os.path.join(os.path.dirname(srcFile),
                     os.path.basename(srcFile.split('.')[0] + datestr + '.md'))
+            #objFile =  os.path.join(curdir,os.path.splitext(filename)[0] + datestr + '.md')
             # Some batch operations with context sensitively
             autoNumber(srcFile,objFile)
         else:

@@ -4,7 +4,8 @@ import socket
 import yaml
 from cryptography.fernet import Fernet
 import secrets
-
+import base64
+import datetime
 #https://docs.python.org/3/library/socketserver.html#server-creation-notes
 
 
@@ -15,6 +16,10 @@ SERVER_PORT = 55100
 BUFFER_SIZE = 1024
 MSG_KRB_USERID = 'MSG_KRB_USERID'
 MSG_KRB_USERPWD = 'MSG_KRB_USERPASSWORD'
+MSG_KRB_A = "MSG_KRB_A"
+MSG_KRB_A_PRINT = "Kerberos protocol step 2.1 : to send Client/TGS Session Key from AS SERVER"
+MSG_KRB_B = "MSG_KRB_B"
+MSG_KRB_B_PRINT = "Kerberos protocol step 2.2 : to send Ticket-Granting-Ticket from AS SERVER"
 
 
 class ThreadTCPRequestHandler(socketserver.BaseRequestHandler):
@@ -27,37 +32,74 @@ class ThreadTCPRequestHandler(socketserver.BaseRequestHandler):
         try:
             self.data = self.request.recv(1024).decode('utf-8')
             current_thread = threading.current_thread()
-            response = bytes("{}:{}".format(current_thread.name,self.data),'utf-8')
+            
             print("Recieved from {}, Data :{}".format(current_thread.name,self.data))
 
             if self.data.find(MSG_KRB_USERID) >=0 :
                 uid = self.data.split('=')
                 if uid[1]:
                     sessionkey,token = self.checkUser(userid = uid[1])
-                    print(sessionkey)
-                    print(token)
+                    if len(token) > 0:
 
-            self.request.sendall(response)
+                        #sent msessage A
+                        print(MSG_KRB_A_PRINT)
+                        self.request.sendall(self.krbmsgA(token))
+
+                        #sent message B
+                        print(MSG_KRB_B_PRINT)
+                        self.krbmsgB(uid,token)
+                        #self.request.sendall(self.krbmsgB())
+
+
+
+            #self.request.sendall(token)
         except Exception as e:
             print(e)
             
     def finish(self):
         pass             
+    def krbmsgA(self,token):
+        return bytes("{}:{}".format(MSG_KRB_A,token),'utf-8')
+    
+    
+    
+    def krbmsgB(self,uid,token):        
+
+        # TGT票据有效期10分钟
+        expired = datetime.datetime.now()+datetime.timedelta(minutes=10)
+        # 客户端网络地址
+        u_ipaddr = self.request.raddr[0]
+        # 打包消息B
+        msgB = "uid:{},u_ipaddr:{},expired:{},clt_tgs_sk:{}".format(uid,u_ipaddr,expired,token)
+        # 加密消息B
+        key = Fernet.generate_key()
+        f = Fernet(key)
+        ##
+        ##
+        #TODO CHECK THIS.
+        return f.encrypt(msgB.encode('utf-8'))
+
+
 
 
     def checkUser(self,userid):
+        
         users = [
-                    {"uid":"leo","pwd":"a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3"},
+                    {"uid":"leo","pwd":"202cb962ac59075b964b07152d234b70"},
                     {"uid":"neo","pwd":"456"},
                 ]
         
         for u in users:
             if u['uid'] == userid:
                 # 使用用户的pwd hash为密钥生成会话密钥
-                f = Fernet(u['pwd'])
-                sessionkey = secrets.SystemRandom().randint(1000000000,9999999999)
-                token = f.encrypt(str(sessionkey))
+                print("User {} login successfully.".format(userid))
+                f = Fernet(base64.b64encode(u['pwd'].encode()))
+                sessionkey = str(secrets.SystemRandom().getrandbits(128))
+                token = f.encrypt(sessionkey.encode('utf-8'))
                 return (str(sessionkey),token)
+            else:
+                print("Login failed. {} is not a legal user.".format(userid))
+                return ()
 
         return ()
 
@@ -66,13 +108,7 @@ class ThreadTCPRequestHandler(socketserver.BaseRequestHandler):
 class AuthenticationServer(socketserver.ThreadingTCPServer):
     servertype = 'AUTHENTICATION_SERVER'
 
-    
-
-
-
-
-
-
+ 
 
 if __name__ == "__main__":
 
