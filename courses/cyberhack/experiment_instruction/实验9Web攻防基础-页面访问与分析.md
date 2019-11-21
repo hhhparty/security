@@ -52,13 +52,18 @@ ln -s /usr/local/BurpSuite_pro_v2.1/burpsuite_pro_v2.1_BurpHelper.jar /usr/bin/b
 burpsuite
 ```
 
+如果显示Burpsuite过期（Expires），可以关闭burpsuite pro，然后在命令行允许下列命令：
+```sudo date -s 01/01/2019```
+
+修改系统时间后，重新启动burpsuite。
+
 7.设置破解对象
 
 主要是设置中间一行的BurpSuite Jar：
 
 <img src="images/burpsuite/破解界面.png" width="480" alt="破解界面" />
 
-然后点击 Run，之后点击 I accept，接受协议开始使用。
+然后点击 Run，之后点击 “I accept”，接受协议开始使用。
 
 8.查看主界面
 
@@ -77,7 +82,7 @@ burpsuite
 
 <img src="images/burpsuite/browser-proxy-setting.png" width="480" alt="browser-proxy-setting" />
 
-3.在burpsuite中Proxy启动中断，即“Intercept is on”，然后从kali访问某个链接，例如 http://10.10.10.10.135/webgoat/attack。
+3.在burpsuite中Proxy启动中断，即“Intercept is on”，然后从kali访问某个链接，例如 http://10.10.10.135/webgoat/attack。
 
 <img src="images/burpsuite/proxy-op-01.png" width="480" alt="proxy-op-01" />
 

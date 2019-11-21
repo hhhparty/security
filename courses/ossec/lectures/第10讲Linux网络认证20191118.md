@@ -88,7 +88,7 @@ LDAP目录服务是由目录数据库和一套访问协议组成的系统。
 {
 "ldapLogin": {
     	"enable": true,
-      	"server": "ldap://l-ldapt1.ops.dev.cn0.qunar.com",
+      	"server": "ldap://l-ldapt1.ops.dev.cn0.example.com",
       	"baseDn": "CN=Admin,CN=Users,DC=test,DC=com",
       	"bindPassword": "password123",
       	"searchDn": "OU=UserContainer,DC=test,DC=com",
