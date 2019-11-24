@@ -74,7 +74,7 @@ def modiImageImportFormat(line):
         - line：a line of markdown file.
     """
     newline = line
-    imageRegexStr = r'^!\[([\-\*\+\?\w\s\u4e00-\u9fa5]+)\]\(([\w\s/\.\-]+)\)$'
+    imageRegexStr = r'^!\[([\-\*\+\?\w\s\u4e00-\u9fa5\.]+)\]\(([\w\s/\.\-]+)\)$'
     if re.match(imageRegexStr,line):  
         p = r'<img src="\2" width="480" alt="\1" />'
         newline = re.sub(imageRegexStr,p,line)
