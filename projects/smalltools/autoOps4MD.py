@@ -31,7 +31,7 @@ def autoNumber(srcFile,objFile):
             with open(objFile,"w+",encoding="utf-8") as wf:
                 for line in rf: 
                     newline = line
-                    if re.match('^[`"]{3}$',line):
+                    if re.match('^[`"]{3}\s*$',line):
                         excount += 1
                     if excount % 2 == 0:
                         # We don't auto number the headings in comments blocks 
