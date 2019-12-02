@@ -44,7 +44,7 @@ User-Agent: Mozilla/4.06 Accept: image/gif,image/jpeg, /
 
 ## 7 实验时长
 
-n课时（45分钟/课时，n为正整数）
+1课时（45分钟/课时，n为正整数）
 
 ## 8 实验选题背景
 
@@ -54,10 +54,9 @@ n课时（45分钟/课时，n为正整数）
 
 1.启动内含webgoat8.0 docker 镜像的 ubuntu server 虚拟机。启动后，使用ifconfig命令查看虚拟机ip地址。下面以 10.10.10.129 为例。
 2.运行下列命令启动webgoat/webgoat-8.0 docker 容器。
-```
-sudo docker run --rm -it -p 8080:8080 webgoat/webgoat-8.0
 
-```
+```sudo docker run --rm -it -p 8080:8080 webgoat/webgoat-8.0```
+
 3.使用 Google Chrome 浏览器浏览链接：http://10.10.10.129:8080/WebGoat/start.mvc#lesson/HttpBasics.lesson/1
 
 <img src="images/lab01/httpbasic-01.png" width="480" alt="httpbasic-01" />
