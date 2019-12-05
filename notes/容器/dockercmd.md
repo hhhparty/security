@@ -21,6 +21,10 @@
 
 4.运行mongo
 
+``` docker run -d -p 27017:27017 --name mongodb -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=mongoadmin mongo:4.1.6```
+
+```docker run -it --restart=always --name mongo-express --link mongodb:mongo-db -d -p 8081:8081 -e ME_CONFIG_OPTIONS_EDITORTHEME="3024-night" -e ME_CONFIG_BASICAUTH_USERNAME="mongoexpress" -e ME_CONFIG_BASICAUTH_PASSWORD="mongoexpress" -e ME_CONFIG_MONGODB_ADMINUSERNAME="mongoadmin" -e ME_CONFIG_MONGODB_ADMINPASSWORD="mongoadmin" mongo-express```
+
 先创建```mkdir -p ~/docker/mongo/conf && mkdir -p ~/docker/mongo/data```，准备将mongo 容器中的数据挂载到这个目录中。
 
 可以先查看一下mongo docker中数据目录和配置目录，一般为/data/db和/etc/mongod.conf.orig
