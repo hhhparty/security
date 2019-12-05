@@ -203,3 +203,28 @@ docker rm 容器名
 ```
 $ docker commit <container_id> <image_name>
 ```
+
+
+### 设置开机自启动docker服务
+
+```sudo systemctl enable docker.service```
+
+### 设置ipv4转发
+
+编辑sysctl配置文件
+```sudo vi /usr/lib/sysctl.d/00-system.conf```
+
+
+添加如下内容：
+```net.ipv4.ip_forward = 1```
+
+重启network服务
+
+```systemctl restart network```
+
+
+如果返回为“net.ipv4.ip_forward = 1”则表示成功了
+
+### 安装netstat等工具
+
+```yum install net-tools```

@@ -17,7 +17,7 @@
 ### 启动 owasp bwa 靶机
 
 步骤：
-1. 启动 owasp bwa 虚拟机。
+1. 启动 owasp bwa v1.2 虚拟机。
 2. 以 root用户名登录，密码owaspbwa。
 3. 在 owasp bwa 虚拟机中运行ifconfig，确认其的IP地址。下面以10.10.10.135为例。
 4. 在 kali linux 虚拟机 或 windows中的浏览器上访问 http://10.10.10.135/

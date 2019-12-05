@@ -53,9 +53,12 @@ User-Agent: Mozilla/4.06 Accept: image/gif,image/jpeg, /
 ## 9 实验步骤
 
 1.启动内含webgoat8.0 docker 镜像的 ubuntu server 虚拟机。启动后，使用ifconfig命令查看虚拟机ip地址。下面以 10.10.10.129 为例。
+
 2.运行下列命令启动webgoat/webgoat-8.0 docker 容器。
 
 ```sudo docker run --rm -it -p 8080:8080 webgoat/webgoat-8.0```
+
+之后在某个浏览器上打开这个应用： http://10.10.10.129:8080/WebGoat/login， 然后进行注册用户密码。
 
 3.使用 Google Chrome 浏览器浏览链接：http://10.10.10.129:8080/WebGoat/start.mvc#lesson/HttpBasics.lesson/1
 

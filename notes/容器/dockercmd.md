@@ -27,6 +27,7 @@
 
 docker run --name some-mysql -v ~/docker/mongodb/conf:/etc/mongod.conf.orig -d mongo
 
+```docker run -d -p 27017:27017 -v ~/docker/mongodb/conf:/etc  -v ~/docker/mongodb/data:/data/db mongo mongod --auth```
 
 ```sudo docker run --name mongodbserver -p 27017:27017 --mount type=bind,src=~/docker/mongodb/conf,dst=/data/configdb --mount type=bind,src=~/docker/mongodb/data, dst=/data/db --restart=on-failure:3 -d mongo```
 
