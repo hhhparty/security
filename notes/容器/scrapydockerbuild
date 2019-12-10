@@ -1,0 +1,24 @@
+FROM centos:7.6.1810
+WORKDIR /server
+COPY . /server
+ENV SCRAPYD_PORT 6800
+RUN set -ex \
+	&& yum -y install zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel gcc make wget \
+	&& yum clean all \
+	&& mkdir /usr/local/python3 \
+	&& wget https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tar.xz \
+	&& tar -xvJf  Python-3.6.8.tar.xz && rm -f Python-3.6.8.tar.xz \
+	&& cd Python-3.6.8 \
+	&& ./configure prefix=/usr/local/python3 \
+	&& make && make install \
+	&& ln -s /usr/local/python3/bin/python3.6 /usr/local/bin/python3 \
+	&& ln -s /usr/local/python3/bin/pip3 /usr/local/bin/pip3 \
+	&& cd .. \
+	&& rm -rf Python-3.6.8 \
+	&& pip3 install -r requirements.txt \
+	&& ln -s /usr/local/python3/bin/scrapyd /usr/local/bin/scrapyd \
+	&& sed -i 's#127.0.0.1#0.0.0.0#g' /usr/local/python3/lib/python3.6/site-packages/scrapyd/default_scrapyd.conf \
+	&& echo '#!/bin/bash' >>runserver.sh \
+	&& echo 'sed -i "s#6800#$SCRAPYD_PORT#g" /usr/local/python3/lib/python3.6/site-packages/scrapyd/default_scrapyd.conf' >>runserver.sh \
+	&& echo 'scrapyd' >> runserver.sh
+CMD ["bin","bash"]
