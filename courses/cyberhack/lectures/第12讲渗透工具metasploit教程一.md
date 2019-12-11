@@ -1,4 +1,4 @@
-# 第12讲 渗透工具 Metasploit
+# 第12讲 渗透工具 Metasploit 教程一
 
 内容来源：https://www.offensive-security.com/metasploit-unleashed
 
@@ -1673,12 +1673,12 @@ meterpreter >
 
 使用 ```load python``` 命令可以在运行了meterpreter的主机上运行python程序。
 
-```
+```shell
 meterpreter > load python
 Loading extension python...success.
 ```
 
-```
+```shell
 meterpreter > help
 ...
 Python Commands
@@ -1691,21 +1691,34 @@ Python Commands
     python_reset    Resets/restarts the Python interpreter
 ```
 ```python_execute``` 命令用于执行一个python 命令。
-```
+
+```shell
 meterpreter > python_execute "print 'Good morning! It\\'s 5am'"
 [+] Content written to stdout:
 Good morning! It's 5am
 ```
 
-```
+你可以保存到一个变量，然后使用 -r 参数打印内容：
+
+```shell
 meterpreter > python_execute "import os; cd = os.getcwd()" -r cd
 [+] cd = C:\Users\loneferret\Downloads
 meterpreter >
 ```
+下面这个文件位于我们机器的root目录下，这段程序搜索C:\下是否存在readmet.txt文件。
 
-```python_import``` 命令用于引入一个python文件
-
+```python
+#findfiles.py 
+import os
+for root, dirs, files in os.walk("c://"):
+    for file in files:
+        if file.endswith(".txt") and file.startswith("readme"):
+             print(os.path.join(root, file))
 ```
+
+为了在目标系统上运行这个文件，我们需要使用```python_import``` 命令，并使用参数 -f 。
+
+```shell
 meterpreter > python_import -f /root/findfiles.py
 [*] Importing /root/findfiles.py ...
 [+] Content written to stdout:
@@ -1714,15 +1727,16 @@ c://qemu-0.13.0-windows\patch\readme.txt
 c://Users\loneferret\Desktop\IM-v1.9.16.0\readme.txt
 ```
 
-```
+还有一个例子是打印内存信息，调用windows 消息对话框：
+
+```shell
 meterpreter > python_import -f /root/ctypes_ex.py
 [*] Importing /root/ctypes_ex.py ...
 [+] Content written to stdout:
 >WinDLL 'kernel32', handle 76e30000 at 4085e50>
 ```
 
-
-```
+```shell
 metrepreter > python_import -f /root/msgbox.py
 [*] Importing /root/msgbox.py ...
 [+] Command executed without returning a result

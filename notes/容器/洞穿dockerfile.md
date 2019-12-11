@@ -1,4 +1,4 @@
-# 了解 Dockerfile
+# 洞穿 Dockerfile
 
 ## Dockerfile 基础
 
@@ -250,9 +250,11 @@ ONBUILD <其它指令>
 
 ## Dockerfiles 编写最佳实践
 
-参考：https://docs.docker.com/develop/develop-images/dockerfile_best-practices/
+内容参考：https://docs.docker.com/develop/develop-images/dockerfile_best-practices/
 
-Docker 的 ```docker build 某个含有dockerfile的目录``` 命令，会自动加载目录中的dockerfile文件，按顺序执行其中的所有步骤或命令。
+
+
+
 
 一个docker镜像由多个只读层，每个只读层表示一个Dockerfile指令。这些只读层像堆栈一样排列，每个层次基于其下一层有一定的变化。假如有下列dockerfile：
 
@@ -269,4 +271,29 @@ CMD python /app/app.py
 
 为了更加有效的构建docker镜像，有下列推荐做法。
 
-#### 生成 ephemeral容器
+#### 生成临时的容器
+
+由Dockerfile定义的镜像将尽可能的生成临时的容器。临时的意味着容器可能被停止或被破坏，然后重建并使用一个绝对的最小化安装和配置所替代。
+
+
+#### 理解构建上下文（build context）
+
+Docker 的 ```docker build 某个含有dockerfile的目录``` 命令，会自动加载目录中的dockerfile文件，按顺序执行其中的所有步骤或命令。这个工作目录被称为 build context。默认情况下，Dockerfile被假定位于此目录下，但也可以使用-f参数指定某个dockerfile。不管Dockerfile在哪儿，所有当前工作目录下的文件和目录将作为build context送给Docker daemon。
+
+下面是一个build context的例子：使用命令生成一个目录，然后cd进入它。写"hello"到一个文本文件hello中，然后生成一个Dockerfile，并运行cat命令。从这个build context中构建镜像。
+
+```shell
+
+mkdir myproject && cd myproject
+echo "hello" > hello
+echo -e "FROM busybox\nCOPY /hello /\nRUN cat /hello" > Dockerfile
+docker build -t helloapp:v1 .
+```
+
+移动 Dockerfile 和 hello 分别到目录中，构建另一个版本的image（没有依赖来自上一个build的缓存）。使用-f指定dockerfile，指定这个build context。
+
+```shell
+mkdir -p dockerfiles context
+mv Dockerfile dockerfiles && mv hello context
+docker build --no-cache -t helloapp:v2 -f dockerfiles/Dockerfile context
+```
