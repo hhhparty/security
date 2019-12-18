@@ -20,6 +20,9 @@
 - 第08讲 Linux本地认证
 - 第09讲 Linux网络安全
 - 第10讲 Linux网络认证
+- 第11讲 Linux安全检测工具1
+- 第12讲 Linux安全检测工具2
+- 第13讲 系统自动化运维
 
 #### [实验](https://github.com/hhhparty/security/tree/master/courses/ossec/experiment_instruction)
 
@@ -35,6 +38,8 @@
 - 实验10 Linux文件系统运维实验
 - 实验11 Linux本地认证实验
 - 实验12 Linux中iptables防护墙规则设置
+- 实验13 Linux网络认证实验
+- 实验14 Linux安全工具
 
 ---
 
@@ -51,6 +56,10 @@
 - 第07讲 代码动态分析技术
 - 第08讲 代码动态分析技术进阶
 - 第09讲 使用WindDbg调试内核
+- 第10讲 Web攻防技术综述
+- 第11讲 Web安全技术进阶
+- 第12讲 渗透工具Metsploit教程1
+- 第13讲 渗透工具Metsploit教程2
 
 #### [实验](https://github.com/hhhparty/security/tree/master/courses/cyberhack/experiment_instruction)
 
@@ -61,6 +70,13 @@
 - 实验05 程序静态分析技术进阶
 - 实验06 程序动态分析技术
 - 实验07 程序动态分析技术进阶
+- 实验08 使用WinDbg调试内核级恶意代码
+- 实验09 Web攻防基础实验-页面访问与分析
+- 实验10 Web攻防基础实验-WebGoat8HTTP攻击
+- 实验11 Web攻防基础实验-WebGoat5注入攻击
+- 实验12 Web攻防基础实验-WebGoat8高级SQL注入
+- 实验13 Web攻防基础实验-Web登录暴力破解
+- 实验14 利用MS_067漏洞渗透windows2k3
 
 ---
 
@@ -72,6 +88,11 @@
 - 第2章 网络爬取相关的Web技术
 - 第3章 Web页面爬取
 - 第4章 Web页面内容解析
+- 第5章 RIA网站数据爬取
+- 第6章 构建健壮的爬虫系统
+- 第7章 构建分布式爬虫系统
+- 第8章 网络数据采集中的问题与应对
+
 
 #### [实验](https://github.com/hhhparty/security/tree/master/courses/webcrawler/experiment_instruction)
 
@@ -81,6 +102,10 @@
 - 第3章Web页面爬取案例
 - 第4章Web内容解析实验
 - 第4章Web内容解析案例
+- 第5章爬取RIA网站内容实验
+- 第6章使用selenium爬取去哪儿网信息
+- 第6章使用selenium爬取淘宝商品
+- 有道翻译爬虫实力
 
 ps: 资源库目前尚不完整，正在补充更新...
 
