@@ -1,0 +1,14 @@
+残疾婴儿,水利工程费用分摊,通过预算决议,医师费用冻结,萨尔瓦多援助,学校中的宗教团体,反卫星试验禁令,尼加拉瓜反政府援助,MX导弹,移民,合成燃料公司削减,教育支出,超基金起诉权,罪行,免税出口,南非出口管理法,分类
+y,y,n,y,y,y,n,n,n,y,y,n,y,n,n,n,republican
+n,y,n,n,y,y,n,n,n,y,y,n,y,y,n,n,democrat
+n,y,y,y,y,y,n,n,n,y,y,n,y,y,n,n,democrat
+n,n,n,y,y,n,n,n,n,n,n,y,n,y,n,n,republican
+n,y,n,y,y,y,n,n,n,n,y,y,n,y,n,n,democrat
+n,n,n,y,y,y,n,n,n,n,n,y,y,y,n,n,republican
+n,n,n,y,y,y,n,n,n,n,n,y,y,y,n,n,republican
+n,n,n,y,y,y,n,n,n,n,n,y,y,y,n,n,republican
+n,n,n,y,y,y,n,n,n,n,n,y,y,y,n,n,republican
+n,n,n,y,y,y,n,n,n,n,n,y,y,y,n,n,republican
+n,n,n,y,y,y,n,n,n,n,n,y,y,y,n,n,republican
+n,n,n,y,y,y,n,n,n,n,n,y,y,y,n,n,republican
+n,n,n,y,y,y,n,n,n,n,n,y,y,y,n,n,republican
