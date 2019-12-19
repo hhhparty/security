@@ -10,6 +10,7 @@
 - [ossec：“操作系统安全”课程](https://github.com/hhhparty/security/tree/master/courses/ossec)
 - [cyberhack：“网络攻防技术”课程](https://github.com/hhhparty/security/tree/master/courses/cyberhack)
 - [webcrawler：“网络爬虫与数据采集” 课程](https://github.com/hhhparty/security/tree/master/courses/webcrawler)
+- [SecAI:“机器学习与网络安全”课程](https://github.com/hhhparty/security/tree/master/courses/secai)
 
 收录了下列学习笔记：
 - Exploit Coding
@@ -114,6 +115,27 @@
 - 第6章使用selenium爬取去哪儿网信息
 - 第6章使用selenium爬取淘宝商品
 - 有道翻译爬虫实例
+
+### [SecAI:“机器学习与网络安全”课程](https://github.com/hhhparty/security/tree/master/courses/secai)
+
+#### [讲义](https://github.com/hhhparty/security/tree/master/courses/secai/lectues)
+
+- 0x01机器学习导学
+- 0x02一小时Python编程入门
+- 0x03机器学习基本术语
+- 0x04 利用机器学习算法寻找更心仪的对象(kNN算法)
+- 0x05使用sklearn中的knn进行分类
+- 0x06 模型评估与选择
+- 0x07 决策树与实践案例
+- 0x08 朴素贝叶斯-简化
+- 0x08 朴素贝叶斯
+- 0x09 支持向量机
+- 0x10 线性模型
+- 0x11 神经网络
+- 0x12 集成学习
+- 0x14 聚类
+- 0x15 降维与度量学习
+- 0x16 关联分析
 
 ps: 资源库目前尚不完整，正在补充更新...
 
