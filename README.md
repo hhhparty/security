@@ -10,7 +10,7 @@
 - [ossec：“操作系统安全”课程](https://github.com/hhhparty/security/tree/master/courses/ossec)
 - [cyberhack：“网络攻防技术”课程](https://github.com/hhhparty/security/tree/master/courses/cyberhack)
 - [webcrawler：“网络爬虫与数据采集” 课程](https://github.com/hhhparty/security/tree/master/courses/webcrawler)
-- [SecAI：“机器学习与网络安全”课程](https://github.com/hhhparty/security/tree/master/courses/secai)
+- [AISec：“机器学习与网络安全”课程](https://github.com/hhhparty/security/tree/master/courses/AISec)
 
 收录了下列学习笔记：
 - Exploit Coding
@@ -120,9 +120,9 @@
 
 ---
 
-### [SecAI:“机器学习与网络安全”课程](https://github.com/hhhparty/security/tree/master/courses/secai)
+### [SecAI:“机器学习与网络安全”课程](https://github.com/hhhparty/security/tree/master/courses/AISec)
 
-#### [讲义](https://github.com/hhhparty/security/tree/master/courses/secai/lectues)
+#### [讲义](https://github.com/hhhparty/security/tree/master/courses/AISec/lectues)
 
 - 0x01机器学习导学
 - 0x02一小时Python编程入门
