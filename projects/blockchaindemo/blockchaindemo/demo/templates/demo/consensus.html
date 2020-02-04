@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>HDH BLOCKCHAIN DEMO</title>
+    <meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+	<link rel="stylesheet" type="text/css" href="{% static 'finances/css/style.css' %}">
+	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+	<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+	<script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+	
+</head>
+
+ 
+<body>	
+	<div class="container-fluid ">
+		<div class="bg-primary text-white">
+			<h1 class="text-center h1"> Blockchain Demo Consensus</h1>	
+		</div>	
+		<div>
+			<p>{{ message }}</p>
+			<ul id='blockchain'>链(长度: <span id="chainlength">{{ chainlength }}</span> ): 
+				{% for c in chain %}
+					<li id='block'>{{ c }}</li>
+				{% endfor %}
+			
+			</ul>
+		</div>
+	</div>
+</body>
+ 
+</html>

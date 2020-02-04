@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>MINE</title>
+    <meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+	<link rel="stylesheet" type="text/css" href="{% static 'finances/css/style.css' %}">
+	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+	<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+	<script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+	
+</head>
+
+ 
+<body>	
+	<div class="container-fluid ">
+		<div class="bg-primary text-white">
+			<h1 class="text-center h1"> Blockchain Demo: MINE</h1>	
+		</div>	
+		<div>
+		<p>message: {{ message }}</p>
+		<p>index: {{ index }} </p>
+		<p>timestamp: {{ timestamp}}</p>
+		<p>transactions: {{ transactions }}</p>
+		<p>proof: {{ proof }}</p>
+		<p>previous_hash: {{ previous_hash }}</p>
+		
+		</div>
+		<div>
+			<a href="{% url 'demo:chain' %}" class="btn  btn-dark btn-block">查看本地区块链</a>			
+		</div>
+	</div>
+</body>
+ 
+</html>
