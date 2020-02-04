@@ -15,7 +15,12 @@
 收录了下列学习笔记：
 - Exploit Coding
 
+收录了下列示例项目：
+- 区块链示例
+
 ---
+
+## 课程资料
 
 ### [ossec：“操作系统安全”课程](https://github.com/hhhparty/security/tree/master/courses/ossec)
 
@@ -142,6 +147,15 @@
 - 0x16 关联分析
 
 ---
+
+## 笔记
+
+### Exploit Coding
+
+## 项目
+
+### [区块链示例](https://github.com/hhhparty/security/tree/master/projects/blockchaindemo)
+
 
 资源库目前尚不完整，正在补充更新...
 
