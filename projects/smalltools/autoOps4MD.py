@@ -6,11 +6,12 @@ markdown files or directory which includes markdown files.
 
 The function "modiImageImportFormat" assign the images width="480" and make it  more suitable for display in browser.
 """
-
+import argparse
 import os
 import sys
 import re
 import datetime
+import click
 
 def autoNumber(srcFile,objFile):
     """autoNumber 
@@ -81,10 +82,12 @@ def modiImageImportFormat(line):
 
     return newline
 
+@click.command()
+@click.option("--file",help="A markdown file name needed be beautified.")
+@click.option("--dir",help="A directory name of markdown files needed be beautified.")
+def mdbeautify(file):
+    pass
 def main():
-    import sys
-    import argparse
-
     parser = argparse.ArgumentParser()
     parser.add_argument("-d","--dir",type=str,
             help="some directory of markdown files")
@@ -127,7 +130,9 @@ def main():
     # Some batch operations with context sensitively
     autoNumber(srcFile,objFile)
     """
-    
+
+
+
 
 if __name__ == "__main__":
     main()
