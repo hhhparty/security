@@ -13,6 +13,7 @@
 - 第2讲 开发Shellcode
 - 第3讲 使用Metasploit 开发 Exploit 
 - 第4讲 堆溢出利用
+- 第5讲 各类内存攻击技术
 
 
 ## 相关资料

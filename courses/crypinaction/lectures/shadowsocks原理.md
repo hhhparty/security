@@ -4,11 +4,11 @@
 
 原始的网络连接可称为“直连”，即端与端之间只存在通信链路。
 
-<img src="./images/nofwconn.png" weight="480"/>
+<img src="images/shadowsocks/nofwconn.png" weight="480"/>
 
 当网络连接的某一端（通常为server）为了加强自身安全性，而增加防火墙时，被限制的网络连接将无法访问server。
 
-<img src="./images/withfwconn.png" weight="480"/>
+<img src="images/shadowsocks/withfwconn.png" weight="480"/>
 
 防火墙的过滤（限制）规则往往存在漏洞：
 - 未限制某些可被利用的IP地址段
@@ -16,7 +16,7 @@
 
 SSH tunnel是一种协议，这种协议在端与端之间建立了加密传输，所以防火墙往往不能识别其数据包内容，从而无法过滤或转发。SSH tunnel的建立需要网络连接的两端同时安装相应软件，并以代理方式使用ssh隧道进行网络通信。
 
-<img src="./images/withsshandfwconn.png" weight="480"/>
+<img src="images/shadowsocks/withsshandfwconn.png" weight="480"/>
 
 SSH 使用了RSA非对称加密，数据包内容被加密，防火墙无法有效识别。但SSH是常用软件，其网络特征也很明显，所以防火墙软件仍然可以根据SSH连接特征识别并过滤SSH连接。
 
@@ -26,11 +26,11 @@ SSH 使用了RSA非对称加密，数据包内容被加密，防火墙无法有�
 - SS Server将收到的加密数据进行解密，还原请求后发给服务器以获得服务器响应。
 - 响应回传的过程类似请求的过程。
 
-<img src="./images/sshconn.png" weight="480"/>
+<img src="images/shadowsocks/sshconn.png" weight="480"/>
 
 Shadowsocks协议格式如下：
 
-<img src="./images/ss协议格式.jfif"  weight="480"/>
+<img src="images/shadowsocks/ss协议格式.jfif"  weight="480"/>
 
 目标地址有三部分组成:
 - 类型是一个字节的枚举类型
