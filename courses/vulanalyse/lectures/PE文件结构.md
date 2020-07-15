@@ -1,6 +1,10 @@
 # PE文件结构
 
-内容来源：https://docs.microsoft.com/en-us/windows/win32/debug/pe-format
+内容来源：
+- https://docs.microsoft.com/en-us/windows/win32/debug/pe-format
+- https://blog.csdn.net/reversalc/article/details/8022977
+
+
 
 Windows OS下的可执行文件的结构和对象文件被称为Portable Execute PE 和 Common Object File Format (COFF) 文件。
 
@@ -8,6 +12,10 @@ Windows OS下的可执行文件的结构和对象文件被称为Portable Execute
 
 在PE文件结构介绍中，常出现的概念有：
 
+### 地址
+是“虚拟地址”而不是“物理地址”。为什么不是“物理地址”呢？因为数据在内存的位置经常在变，这样可以节省内存开支、避开错误的内存位置等的优势。同时用户并不需要知道具体的“真实地址”，因为系统自己会为程序准备好内存空间的（只要内存足够大）
+### 镜像文件
+包含以EXE文件为代表的“可执行文件”、以DLL文件为代表的“动态链接库”。为什么用“镜像”？这是因为他们常常被直接“复制”到内存，有“镜像”的某种意思。
 ### attribute certificate
 
 A certificate that is used to associate verifiable statements with an image. A number of different verifiable statements can be associated with a file; one of the most useful ones is a statement by a software manufacturer that indicates what the message digest of the image is expected to be. A message digest is similar to a checksum except that it is extremely difficult to forge. Therefore, it is very difficult to modify a file to have the same message digest as the original file. The statement can be verified as being made by the manufacturer by using public or private key cryptography schemes. This document describes details about attribute certificates other than to allow for their insertion into image files.
@@ -21,13 +29,21 @@ A reference to the linker that is provided with Microsoft Visual Studio.
 A file that is given as input to the linker. The linker produces an image file, which in turn is used as input by the loader. The term "object file" does not necessarily imply any connection to object-oriented programming.
 ### reserved, must be 0
 A description of a field that indicates that the value of the field must be zero for generators and consumers must ignore the field.
-### RVA
+### RVA 相对虚拟地址
+相对镜像基址的偏移位置。
 Relative virtual address. In an image file, the address of an item after it is loaded into memory, with the base address of the image file subtracted from it. The RVA of an item almost always differs from its position within the file on disk (file pointer).
 In an object file, an RVA is less meaningful because memory locations are not assigned. In this case, an RVA would be an address within a section (described later in this table), to which a relocation is later applied during linking. For simplicity, a compiler should just set the first RVA in each section to zero.
 ### section
 The basic unit of code or data within a PE or COFF file. For example, all code in an object file can be combined within a single section or (depending on compiler behavior) each function can occupy its own section. With more sections, there is more file overhead, but the linker is able to link in code more selectively. A section is similar to a segment in Intel 8086 architecture. All the raw data in a section must be loaded contiguously. In addition, an image file can contain a number of sections, such as .tls or .reloc , which have special purposes.
 ### VA
 virtual address. Same as RVA, except that the base address of the image file is not subtracted. The address is called a "VA" because Windows creates a distinct VA space for each process, independent of physical memory. For almost all purposes, a VA should be considered just an address. A VA is not as predictable as an RVA because the loader might not load the image at its preferred location.
+
+## 32位与64位的区别
+
+x86都是32位的，IA-64都是64位的。64位Windows需要做的只是修改PE格式的少数几个域。这种新的格式被称为PE32+。它并没有增加任何新域，仅从PE格式中删除了一个域。其余的改变就是简单地把某些域从32位扩展到64位。在大部分情况下，你都能写出同时适用于32位和64位PE文件的代码。
+
+EXE文件与DLL文件的区别完全是语义上的。它们使用的是相同的PE格式。惟一的不同在于一个位，这个位用来指示文件应该作为EXE还是DLL。甚至DLL文件的扩展名也完全也是人为的。你可以给DLL一个完全不同的扩展名，例如.OCX控件和控制面板小程序（.CPL）都是DLL。
+
 
 ## PE文件结构概述
 
