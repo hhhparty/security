@@ -1,4 +1,7 @@
-# 第9讲 windows 安全机制2
+# 第9讲 windows 安全机制2 
+
+本节主要介绍：
+- 数据执行保护机制 DEP
 
 ##  数据与程序的分水岭：DEP 
 
@@ -32,11 +35,11 @@ DEP 的主要作用是阻止数据页（如默认的堆页、各种堆栈页以�
 
 介绍完 DEP 的工作原理及状态后，我们来看一个和 DEP 密切相关的程序链接选项： /NXCOMPAT。/NXCOMPAT 是 Visual Studio 2005 及后续版本中引入一个链接选项，默认情况下是开启的。在本书中使用的 Visual Studio 2008 (VS 9.0)中，可以在通过菜单中的 Project→ project Properties →Configuration Properties→Linker→Advanced→Data Execution Prevention (DEP)中选择是不是使用/NXCOMPAT 编译程序，如图 12.1.4 所示。 
 
-<img src="images/09/vs2008中设置/nxcompat编译选项.png">
+<img src="images/09/vs2008中设置nxcompat编译选项.png">
 
 采用/NXCOMPAT编译的程序会在文件的PE头中设置IMAGE_DLLCHARACTERISTICS_ NX_COMPAT 标识，该标识通过结构体 IMAGE_OPTIONAL_HEADER 中的 DllCharacteristics 变量进行体现，当 DllCharacteristics 设置为 0x0100 表示该程序采用了/NXCOMPAT 编译。
 
-关于结构体 IMAGE_OPTIONAL_HEADER 的详细说明大家可以查阅 MSDN 相关资料，在这我们就不过多讨论了。 经过/NXCOMPAT编译的程序有什么好处呢？通过前面的介绍我们知道用户版的操作系统 中DEP 一般工作在 Optin 状态，此时 DEP 只保护系统核心进程，而对于普通的程序是没有保护的。虽然用户可以通过工具自行添加，但这无形中增高了安全的门槛，所以微软推出了 /NXCOMPAT 编译选项。经过/NXCOMPAT 编译的程序在 Windows vista 及后续版本的操作系统上会自动启用 DEP 保护。 
+关于结构体 IMAGE_OPTIONAL_HEADER 的详细说明大家可以查阅 MSDN 相关资料，在这我们就不过多讨论了。 经过/NXCOMPAT编译的程序有什么好处呢？通过前面的介绍我们知道用户版的操作系统中 DEP 一般工作在 Optin 状态，此时 DEP 只保护系统核心进程，而对于普通的程序是没有保护的。虽然用户可以通过工具自行添加，但这无形中增高了安全的门槛，所以微软推出了 /NXCOMPAT 编译选项。经过/NXCOMPAT 编译的程序在 Windows vista 及后续版本的操作系统上会自动启用 DEP 保护。 
 
 DEP 针对溢出攻击的本源，完善了内存管理机制。通过将内存页设置为不可执行状态，来阻止堆栈中 shellcode 的执行，这种釜底抽薪的机制给缓冲溢出带来了前所未有的挑战。这也是迄今为止在本书中我们遇到的有力的保护机制，它能够彻底阻止缓冲区溢出攻击么？答案是否定的。 
 
@@ -65,7 +68,11 @@ Ret2libc 是 Return-to-libc 简写，由于 DEP 不允许我们直接到非可�
 
 <img src="images/09/ret2libc流程.png">
 
-简言之，只要为 shellcode 中的每条指令都在代码区找到一条替代指令，就可以完成 exploit 想要的功能了。理论上说，这种方法是可行的，但是实际上操作难度极大。姑且不说是不是 shellcode 中的每条指令都能在代码区找到替代指令，就算所有替代指令都找好了，如何保证每条指令的地址都不包含 0x00 截断字符呢？栈帧如何去布置呢？我们不断使用替代指令执行操作，然后通过 retn 指令收回控制权，不停地跳来跳去，稍有不慎就跳沟里去了。 
+简言之，只要为 shellcode 中的每条指令都在代码区找到一条替代指令，就可以完成 exploit 想要的功能了。理论上说，这种方法是可行的，但是实际上操作难度极大。主要有以下几点问题：
+- shellcode 中的每条指令是否都能在代码区找到替代指令？
+- 就算所有替代指令都找好了，如何保证每条指令的地址都不包含 0x00 截断字符呢？
+- 栈帧如何去布置呢？
+- 我们不断使用替代指令执行操作，然后通过 retn 指令收回控制权，不停地跳来跳去，稍有不慎就跳沟里去了。 
 
 为此，我们在继承这种思想的大前提下，介绍三种经过改进的、相对比较有效的绕过 DEP 的 exploit 方法。 
 - （1）通过跳转到 ZwSetInformationProcess 函数将 DEP 关闭后再转入 shellcode 执行。 
@@ -75,7 +82,9 @@ Ret2libc 是 Return-to-libc 简写，由于 DEP 不允许我们直接到非可�
 
 #### Ret2Libc 实战之利用 ZwSetInformationProcess 
 
-既然 DEP 这么碍事，不如我们就来个彻底的，直接将进程的 DEP 保护关闭。我们先来了解一个重要的结构和一个重要的函数。 一个进程的 DEP 设置标识保存在 KPROCESS 结构中的 _KEXECUTE_OPTIONS 上，而这个标识可以通过API函数 ZwQueryInformationProcess 和 ZwSetInformationProcess 进行查询和修改。 
+既然 DEP 这么碍事，不如我们就来个彻底的，直接将进程的 DEP 保护关闭。
+
+我们先来了解一个重要的结构和一个重要的函数。 一个进程的 DEP 设置标识保存在 KPROCESS 结构中的 _KEXECUTE_OPTIONS 上，而这个标识可以通过API函数 ZwQueryInformationProcess 和 ZwSetInformationProcess 进行查询和修改。 
 
 题外话：在有些资料中将这些函数称为 NtQueryInformationProcess 和 NtSetInformation Process，在 Ntdll.dll 中 Nt** 函数和 Zw** 函数功能是完全一样的，本书中我们统一称 之为 Zw**。 
 
@@ -84,7 +93,7 @@ Ret2libc 是 Return-to-libc 简写，由于 DEP 不允许我们直接到非可�
 ```C++
 typedef struct _KEXECUTE_OPTIONS
 {
-    ULONG ExecuteDisable: 1; //1 表示1bit
+    ULONG ExecuteDisable: 1; //1 表示 1 bit
     ULONG ExecuteEnable: 1;
     ULONG DisableThunkEmulation: 1;
     ULONG Permanent: 1;
@@ -125,7 +134,8 @@ NTSTATUS WINAPI ZwQueryInformationProcess(
 Skape 和 Skywing 在他们的论文 Bypassing Windows Hardware-Enforced DEP 中给出了关闭 DEP 的参数设置。 
 
 ```
-ULONG ExecuteFlags = MEM_EXECUTE_OPTION_ENABLE; ZwSetInformationProcess(    
+ULONG ExecuteFlags = MEM_EXECUTE_OPTION_ENABLE; 
+ZwSetInformationProcess(    
     NtCurrentProcess(),   // (HANDLE)-1     
     ProcessExecuteFlags,   // 0x22 
     &ExecuteFlags,   // ptr to 0x2    
@@ -414,6 +424,8 @@ BOOL VirtualProtect(
 这里有两个问题需要注意。
 - （1）参数中包含 0x00，strcpy 在复制字符串的时候会被截断，所以我们不能攻击 strcpy 函数，本次实验中我们改为攻击 memcpy 函数。
 - （2）对 shellcode 所在内存空间起始地址的确定，不同机器之间 shellcode 在内存中的位置可能会有变化，本次实验中我们采用**一种巧妙的栈帧构造方法动态确定 shellcode 所在内存空间起始地址**。
+- 上面代码中的0x40 代表一种内存页保护方式，具体可参考：https://docs.microsoft.com/en-us/windows/win32/memory/memory-protection-constants
+
 
 我们将用如下代码演示如何布置栈帧，并利用 VirtualProtect 函数将 shellcode 所在内存区域设置为可执行状态，进而执行 shellcode。
 
@@ -480,8 +492,7 @@ int main()
 
 <img src="images/09/virtualprotect函数具体实现过程.png">
 
-如图 12.3.17 所示，VirtualProtect 只是相当于做了一次中转，通过将进程句柄、内存地址、内存大小等参数传递给 VirtualProtectEx 函数来设置内存的属性。我们不妨选择 0x7C801FE8 作为切入点，按照函数要求将栈帧布置好后转
-入 0x7C801FE8 处执行设置内存属性过程。
+如图 12.3.17 所示，VirtualProtect 只是相当于做了一次中转，通过将进程句柄、内存地址、内存大小等参数传递给 VirtualProtectEx 函数来设置内存的属性。我们不妨选择 0x7C801FE8 作为切入点，按照函数要求将栈帧布置好后转入 0x7C801FE8 处执行设置内存属性过程。
 
 通过图 12.3.17 我们还可以看出从 EBP+8 到 EBP+18 这 16 个字节空间中存放着设置内存属性所需要的参数。
 - [EBP+C]和[EBP+10]这两个参数是固定的，我们可以直接在 shellcode 中设置；
@@ -604,7 +615,7 @@ char shellcode[]=
 
 继续运行程序就可以看到弹出熟悉的“failwest”对话框啦！
 
-### Ret2Libc 实战之利用 VirtualAlloc 
+#### Ret2Libc 实战之利用 VirtualAlloc 
 
 除了 VirtualProtect 函数，微软还提供了另一个 API 函数用来解决 DEP 对特殊程序的影响。当程序需要一段可执行内存时，可以通过 kernel32.dll 中的 VirtualAlloc 函数来申请一段具有可执行属性的内存。我们就可以将 Ret2Libc 的第一跳设置为 VirtualAlloc 函数地址，然后将 shellcode 复制到申请的内存空间里，以绕过 DEP 的限制。
 
@@ -686,12 +697,47 @@ int main()
 - （5）最后在这段可执行的内存空间中执行 shellcode，实现 DEP 的绕过。
 
 
-实验环境如表 12-3-3 所示。
-- 操作系统 Windows 2003 SP2 ;DEP 状态 Optout
-- 编译器 V C++ 6.0 编译选项 禁用优化选项
-- build 版本 re lease 版本
+实验环境如下表所示。
+- 操作系统 Windows 2003 SP2 
+- DEP 状态 Optout
+- 编译器 VC++ 6.0 编译选项 禁用优化选项
+- build 版本 release 版本
 
 
-首先我们要能够利用 VirtualAlloc 申请具有执行权限的内存，让我们来分析一下 VirtualAlloc 具体实现流程。从图 12.3.25 中大家可以看到 VirtualAlloc 函数中对各参数的调用与 VirtualProtect 函数如出一辙，因此我们可以选择与上个实验中一致的参数构造方法，但是仔细观察后您会发现二者还是有区别的，VirtualAlloc 各参数不存在动态确定的问题，可以直接写到 shellcode 里边，它的布局要比 VirtualProtect 函数中的布局简单的多。
+首先我们要能够利用 VirtualAlloc 申请具有执行权限的内存，让我们来分析一下 VirtualAlloc 具体实现流程：
+- 从图 12.3.25 中大家可以看到 VirtualAlloc 函数中对各参数的调用与 VirtualProtect 函数如出一辙，因此我们可以选择与上个实验中一致的参数构造方法；
+- 但是仔细观察后您会发现二者还是有区别的，VirtualAlloc 各参数不存在动态确定的问题，可以直接写到 shellcode 里边，它的布局要比 VirtualProtect 函数中的布局简单的多。
 
 <img src="images/09/virtualalloc函数的具体实现流程.png">
+
+这次我们将参数直接布置到shellcode中，然后选择 0x7c8245BC CALL VirtualAllocEx处作为切入点，直接申请空间。
+
+关键参数取值：
+- lpAddress = 0x00030000，只要选择一个未被占用的地址即可，没有什么特殊要求；
+- dwSize = 0xFF，申请空间大小可以根据shellcode的长度确定，这里申请了255个字节；
+- flAllocationType = 0x00001000，该值使用0x00001000即可，如有特殊需要可根据MSDN的介绍来设置为其他值。
+- flProtect = 0x00000040，内存属性要设置为可读可写可执行，详情可参考[MSDN memory protection constants](https://docs.microsoft.com/en-us/windows/win32/memory/memory-protection-constants)
+
+由于EBP在溢出过程中被破坏，所以第一步依然是修复EBP，我们用```PUSH ESP POP EBP RETN4```指令的地址覆盖test函数的返回地址，然后按照以上参数布置一个能够申请可执行内存空间的shellcode，shellcode如下所示：
+
+```c
+char shellcode [] = "\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90"
+"……"
+"\x90\x90\x90\x90"
+"\xBA\xD9\xBB\x7C"//修正 EBP retn 4 的指令地址
+"\xBC\x45\x82\x7C"//CALL VirtualAllocEx 地址
+"\x90\x90\x90\x90"
+"\xFF\xFF\xFF\xFF"//-1 当前进程
+"\x00\x00\x03\x00"//申请空间起始地址 0x00030000
+"\xFF\x00\x00\x00"//申请空间大小 0xFF
+"\x00\x10\x00\x00"//申请类型 0x1000
+"\x40\x00\x00\x00"//申请空间访问类型 0x40
+; 
+```
+
+编译好程序后用 OllyDbg 加载程序，并在 0x7CBBD9BA（调整 EBP 入口）处下断点，然后按 F8 键单步运行到 0x7C8245C2（VirtualAlloc 函数的 RETN 0x10）暂停，观察内存状态。
+
+如图 12.3.26 所示，EAX 中是我们申请空间的起始地址 0x00030000，这也说明我们的空间申请成功了，此时通过 OllyDbg 的内存窗口也可以看到我们刚刚申请的空间，而且属性是带 E 的标志！下面就是向这部分内存空间复制 shellcode 了。
+
+<img src="images/09/virtualAlloc函数返回前内存状态.png" >
+

@@ -139,12 +139,20 @@ ServiceManager 主要做3件事：
 
 
 #### Zygote进程
+Zygote 是在设备开启的时候initi东的一个进程。因为其行为很像受精卵的复制自身分裂行为，故取名zygote。
 
-zygote是由init进程通过解析init.rc文件后fork生成的，Zygote进程主要包含：
-- 加载ZygoteInit类，注册Zygote Socket服务端套接字
-加载虚拟机
-- 提前加载类preloadClasses
-- 提前加载资源preloadResouces
+<img src="images/android1/../android01/zygote1.jpg">
+
+zygote是由init进程通过解析init.rc文件后fork生成的，主要功能：
+- 在系统Framework层添加附加的服务和加载库工作
+- Zygote是Dalvik虚拟机的构造器
+- 在android应用执行时，它负责fork一个自身来执行该程序。
+  - 这样的优势是，zygote是系统启动时生成的，会完成虚拟机的初始化、库加载、预置库类的加载等操作。复制自身可以快速的构建执行环境。此外对于只读系统库，所有dalvik虚拟机实例都和zygote共享一块内存区域，大幅减少内存开销。
+- zygote的二级任务是启动一些系统服务进程，这些进程包括所有的系统中所有的AID核心服务。Zygote进程主要包含：
+  - 加载ZygoteInit类，注册Zygote Socket服务端套接字加载虚拟机
+  - 提前加载类preloadClasses
+  - 提前加载资源preloadResouces
+
 
 ##### Android Fork
 Fork函数继承于linux内核，一个进程，包括代码、数据、资源等都可以通过fork创建一个与原进程完全相同的进程，两个进程可以做相同的事，也可以赋予不同的数据或资源做不同的事。
@@ -179,6 +187,26 @@ Vold处理过程大致分为3个部分：
   - 访问udev的socket层，负责vold与底层的信息传递
 - 引导
 - 事件处理
+
+#### 匿名共享内存机制Ashmem
+Anonymous Shared Memory，通过这一内核机制，可以为用户空间程序提供分配内存的机制。这类似malloc。
+
+Ashmem 驱动程序在内核中的头文件和代码路径为：
+- ```kernel/include/linux/asmem.h```
+- ```kernel/mm/ashmem.c```
+
+在用户空间C libutil库对Ashmem进行封装并提供接口。
+
+#### 日志服务 Logger 
+
+Android 操作系统保存在Linux的日志机制之外，他也使用了另一套日志系统，我们称为Logger。
+
+该驱动程序主要为了支持Logcat命令，用于查看日志缓冲区。它提供了4个独立的缓冲区：
+- main，通常调用的android.util.Log方法类就会写道主缓冲区。
+- radio
+- event
+- system
+
 
 
 ### App层
@@ -315,4 +343,262 @@ userdata——用户使用APP产生的缓存数据
 - Android 6（Marshmallow，棉花糖）
 - Android 7（Nougat，牛轧糖）
 - Android 8（Oreo，奥利奥）
+
+## APK生成
+
+APK生成工程，即一个应用程序的APK文件，从开发者编写代码到编译生成的工程。了解一个APK文件的生成工程有利于我们理解整个应用的架构与安全性，也能够清楚如何保护自己的应用APK不被篡改、重打包。
+
+APK生成主要分为3个步骤：
+- 编译
+- 打包
+- 签名优化
+
+
+<img src="images/android01/apk_compile_package_process.png">
+
+
+### 编译过程
+
+包括:
+- 使用AAPT工具对资源文件打包，生成R.java文件
+  - 资源文件包括：res目录下的布局、动画、图片、声音等，以及manifest.xml；
+  - asset目录下的资源不会被编译生成R处理，只是简单压缩。
+- 使用aidl工具处理AIDL文件（AIDL是android interface definition language），生成对应的Java文件。
+- 使用Javac命令编译Java文件，生成对应的.class文件；
+- 把.class 文件转化成Davik VM（或 ART VM）支持的.dex文件
+
+### 打包过程
+将编译后文件，按照一定的格式压缩到一个文件。
+
+使用APK Builder 打包生成外签名的APK文件。
+
+### 签名优化过程
+
+打包后的APK文件是不能够直接安装使用的，还需要签名。
+
+步骤包括：
+- 使用jarsigner对未签名的APK文件进行签名
+- 使用zipalign工具对签名后的apk文件进行对齐。
+
+## Android 系统安全执行边界
+
+Android 采用了内核和用户空间两个大的安全边界，这与linux类似，使用不同的用户和组的权限模型。执行边界通常被成为Android的Sandbox。
+
+### 沙箱隔离机制
+
+<img src="images/android01/android应用沙箱机制.png" >
+Sandbox是一种基于系统重定向技术的安全技术。
+
+Android系统给每一个用户都分配一个唯一的UID，同时也会为该程序下所有的文件与所有的操作都配置相同的权限，只有相同的UID应用程序才能对这些文件进行读写操作。
+
+Android采用了Linux 的UID/GID隔离机制，但是Android在控制上也有一套规则。所以在Android上的UID机制也称AID。
+
+当然也可以使用 Android:sharedUserId 共享一个UID，让两个应用存在同一个进程中。在```\system\core\include\private\android_firesystem_config.h```中定义了系统中不同作用的服务所使用的AID。
+
+### 权限授予机制
+
+Android 权限很多，主要分为3类：
+- API权限
+- 文件权限
+- IPC权限
+
+#### API权限
+
+包括哪些在调用AndroidAPI，Framework 和第三方框架中使用的权限。
+
+低级别的权限在用户安装应用时会直接赋予，如READ_PHONE_STATE, ACCESS_NETWORK_STATE等。
+
+高级别的权限，如CHANGE_NETWORK_STATE, RECORD_AUDIO, SEND_SMS等，在使用时系统会弹出提示框。
+
+此外还包括自定义的权限，在```<permission android:description="xxx" .../>```中
+
+#### 文件权限
+
+Android 继承了Linux中的文件权限机制，系统中的每个文件和目录都访问许可权限，用它来确定谁可以通过何种方式和目录进行访问和操作。
+
+权限包括：
+- 只读
+- 只写
+- 执行
+
+### 数字签名机制
+
+#### 签名的意义
+
+- 程序升级。只有相同签名且相同包名才认为是同一个程序，才允许程序覆盖安装。
+- 模块化设计和开发。同一个数字签名的程序运行在一个进程之中，所以开发者可以将自己的程序分模块开发。
+- 共享数据和代码。Android提供了基于数字证书的权限赋予机制，应用程序可以和其他的程序共享此功能或将数据给那些与自己拥有相同数字证书的程序。如果应用在manifest.xml中声明了permision为android:protectionLevel="signature",则这个权限就只能授予哪些跟该权限所在的包拥有同一个数字签名的程序。
+
+
+#### 如何签名
+
+Android 系统签名主要有ROM签名和应用程序APK签名两种形式。
+- ROM签名是针对已经生成的Android系统ROM包进行签名。这是对整个Android系统的签名。
+- 应用程序APK签名是针对开发者开发的应用程序安装包APK进行签名。这是对单一APK的签名。
+
+Android应用程序APK是jar包，签名采用的工具是signapk.jar包，对应用程序安装包进行签名的命令如下：
+
+```java -jar signapk.jar publickkey privatekey input.apk output.apk```
+
+上述命令实现了对应用程序安装包 input.apk 签名的功能。后续为参数，第一个参数是公钥，第二个是私钥，第三个为输入的包名，第四个为签名后文件名。
+
+sign.jar 源码位于```build/tools/signapk/SignApk.Java```。
+
+完成签名后的APK包中多了一个META-INF文件夹，其中有名为MANIFEST.MF、CERT.SF和CERT.RSA3个文件。
+- MANIFEST.MF，包含很多APK包信息，如manifest文件版本、签名版本、应用程序相关属性、签名相关属性等。
+- CERT.SF是铭文的签名证书，通过采用私钥签名得到。
+- CERT.RSA是密文的签名证书，通过公钥生成的。
+
+上面签名所使用的公钥、私钥可以通过```development/tools/make_key```得到.
+
+##### MANIFEST.MF文件的生成方法
+
+基本思路是：对非文件夹、非签名文件的文件，逐个生成SHA1的数字签名信息，然后转BASE64编码存储。
+
+如果恶意代码改变了APK包中文件，那么进行APK安装校验时，改变后的摘要信息与MANIFEST.MF文件中存放的不同，则该程序不能安装。
+
+##### CERT.SF的生成
+
+基本思路：使用SHA1-RSA算法，用私钥进行签名。
+
+
+##### CERT.RSA的生成
+
+CERT.RSA文件中保存了公钥，采用的加密算法等信息。
+
+#### 如何验证签名
+
+安装APP的APK文件时，通过CERT.RSA查找公钥和算法，并对CERT.SF进行解密和签名验证，确认MANIFEST.MF，最终对每个文件进行签名校验。
+
+升级时，也会对签名进行验证。
+
+遇到下列情形之一都不能完成安装和更新：
+- 两个应用，名字相同，签名不同；
+- 升级时前一版本签名，后一版本未签名；
+- 升级时前一版本为DEBUG签名，后一个为自定义签名；
+- 升级时前一版本为android源码中的签名，后一个为debug签名或自定义签名
+- 安装未签名的文件
+- 安装升级已过有效期的程序。
+
+### 系统的安全结构
+
+Android 系统分为4层的层级结构，每一层都有不同的安全措施。
+- 应用层，有介入权限、代码包护
+- 框架层，数字证书
+- Dalvik，沙箱机制
+- 内核层，Linux文件权限
+
+#### Android 应用程序安全
+
+应程序分为两类：
+- 系统预安装应用
+- 用户自己安装的应用
+
+预安装的应用包括：谷歌、原始设备制造商(OEM)或移动运营商提供的应用程序。这些都安装在```/system/app```目录下。其中的一些可能有提升权限或能力，因此，可能是特别感兴趣的。
+
+用户安装的应用程序以及预装应用的更新包都在```/data/app```目录下。
+
+#### 主要的应用组件
+
+几乎所有的Andorid系统都会包含：AndroidManifest.xml,Intent,Activity,Broadcast,Receivers,Service和Content Providers。
+
+##### Manifest.xml中包含的功能
+
+- 声明应用的包名、版本号，包名是应用的唯一标识
+- 描述应用的component（Activity，Service，Broadcast Reciever，Content Provider）。
+- 说明应用的component运行在那个process下。
+- 声明应用所必须具备的权限，用以访问受保护的部分API，以及与其他application的交互。
+- 声明应用其他的必备权限，用以component之间的交互
+- 声明自定义权限，用来限制应用中特殊组件特性与应用内部或者和其他应用之间访问。
+- 列举应用所需的环境配置信息，这些只存在于开发和测试期间，发布前将被删除。
+- 声明应用所需的Andorid API的最低版本
+- 列举应用所需链接的库
+- 声明共享进程ID，shareUserId
+
+##### Intents
+Intent是一种运行时绑定机制，它能够在程序运行的过程中连接两个不同的组件。通过Intent，你的程序可以向Android表达某种请求或者意愿，Android会根据意愿的内容选择适当的组件来处理请求。
+
+如：startActivity(intent)，startService(intent)等。掉起一个组件或传递一些数据的时候我们都会使用intent。
+
+可以注册一些intent-filter，过滤接收一些特定的intent。Intent的传递机制，类似于IPC或远程过程调用RPC, 应用组件可以使用数据共享的方式与另一个应用组件交互。
+
+显示注册是开发者在代码中使用具体的类或包名的方式进行新建与注册的。其传递方式是通过ActivityManager来完成的。
+
+##### 四大组件模型
+
+Android四大基本组件是：
+- Activity，负责界面
+- Service，负责服务
+- contentProvider，负责数据存储
+- BroadcastReceiver，负责广播
+
+<img src="images/android01/componentsOfAndroid.png">
+
+
+<img src="images/android01/Android_Intro_building.jpg">
+
+#### Android Framework层
+
+Android Framework层是Application层和Runtime层的粘合剂，Android Framework层提供了软件包和开发商执行常见任务的类。这些任务可能包括用户界面元素，共享数据存储，并通过应用程序组件传递消息。
+
+Framework层包含一些android开发中常用的库：
+- android.*命名的库
+- Java.*库
+- Javax.*库
+- 第三方库，如apache http库...
+- 用于管理的一些服务，如Activity Manager。
+
+##### Dalvik虚拟机
+
+2007年google的Dan Bornstein开发，特点有：
+- 体积小
+- 专用的DEX可执行文件格式体积更小，执行速度更快
+- 常量池采用32位索引，寻址类方法名、字段名、常量更快
+- 基于寄存器架构，并拥有一套完整的指令系统。
+- 提供了对象生命周期管理、堆栈管理、线程管理、安全和异常管理、垃圾收集等功能
+- 所有的android程序都运行在android系统进程中，每个进程对应着一个dalvik虚拟机实例
+
+Dalvik与JVM并不兼容，最大的区别在于：
+- JVM运行的是java字节码，Dalvik运行的是Dalvik字节码
+- Dalvik体积更小
+- JVM是基于栈架构，Dalvik是基于寄存器架构。
+
+## Android Root
+
+Root Android设备事实上是将一项原本Android中拥有但被OEM商删去的功能恢复起来。
+
+在原生的Android中有一个文件名为 su，它普通用户切换为root的权限获取工具。
+
+### system root 与 systemless root
+
+自从Android 4.3版本出现后，我们就不能简单的通过增加su文件的方式切换到root了。Android 4.3 中申请成为root必须在你启动手机时执行。而且su的daemon必须以特殊权限运行。为达到这两个条件，手机中的系统文件夹需要被改动。
+
+到了Android5.0，之前的情况被改变了，而且 boot image（负责启动android的软件部分）需要被修改才能使 su daemon 启动起来。由于不修改 system 分区，所以这类root称为 systemless root。Systemless root就是通过为手机构建和安装 Android系统实现的root。
+
+Systemless root可以对某些应用隐藏root状态，即这些 app 不知道当前手机已经被root，它将被限制运行在无root状态。这意味着类似 Google's SafetyNet, 银行app，游戏app等不知道当前设备已经被root了。
+
+目前，除了较老的手机或不想自己构建Android系统的机器，最好都进行systemless root。
+
+### 准备工作
+
+大多数root方法都需要安装Android SDK 或 解锁你的 bootloader。
+
+解锁 bootloader 在不同的手机上大不相同。标准做法是通过OEM解锁命令。如果你使用Motorola, Sony, or LG等，可以使用官方的密码令牌来解锁你的bootloader。
+
+### 如何root
+如何root取决于你的手机类型，有些手机设计成很难root的情况。
+
+#### Samsung
+
+Root 三星手机通常可借助工具 Odin，这是一款底层固件刷机工具，可以将image文件存入存储，覆盖已存的images。
+
+Odin需要设置USB驱动，正确连接手机和PC机。如果在Mac 电脑上刷机，需要使用 Heimdall。
+
+Flashing的风险是错误的image会使手机无法启动。大多数无法启动可以被回复，但有些会损坏硬件。
+
+有些三星电话带有Knox Security。Knox使一种三星特定的 "Samsung Approved For Enterprise" 功能，这个功能会监视固件修改情况，一旦改动固件就会丧失保修。
+
+#### huawei
+
+首先要解锁bootloader。
 
