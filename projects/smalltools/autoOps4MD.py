@@ -26,6 +26,7 @@ def autoNumber(srcFile,objFile):
     level1 = 0
     level2 = 0
     level3 = 0
+    level4 = 0
     excount = 0
     try:
         with open(srcFile,'r',encoding="utf-8") as rf:
@@ -45,17 +46,26 @@ def autoNumber(srcFile,objFile):
                             newline = re.sub(h2re,p,line)
                             level2 = 0
                             level3 = 0
+                            level4 = 0
+
                         h3re = r'(^#{3})\s+[\d\.]*\s*'
                         if re.match(h3re,line):
                             level2 += 1
                             p = r'\1 ' + str(level1) +'.'+str(level2) +' '
                             newline = re.sub(h3re,p,line)
                             level3 = 0
+                            level4 = 0
                         h4re = r'(^#{4})\s+[\d\.]*\s*'
                         if re.match(h4re,line):
                             level3 += 1
                             p = r'\1 ' + str(level1) +'.'+str(level2)+'.'+str(level3) +' '
                             newline = re.sub(h4re,p,line)
+                            level4 = 0
+                        h5re = r'(^#{5})\s+[\d\.]*\s*'
+                        if re.match(h5re,line):
+                            level4 += 1
+                            p = r'\1 ' + str(level1) +'.'+str(level2)+'.'+str(level3)+'.'+str(level4) +' '
+                            newline = re.sub(h5re,p,line)
                     # Some batch operations regardless of context
                     #    To auto modify image import block
                     newline = modiImageImportFormat(newline) 

@@ -1198,4 +1198,134 @@ int main()
 
 重新编译程序后直接运行，大家就可以看到弹出的对话框了.
 
-> 个人实验，没有能够执行，原因是0x00140000为不可执行内存。从ollydbg观察此内存访问属性为RWE，使用xdbg32查看，0x00140000仅可读写。所以执行时会引发nt异常。
+> 个人实验结果：没有能够顺利执行，原因是0x00140000为不可执行内存。从ollydbg观察此内存访问属性为RWE，使用xdbg32查看，0x00140000仅可读写。所以执行时会引发nt异常。
+
+## 利用.NET 挑战 DEP
+
+微软在IE6及后续版本的浏览器中允许使用.NET控件来实现一些功能，这些功能最终会运行在浏览器进程中的沙盒里。。为了防止这些.NET 控件做出什么出格的事，微软
+对.NET 控件进行了一系列校验，但是.NET 控件本身不做出格的事，并不代表不能利用它来做出格的事。就像前面介绍的一些绕过 DEP 的方法，那些 DLL 和指令本身都没有问题，但是经过我们的组合后，就变成了血刃 DEP 的利剑。
+
+实际上.NET 的文件具有和与 PE 文件一样的结构，也就是说它也具有.text 等段，这些段也会被映射到内存中，也会具备一定的可执行属性。大家应该想到如何利用这一点了，将 shellcode 放到.NET 中具有可执行属性的段中，然后让程序转入这个区域执行，就可以执行 shellcode 了。
+
+演示如何利用.NET 控件绕过 DEP 需要三方面的支持：
+- 具有溢出漏洞的 ActiveX 控件。
+- 包含有 shellcode 的.NET 控件。
+- 可以触发 ActiveX 控件中溢出漏洞的 POC 页面。
+
+在“利用 Adobe Flash Player ActiveX 控件绕过 SafeSEH”一节中我们介绍了如何用 Visual Studio 2 008 建立一个基于 MFC 的 ActiveX 控件，本次实验中具有溢出漏洞的 ActiveX 控件依然使用 Visual Studio 2008 建立，控件名称为 VulnerAX。建立的过程与前面介绍的完全一致，只是本次实验我们攻击的是函数返回地址，而不是 S.E.H。
+
+本次使用的漏洞代码依然放在 test 函数中。代码很简单，在函数里边申请 100 个字节的空间，然后向这个空间里复制字符串，当复制的字符串超度超过 100 个字节时就会发生溢出，具体代码如下所示。
+
+```c
+void CVulnerAXCtrl::test(LPCTSTR str) 
+{
+    //AFX_MANAGE_STATE(AfxGetStaticModuleState());
+    // TODO: Add your dispatch handler code here
+    printf("aaaa");//定位该函数的标记
+    char dest[100];
+    sprintf(dest,"%s",str);
+} 
+```
+
+接下来我们就要编译生成这个 ActiveX 控件了，因为本次我们攻击的是函数返回地址，所以要禁用程序的 GS 编译选项，其他编译选项与“利用 Adobe Flash Player ActiveX 控件绕过SafeSEH”一节中的 ActiveX 空间一致，具体编译选项如下表所示。
+- 操作系统 Windows XP SP3
+- 编译器 Visual Studio 2008
+- 优化 禁用编译优化
+- GS 选项 GS 关闭
+- MFC 在静态库中使用 MFC
+- 字符集 使用 Unicode 字符集
+- build 版本 release 版本 
+
+编译好控件后，我们在实验机器上注册这个 ActiveX 控件。在命令行下输入：```Regsvr32 路径\ VulnerAX.ocx``` 即可。注册之后我们可以在 Web 页面中通过如下代码来调用该控件中的 test 函数。
+```HTML
+<object classid="clsid:39F64D5B-74E8-482F-95F4-918E54B1B2C8" id="test"> </object>
+<script>
+    test.test("testest");
+</script> 
+```
+
+其中 classid 的值可以在 VulnerAx.idl 文件中的“Class information for CVulnerAXCtrl”下边查看到，如图 12.5.1 所示，本次实验中 classid 值为 39F64D5B-74E8-482F-95F4-918E54B1B2C8。
+
+<img src="images/09/activex的classid值.png">
+
+然后我们需要在 C#下边建立一个 DLL 解决方案，如下图所示。
+
+<img src="images/09/csharp下建立dll解决方案.png">
+
+建立好之后 .NET 控件工程的，我们只需要将 shellcode 以变量形式放到 dll 中即可，需要注意的是浏览器加载这个 DLL 之后使用是 Unicode 编码，所以我们的 shellcode 也要以 Unicode 编码的形式存放，代码如下所示。
+
+接下来要编译生成这个 .NET 控件，编译选项的设置上还有几个需要注意的地方，如下表所示：
+- 操作系统 Windows XP SP3
+- 编译器 Visual Studio 2008
+- 基址 0x24240000
+- build 版本：使用 Debug 版本 （Realse 版的优化选项会影响 shellcode ）。
+
+.NET 控件的基址可以通过“Project→DEP_NETDLL Properties→Build→Advanced”进行设置，如下图所示。
+
+<img src="images/09/设置dll基址.png">
+
+编译好 DLL 之后，我们需要将这个 DLL 和溢出 ActiveX 控件的 POC 页面放到同一目录下，并通过如下代码调用。
+
+```<object classID="DEP_NETDLL.dll#DEP_NETDLL.Shellcode"></object> ```
+
+Shellcode 放置好后，我们来设置 POC 页面，并将 POC 页面与.NET 控件放到一台 Web 服务器上，在实验机上访问这个 POC 页面，以触发 ActiveX 中的溢出漏洞，通过.NET 控件绕过DEP。
+
+POC 页面的代码如下所示。
+
+```html
+<html>
+<head>
+<title>Test </title>
+
+</head>
+<body>
+    <object classID="DEP_NETDLL.dll#DEP_NETDLL.Shellcode"></object> 
+    <object classid="479E2026-87D1-4DDF-B417-6BA667AA9B3D" id="VulnerAX"> </object>
+    <script>
+        var s = "\u9090";
+        while (s.length < 54) {
+            s += "\u9090";
+        }
+        s+="\u24E2\u2424";
+        VulnerAX.test(s);
+    </script>
+</body>
+
+</html>
+
+```
+
+对代码和思路简要解释如下。
+- 为了更直观地反映绕过 DEP 的过程，本次实验所攻击的 ActiveX 控件不启用 GS（项目属性C++——代码生成处设置buff safe选项）。
+- 通过 Web 页面同时加载具有溢出漏洞的 ActiveX 控件和包含shellcode 的 .NET 控件。
+- 由于 shellcode 位于 .NET 的 .text 段中，因此 shellcode 所在区域具有可执行权限。
+- ActiveX 控件中的 test 函数存在一个典型的溢出，通过向 test 函数传递超长字符串可以造成溢出，进而覆盖函数返回地址。
+- 编译 .NET 控件的时候，我们设置了 DLL 的基址，所以我们可以将函数的返回地址覆盖为 .NET 控件中的 shellcode 起始地址，进而转入 shellcode 执行。
+- 实验中使用的是 Unicode 编码，在计算填充长度时要考虑 Unicode 与 Ascii 编码之间的长度差问题。
+
+实验环境如下表所示。
+- 操作系统 Windows XP SP3
+- DEP 状态 Optout
+- 浏览器 Internet Explorer 7
+
+用 IE 访问我们设置好的 POC 页面，如果浏览器提示 ActiveX 控件被拦截等信息请自行设置浏览器安全权限，当浏览器弹出图 12.5.4 中所示的对话框时用 OllyDbg 附加 IE 的进程，附加好后按一下 F9 键让程序继续运行。
+
+<img src="images/09/ie拦截到web页面与activex空间之间交互.png">
+
+然后我们转到 DEP_NETDLL.dll 的内存空间中查找 shellcode 的具体位置，大家可以通过OllyDbg 的可执行模块窗口找到 DEP_NETDLL.dll 模块双击进入该内存空间。由于我们在shellcode 开始部分布置了一串 0x90，所以我们很容易地就可以发现 shellcode 起始地址位于 0x242424DF，如图 12.5.5 所示。
+
+<img src="images/09/net控件中shellcode的位置.png">
+
+找到 shellcode 的起始地址后，我们来计算一下填充字符的长度。首先我们转到VulnerAX.ocx 的内存空间中，然后通过查找参考字符串的方法，找到“aaaa”所在位置，这个位置就是 test 函数中的 printf(“aaaa”)的位置，我们在设置好断点，单击浏览器弹出对话框中的“是”按钮，程序会中断在刚才我们设置断点的位置。
+单步运行程序到 RETN 4 的位置，然后观察堆栈。如图 12.5.6 所示，可以发现我们的填充字符从 0x01EF534 的位置开始，函数返回地址存放位置为 0x01EFF5A0，所以填充 108（0x6C）个字节就刚好覆盖到返回的返回地址，然后后面再跟上 shellcode 的起始地址就可以转入shellcode 执行了。
+
+<img src="images/09/ActiveX 控件溢出后的内存状态.png">
+
+JavaScript 实现代码如下所示，需要的注意的是由于在 JavaScript 中使用的是 Unicode 编码，而刚才计算填充长度是以 ASCII 码长度计算的，中间有一个 2 倍的转换。
+
+分析结束，现在可以关掉 OllyDbg 了，用 IE 重新打开 POC 页面，让我们来看看是不是真的绕过 DEP 了，不出意外的话大家就可以看到“failwest”的对话框弹了出来。如图 12.5.7 所示。
+
+
+## 利用 Java applet 挑战 DEP
+略
+
