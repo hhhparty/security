@@ -2,7 +2,7 @@
 #include <stdio.h> 
 #include <ctype.h>
 
-
+//ps. In order to could catch the debug info, release version should set "\EHa" in c++ project propertions of project setting.
 long StrToL(char *srcStr)
 {
     char* str="";
@@ -45,7 +45,6 @@ int main(int argc, char* argv[])
             int flag = 1;
             for(int i=2;i<argc;i++)
             {
-                //printf("\n %x",StrToL(argv[i]));
                 flag = flag && (ptr[position+i-2] == StrToL(argv[i]));
             }
            
@@ -61,7 +60,7 @@ int main(int argc, char* argv[])
 		catch(...) 
 		{ 
 			address = (int)ptr + position; 
-			printf("END OF 0x%x\n", address); 
+			printf("\nEND OF 0x%x\n", address); 
 			done_flag = true; 
 		} 
 	}
