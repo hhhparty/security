@@ -1,5 +1,17 @@
 # 逆向分析中常见的Windows api 函数
 
+## winuser.h
+
+### winprintfA
+
+写格式化的数据到指定buffer。
+
+winprintfA(LPTSTR buffer, LPCTSTR format_string，...)
+
+格式字符串后面跟的参数数量和类型，取决于格式字符串的情况。例如格式字符串为“%c%s”，那么后面应该跟一个char类型和一个字符串类型（或字符数组）。
+
+返回值为证书，如果成功返回值是存入缓冲区的字符数量（不计算最后的空字节）；如果失败，返回值为小于期望输出值。
+
 ## USER32.DLL 中的常见API 函数
 
 USER32.DLL涉及很多用户窗体的API函数
