@@ -2,7 +2,7 @@
 
 ## mongodb
 
-1.安装 centos 虚拟机下系统
+1.安装 centos 虚拟机系统
 
 2.安装 docker
 
@@ -124,3 +124,7 @@ processManagement:
 ```
 
 ```docker run --name mongoserver  -v ~/docker/mongo.conf:/etc/mongo.conf.orig -d mongo```
+
+## 删除所有已停容器
+
+```docker ps -q | xargs docker rm```
