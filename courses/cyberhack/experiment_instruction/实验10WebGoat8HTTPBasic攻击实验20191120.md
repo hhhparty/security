@@ -58,7 +58,7 @@ User-Agent: Mozilla/4.06 Accept: image/gif,image/jpeg, /
 
 ```sudo docker run --rm -it -p 8080:8080 webgoat/webgoat-8.0```
 
-之后在某个浏览器上打开这个应用： http://10.10.10.129:8080/WebGoat/login， 然后进行注册用户密码。
+之后在某个浏览器上打开这个应用：http://10.10.10.129:8080/WebGoat/login， 然后进行注册用户密码。
 
 3.使用 Google Chrome 浏览器浏览链接：http://10.10.10.129:8080/WebGoat/start.mvc#lesson/HttpBasics.lesson/1
 
