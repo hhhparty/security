@@ -1,5 +1,23 @@
 # SQL Injection 测试用例
 
+
+## 思路
+
+### 判断注入点
+
+可以关注一下地方：
+- 搜索框
+- 注册框
+- 登录框
+
+#### 搜索框
+
+搜索框可能用到语句有：
+
+```SELECT p.*, pac.all_cities FROM {p}_page AS p left join {p}_page_all_cities pac on p.page_id=pac.page_id and p.lang=pac.lang left join {p}_page_all_provinces pap  on p.page_id=pap.page_id and p.lang=pap.lang WHERE p.[lang] = N'2' AND p.[hidden] = N'0' AND p.[parent_id] =14  And ( p.[title] like N'%sql%' )  And (p.[pri4]=N'1' Or p.[pri5]=N'1' Or p.[pri6]=N'1' Or p.[sec1]=N'1' Or p.[sec2]=N'1' Or p.[sec3]=N'1' Or p.[sec4]=N'1' Or p.[sec5]=N'1' Or p.[sec6]=N'1')  And ( wholeyear=N'1'  Or year1m9=N'1' Or  wholeyear=N'1'  Or year2m1=N'1')  ORDER BY  wholeyear```
+
+上面用到了预编译，有些程序员会毫无安全意识的不使用，使用字符串硬连接，这时就会有注入形成。
+
 ## 初步尝试
 
 使用下列进行初步尝试，页面不报错或有不同反馈都可能预示着注入的可能。

