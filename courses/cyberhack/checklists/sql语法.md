@@ -277,9 +277,9 @@ SELECT
         WHEN '加拿大'  THEN '北美洲'
         WHEN '墨西哥'  THEN '北美洲'
         ELSE '其他'
-    END AS '洲',
+    END AS '洲',then
     SUM(population) AS '人口'
-    
+    ''
     FROM table_A
     GROUP BY CASE country
         WHEN '中国'   THEN '亚洲'
