@@ -463,7 +463,58 @@ ps.getString(2,mail);
 最后发现ip为104.130.219.202
 
 
+### XXE
+
+XXE指XML external entity 攻击。
+
+一个Xml实体是某个在XML解析时可以用其他内容替代的标签。通常有3种：
+- 内部实体
+- 外部实体
+- 参数实体
+
+一个实体必须在文档类型定义（DTD）中生成，下面是一个例子：
+```xml
+<?xml version="1.0" standalone="yes">
+<!DOCTYPE author [
+  <!ELEMENT author (#PCDATA)>
+  <!ENTITY js "Jo Smith">
+]>
+<author>&js;</author>
+```
+这样，无论在哪儿出现实体```&js;```，解析器都会将他替换为该实体定义的值。
+
+XXE注入攻击是针对某些解析XML输入的应用程序的攻击。在XML输入中包含对外部实体引用时且使用了有缺陷的XML parser，这类攻击就可能发生。攻击会导致机密数据的泄露、服务器端请求伪造（ssrf）、从部署解析器的机器进行端口扫描、其他系统影响。
+
+有些时候，一个含有客户端内存冲突问题漏洞的XML处理库，可能被利用引用一个恶意的URI，可能会导致在当前应用账户下的任意代码执行。
+
+通常我们区别XXE攻击为以下类型：
+- 经典：这种类型是一个外部实体被包含在本地DTD中。
+- 盲注：响应中没有输出或错误。
+- 错误：尝试得到错误消息中的信息。
+
+#### 第一题
+提交表单，在评论输入框执行XXE注入，尝试浏览系统根目录.
+
+先抓包，看到POST表单是一个xml：```<?xml version="1.0"?><comment>  <text>1</text></comment>```
+
+按照上面的介绍，先定义一个DTD，然后修改这个表单提交内容。例如：
+
+```<!DOCTYPE hehe [ <!ENTITY ls  "file:///">]>```
+
+```<?xml version="1.0"?><!DOCTYPE hehe [ <!ENTITY ls SYSTEM "file:///">]><comment><text>&ls;</text></comment>```
+
+这里还是要了解外部实体定义的语法方式。
 
 
+#### 第二题
+现代REST方式，服务器能够接受开发人员想不到的格式数据。所以这可能导致JSON端点存在XXE攻击漏洞。
 
+尝试执行XML注入。
 
+这里主要是需要把request header中的参数修改如下：
+```Content-Type: application/json``` 
+改为：```Content-Type: application/xml```
+
+然后将post表单处的```{"text":"123"}```这样的json改为：```<?xml version="1.0"?><!DOCTYPE hehe [ <!ENTITY ls SYSTEM "file:///">]><comment><text>&ls;</text></comment>```
+
+手动修改后，提交即可。
