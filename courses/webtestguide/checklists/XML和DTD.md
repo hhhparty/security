@@ -249,8 +249,29 @@ XML example:```<author>&writer;&copyright;</author> ```
 - <!ELEMENT from (#PCDATA)>
 - <!ELEMENT heading (#PCDATA)>
 - <!ELEMENT body (#PCDATA)> 
+#### 内部参数化实体声明
+```<!ENTITY % name "entity_value">	 ```     
 
+INTERNAL (PARSED) PARAMETER ENTITY Declaration: Internal parameter entity references are used to declare entities existing only in the DTD.
 
+entity_value:: any character that is not an '&', '%' or ' " ', a parameter entity reference ('%Name;'), an entity reference ('&Name;') or a Unicodeglossary character reference.
+
+Note:
+Note the use of external DTD examples above. Parameter entity references may not be used within markup in an internal DTDwell-formedness constraint.
+
+#### 外部参数化实体声明
+```xml
+<!ENTITY % name SYSTEM "URI">
+%name;
+
+<!ENTITY % name PUBLIC "public_ID" "URI"">
+%name;
+```
+
+External parameter entity references are used to link external DTDs. There are two types of external entities: private, and public. Private external entities are identified by the keyword SYSTEM, and are intended for use by a single author or group of authors. Public external entities are identified by the keyword PUBLIC and are intended for broad use.
+
+URI: In practice, this is a URL where the external parameter entity can be found.
+public_ID: This may be used by an XML processor to generate an alternate URI where the external parameter entity can be found. If it cannot be found at this URI, the XML processor must use the normal URI.
 ### DTD 验证 
 
 使用 Internet Explorer 可根据某个 DTD 来验证您的 XML。
@@ -291,3 +312,6 @@ document.write(xmlDoc.parseError.line);
 ```
 #### 通用的 XML 验证器
 [为了帮助您验证 XML 文件，我们创建了此 链接，这样你就可以验证任何 XML 文件了。](https://www.runoob.com/dom/dom-validate.html)
+
+
+更多dtd内容：http://www.cheat-sheets.org/sites/xml.su/dtd.html
