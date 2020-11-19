@@ -1,6 +1,6 @@
 # 跨站脚本防护 Cheat Sheet
 
-内容参考：[OWASP Cross Site Scripting Prevention](nodejs%20security%20checklist.mdhttps://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html)
+内容取自：[OWASP Cross Site Scripting Prevention](nodejs%20security%20checklist.mdhttps://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html)
 
 ## 介绍
 
