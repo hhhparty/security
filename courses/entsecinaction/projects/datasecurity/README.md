@@ -117,10 +117,14 @@ Cache-Control: must-revalidate,max-age=0,s-maxage=0
 #### 会话管理
 
 - 服务器HTTP响应头中应设置```Set-Cookies:Secure;HttpOnly;SameSite=Strict```等 ；
-- 维持用户状态的会话凭据（cookie），应当在HTTPS下传输；
+- 维持用户状态的会话凭据，应当在HTTPS下传输；
 - 保障每个用户每次访问的会话ID随机性，确保其不可预测、不可篡改、到期过期，防止猜测和重放；
 - 用户注销、用户重新登录、超时注销、用户在不同IP同时登录等动作发生后，原用户会话ID必须强制设为无效；
-- 使用web框架等的内建防止CSRF的机制；
+- 使用web框架内建的CSRF攻击防护机制，可以使用以下模式：
+  - 同步器token模式（建议使用JavaScript在自建的请求头中加入 csrf token）
+  - 加密的token模式（对用户会话id和时间戳进行加密，形成 csrf token，推荐使用 AES-256 with GCM 模式 或 GCM-SIV 加密方法），适用无状态服务。
+  - 强哈希的token模式（），适用无状态服务。
+  - 或者自建完整的CSRF防护机制；
 - 
 
 
@@ -159,4 +163,17 @@ Cache-Control: must-revalidate,max-age=0,s-maxage=0
 
 Excel导出时，需要进行数据加密。
 
-### 
+
+
+# 20201123交流
+
+- 后台目前使用icome
+- 使用新奥云
+- Mysql数据库与icome-test在一起，开发人员都能看到。
+- 数据中有金额等机密信息
+- 运维管建库。DBA管，黄健。
+- VUE web 框架。
+- 中间：redis
+
+
+
