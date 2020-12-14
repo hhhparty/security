@@ -21,6 +21,11 @@
 - 对防御者：由于大多数安全工具并不适合利用TTPs，将其应用到防御中难度是最高的。
 
 ## 框架介绍
+ATT&CK的全称是Adversarial Tactics, Techniques, and Common Knowledge (ATT&CK)。它是一个站在攻击者的视角来描述攻击中各阶段用到的技术的模型。ATT&CK对于任何组织来说都是非常有用的，因为组织需建立一个基于威胁的防御体系。该模型由MITRE公司提出，这个公司一直以来都在为美国军方做威胁建模，之前著名的STIX模型也是由该公司提出的。
+
+官方对ATT&CK定义如下：
+> MITRE’s Adversarial Tactics, Techniques, and Common Knowledge (ATT&CK) is a curated knowledge base and model for cyber adversary behavior, reflecting the various phases of an adversary’s attack lifecycle and the platforms they are known to target.
+
 ATT&CK可以做一把尺子，且能应用于实践。
 - 是一个对抗行为的知识库。
 - 基于真实观测数据创建。
@@ -35,20 +40,22 @@ ATT&CK可分为Enterprise版和Mobile版本。
 
 #### Tactic 战术 （攻击者的目标）
 ATT&CK一共有12个Tactic（目标不大会改变，所以战术基本保持为12个）：
-- 初始访问
-- 执行
-- 持久化
-- 提升权限
-- 防御绕过
-- 凭据访问
-- 发现
-- 横向移动
-- 收集
-- 命令和控制
-- 数据渗透
-- 影响
+- 初始访问 Initial Access
+- 执行 Execution
+- 持久化 Persistence
+- 提升权限 Privilege Escalation
+- 防御绕过 Defense Evasion
+- 凭据访问 Credential Access
+- 发现 Discovery
+- 横向移动 Lateral Movement
+- 收集 Collection
+- 命令和控制 Command and Control
+- 数据渗透 Exfiltration
+- 影响 Impact
 
 战术是高度抽象的，所以企业版的ATT&CK战术在windows、macOS、Linux上基本一致。无论是IT,OT,IoT都可以应用。
+
+##### 
 
 #### 技术 Technologies （目标如何达成）
 - 目前有300多种攻击技术。

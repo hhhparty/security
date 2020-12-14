@@ -29,18 +29,18 @@ MITRE ATT＆CK矩阵按照一种易于理解的格式将所有已知的战术和
 
 顶层战术包括以下内容：
 
-- Initial Access
-- Execution
-- Persistence
-- Privilege Escalation
-- Defense Evasion
-- Credential Access
-- Discovery
-- Lateral Movement
-- Collection
-- Command and Control
-- Exfiltration
-- Impact
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
 
 
 ATT＆CK战术按照逻辑分布在多个矩阵中，并以“初始访问”战术开始。例如：发送包含恶意附件的鱼叉式网络钓鱼邮件就是该战术下的一项技术。ATT＆CK中的每种技术都有唯一的ID号码，例如，此处所使用的技术T1193。矩阵中的下一个战术是“执行”。在该战术下，有“用户执行/ T1204”技术。该技术描述了在用户执行特定操作期间执行的恶意代码。在矩阵中后面的阶段中，您将遇到“提升特权”、“横向移动”和“渗透”之类的战术。
