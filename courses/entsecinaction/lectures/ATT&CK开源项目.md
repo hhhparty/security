@@ -58,12 +58,108 @@ ln -s /usr/software/nodejs/bin/node   /usr/local/bin/
 - Navigate to localhost:4200 in browser
 
 ##### Compile for use elsewhere
-Run ng build within the nav-app directory
-Copy files from nav-app/dist/ directory
-Running the Navigator offline
+在`nav-app`目录下，运行 ```ng build``` 。
+
+这时可能会出现错误，例如：“Error: Job name "..getProjectMetadata" does not exist.”
+
+`npm i @angular-devkit/build-angular@0.803.24`
+
+还有可能出现类似这样的错误：“ FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of me”
+
+所以要在 ng 脚本里写内容，例如 `vi /urs/local/nodejs/bin/ng`，在首行编辑如下：
+
+```#!/bin/sh  --max_old_space_size=4096```
+
+这样增加了build时的可用内存。之后继续`ng build`
+
+还可能遇到这样的问题： An unhandled exception occured: Call retires were exceeded
+
+这可能还是内存问题，所以运行下列脚本代替`ng build`:
+
+```node --max_old_space_size=4096 node_modules/@angular/cli/bin/ng build```
+
+拷贝`nav-app/dist/`目录中的文件，到需要运行的地方。也就是nginx的html目录里。
+
+安装方式，比较简单：
+```
+sudo yum install -y epel-release
+sudo yum -y update
+
+sudo yum install -y nginx
+cd  /usr/local/nginx/html
+
+sudo mv ~/Downloads/nav-app/dist /usr/local/nginx/html/
+#假定server端口为80和443
+sudo firewall-cmd --permanent --zone=public --add-service=http
+sudo firewall-cmd --permanent --zone=public --add-service=https
+sudo firewall-cmd --reload
+
+systemctl start nginx
+```
+安装成功后，默认的网站目录为： /usr/share/nginx/html , dist文件夹要拷贝到这里面。
+
+默认的配置文件为：/etc/nginx/nginx.conf
+
+自定义配置文件目录为: /etc/nginx/conf.d/
+
+修改配置文件 /etc/nginx/nginx.conf :
+```
+server {
+  listen       80 default_server;
+  listen       [::]:80 default_server;
+  server_name  _;
+  root         /usr/share/nginx/html/dist;
+  
+  # Load configuration files for the default server block.
+
+  include /etc/nginx/default.d/*.conf;
+
+  location / {
+  }
+
+  error_page 404 /404.html;
+  location = /404.html {
+  }
+
+  error_page 500 502 503 504 /50x.html;
+  location = /50x.html {
+  }
+}
+
+```
+把dist拷贝到目的地：
+```bash
+sudo cp -r dist  /usr/share/nginx/html/
+```
+然后测试配置文件:
+
+```
+sudo /usr/local/nginx/sbin/nginx -t
+```
+
+
+
+##### Running the Navigator offline
+安装上面所有步骤，然后将github[ CTI项目](https://github.com/mitre/cti/)下载下来。
+
+然后将CTI项目中的 enterprise-attack、mobile-attack等文件夹放到 attack-navigator-4.0/nav-app/src/assests目录下。
+
+修改nav-app/src/assests目录中的config.json文件中的路径，例如：
+```json
+"domains": [
+    {
+        "name": "Enterprise",
+        "data": ["assets/enterprise-attack.json"]
+    }
+]
+```
+
 Install the Navigator as per instructions above.
-Follow instructions under loading content from local files to configure the Navigator to populate the matrix without an internet connection. For enterprise-attack, use this file. For mobile-attack, use this file. For pre-attack, use this file.
-Common issues
+Follow instructions under [loading content from local files](https://github.com/mitre-attack/attack-navigator#Loading-content-from-local-files) to configure the Navigator to populate the matrix without an internet connection. For enterprise-attack, use this file. For mobile-attack, use this file. For pre-attack, use this file.
+
+在我的centos7中，/usr/share/
+
+##### Common issues
 If serving or compiling the application gives the warning Module not found: can't resolve 'fs', run the command npm run postinstall. The postinstall step usually runs automatically after npm install to patch the fs issue, but in some environments it must be run manually.
 
 #### 使用
