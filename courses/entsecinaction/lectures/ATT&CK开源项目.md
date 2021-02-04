@@ -210,6 +210,19 @@ $ echo fs.inotify.max_user_watches=102400 | sudo tee -a /etc/sysctl.conf
 $ sudo sysctl -p
 
 ```
+#### 最终编译后可离线使用版本的使用
+上面的都解决后，终于可以enjoy了。
+
+运行下面脚本：
+```bash
+#进入Navigator目录,个人测试时建立在Downloads中
+cd ~/Downloads/attack-navigator-master/nav-app
+
+#启动服务器
+ng serve --host 0.0.0.0
+
+```
+如果服务器顺利运行启动，那么你可以在可访问该虚拟机的任何浏览器上浏览 http://host-ip:4200 ,开始体验使用。例如:http://10.10.10.129:4200 
 
 ### 基本概念
 CTI是威胁情报库（The Cyber Threat Intelligence Repository of ATT&CK and CAPEC catalogs），使用STIX 2.0 json 格式描述威胁情报。查看如何使用可以参考[python-stix2](https://github.com/oasis-open/cti-python-stix2).
