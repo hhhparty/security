@@ -1,0 +1,489 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>owaspbwa OWASP Broken Web Applications</title>
+<link rel="stylesheet" href="index.css" type="text/css" media="screen" />
+<script type="text/javascript" src="/jquery.min.js"></script> <!--http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js pulled april 15 2011--> 
+<script type="text/javascript" src="animatedcollapse.js">
+/***********************************************
+* Animated Collapsible DIV v2.4- (c) Dynamic Drive DHTML code library (www.dynamicdrive.com)
+* This notice MUST stay intact for legal use
+* Visit Dynamic Drive at http://www.dynamicdrive.com/ for this script and 100s more
+***********************************************/
+</script>
+<script type="text/javascript">
+animatedcollapse.addDiv('webgoat', 'fade=1')
+animatedcollapse.addDiv('webgoat_net', 'fade=1')
+animatedcollapse.addDiv('swingset', 'fade=1')
+animatedcollapse.addDiv('swingset_interactive', 'fade=1')
+animatedcollapse.addDiv('mutillidae', 'fade=1')
+animatedcollapse.addDiv('dvwa', 'fade=1')
+animatedcollapse.addDiv('ghost', 'fade=1')
+animatedcollapse.addDiv('bwapp', 'fade=1')
+
+animatedcollapse.addDiv('OWASPVicnum', 'fade=1')
+animatedcollapse.addDiv('jotto', 'fade=1')
+animatedcollapse.addDiv('oneliner', 'fade=1')
+animatedcollapse.addDiv('peruggia', 'fade=1')
+animatedcollapse.addDiv('gruyere', 'fade=1')
+animatedcollapse.addDiv('hackxor', 'fade=1')
+animatedcollapse.addDiv('WackoPicko', 'fade=1')
+animatedcollapse.addDiv('bodgeit', 'fade=1')
+animatedcollapse.addDiv('cyclone', 'fade=1')
+animatedcollapse.addDiv('MCIR', 'fade=1')
+animatedcollapse.addDiv('railsgoat', 'fade=1')
+animatedcollapse.addDiv('owaspbricks', 'fade=1')
+animatedcollapse.addDiv('shepherd', 'fade=1')
+
+animatedcollapse.addDiv('wordpress', 'fade=1')
+animatedcollapse.addDiv('orangehrm', 'fade=1')
+animatedcollapse.addDiv('getboo', 'fade=1')
+animatedcollapse.addDiv('gtd-php', 'fade=1')
+animatedcollapse.addDiv('yazd', 'fade=1')
+animatedcollapse.addDiv('phpbb2', 'fade=1')
+animatedcollapse.addDiv('webcal', 'fade=1')
+animatedcollapse.addDiv('gallery2', 'fade=1')
+animatedcollapse.addDiv('tikiwiki', 'fade=1')
+animatedcollapse.addDiv('joomla', 'fade=1')
+animatedcollapse.addDiv('awstats', 'fade=1')
+animatedcollapse.addDiv('redmine', 'fade=1')
+
+animatedcollapse.addDiv('zapwave', 'fade=1')
+animatedcollapse.addDiv('wavsep', 'fade=1')
+animatedcollapse.addDiv('wivet', 'fade=1')
+
+animatedcollapse.addDiv('owaspCSRFGuard', 'fade=1')
+animatedcollapse.addDiv('mandiantStruts', 'fade=1')
+animatedcollapse.addDiv('mono', 'fade=1')
+animatedcollapse.addDiv('domXSSexample', 'fade=1')
+
+animatedcollapse.addDiv('appsensor', 'fade=1')
+
+animatedcollapse.ontoggle=function($, divobj, state){ //fires each time a DIV is expanded/contracted
+	//$: Access to jQuery
+	//divobj: DOM reference to DIV being expanded/ collapsed. Use "divobj.id" to get its ID
+	//state: "block" or "none", depending on state
+}
+animatedcollapse.init()
+</script>
+</head>
+<body>
+<center><table>
+  <tr>
+    <td id="header" align="right" valign="center"><img src="images/owasp.png" height="150px" width="200px"/></td>
+    <td id="header" align="left" valign="center"><h1>owaspbwa</h1><h4>OWASP Broken Web Applications Project</h4>Version 1.2</td>
+  </tr>
+</table></center>
+<p>
+This is the VM for the <a href="http://www.owasp.org">Open Web Application Security Project (OWASP)</a> <a href="http://www.owaspbwa.org/">Broken Web Applications</a> project.  It contains many, very vulnerable web applications, which are listed below.  More information about this project can be found in the project <a href="https://code.google.com/p/owaspbwa/wiki/UserGuide">User Guide</a> and <a href="http://www.owaspbwa.org/">Home Page</a>.
+<p>
+For details about the known vulnerabilities in these applications, see <a href="https://sourceforge.net/p/owaspbwa/tickets/?limit=999&sort=_severity+asc">https://sourceforge.net/p/owaspbwa/tickets/?limit=999&sort=_severity+asc</a>.
+<p>
+<center><div class="warning" style="width: 600px;"> !!! This VM has many serious security issues.  We strongly recommend that you run it only on the "host only" or "NAT" network in the virtual machine settings !!!</div></center>
+<p>
+<center><table>
+<tr><th style="width:860px" title="Applications designed for learning which guide the user to specific, intentional vulnerabilities."><h4>Training Applications</h4></th></tr>
+<table>
+<tr><td><a href="javascript:animatedcollapse.toggle('webgoat')"><img src="images/Knob_Add.png" width="20px" height="20px" border="0" title="More Info" /><a href="WebGoat/attack">OWASP WebGoat</a>
+	<div id="webgoat" style="width: 400px; background: #D2FBFF; display:none">
+	<b>Version: </b>5.4+SVN<br />
+	<b>Language: </b>Java<br />
+	<b>User Credentials (username/password): </b>guest/guest<br />
+	<b>User Credentials (username/password): </b>user/user<br />
+    <b>User Credentials (username/password): </b>basic/basic<br />
+	<b>Admin Credentials (username/password): </b>webgoat/webgoat<br />
+	<b>Link: </b><a href="http://www.owasp.org/index.php/Category:OWASP_WebGoat_Project">home page</a><br />
+	</div></td>
+	
+	<td ><a href="javascript:animatedcollapse.toggle('webgoat_net')"><img src="images/Knob_Add.png" width="20px" height="20px" border="0" title="More Info" /></a><a href="webgoat.net/">OWASP WebGoat.NET</a>
+	<div id="webgoat_net" style="width: 400px; background: #D2FBFF; display:none">
+	<b>Version: </b>2012-07-05+Git<br />
+	<b>Language: </b>C# ASP.NET<br />
+	<b>User Credentials (username/password): </b>bob@ateliergraphique.com/123456<br />
+	<b>Link: </b><a href="https://www.owasp.org/index.php/Category:OWASP_WebGoat.NET">home page</a>
+	</div></td></tr>
+	
+	<tr><td ><a href="javascript:animatedcollapse.toggle('swingset_interactive')"><img src="images/Knob_Add.png" width="20px" height="20px" border="0" title="More Info" /></a><a href="ESAPI-Java-SwingSet-Interactive/main">OWASP ESAPI Java SwingSet Interactive</a>
+	<div id="swingset_interactive" style="width: 400px; background: #D2FBFF; display:none">
+	<b>Version: </b>1.0.1+SVN<br />
+	<b>Language: </b>Java<br />
+	<b>Link: </b><a href="https://www.owasp.org/index.php/ESAPI_Swingset">home page</a>
+	</div></td>
+	
+	<td ><a href="javascript:animatedcollapse.toggle('mutillidae')"><img src="images/Knob_Add.png" width="20px" height="20px" border="0" title="More Info" /></a><a href="mutillidae">OWASP Mutillidae II</a>
+	<div id="mutillidae" style="width: 400px; background: #D2FBFF; display:none">
+	<b>Version: </b>2.6.24+SVN<br />
+	<b>Language: </b>PHP<br />
+	<b>User Credentials (username/password): </b>user/user<br />
+	<b>Admin Credentials (username/password): </b>admin/admin<br />
+	<b>Link: </b><a href="http://www.irongeek.com/i.php?page=mutillidae/mutillidae-deliberately-vulnerable-php-owasp-top-10">home page</a><br />
+	</div></td>
+	</tr>
+	
+<tr>
+    <td ><a href="javascript:animatedcollapse.toggle('railsgoat')"><img src="images/Knob_Add.png" width="20px" height="20px" border="0" title="More Info" /></a><a href="railsgoat/">OWASP RailsGoat</a>
+	<div id="railsgoat" style="width: 400px; background: #D2FBFF; display:none">
+	<b>Version: </b>Git<br />
+	<b>Language: </b>Ruby on Rails<br />
+	<b>Admin Credentials (username/password): </b>admin@metacorp.com/admin1234<br />
+    <b>User Credentials (username/password): </b>jack@metacorp.com/yankeessuck<br />
+	<b>Link: </b><a href="http://railsgoat.cktricky.com/">home page</a><br />
+	</div></td>
+    
+    <td><a href="javascript:animatedcollapse.toggle('owaspbricks')"><img src="images/Knob_Add.png" width="20px" height="20px" border="0" title="More Info" /></a><a href="owaspbricks">OWASP Bricks</a>
+	<div id="owaspbricks" style="width: 400px; background: #D2FBFF; display:none">
+	<b>Version: </b>2.2+SVN<br />
+	<b>Language: </b>PHP<br />
+	<b>Link: </b><a href="http://sechow.com/bricks/">home page</a><br />
+	</div></td>
+    
+    </tr>
+     <tr>
+	    <td ><a href="javascript:animatedcollapse.toggle('shepherd')"><img src="images/Knob_Add.png" width="20px" height="20px" border="0" title="More Info" /></a><a href="shepherd/">OWASP Security Shepherd</a>
+	<div id="shepherd" style="width: 400px; background: #D2FBFF; display:none">
+	<b>Version: </b>2.4+Git<br />
+	<b>Language: </b>Java<br />
+  	<b>Admin Credentials (username/password): </b>admin/password<br />
+	<b>Link: </b><a href="https://www.owasp.org/index.php/OWASP_Security_Shepherd">home page</a><br />
+	</div></td>
+    
+   
+    <td ><a href="javascript:animatedcollapse.toggle('ghost')"><img src="images/Knob_Add.png" width="20px" height="20px" border="0" title="More Info" /></a><a href="ghost">Ghost</a>
+	<div id="ghost" style="width: 400px; background: #D2FBFF; display:none">
+	<b>Language: </b>PHP<br />
+	<b>User Credentials (username/password): </b>test/test<br />
+	<b>User Credentials (username/password): </b>anonymous/anonymous<br />
+	<b>Admin Credentials (username/password): </b>admin/admin<br />
+	<b>Link: </b><a href="http://www.gh0s7.net">home page</a><br />
+	</div></td>
+     </tr>
+     <tr>
+    <td ><a href="javascript:animatedcollapse.toggle('MCIR')"><img src="images/Knob_Add.png" width="20px" height="20px" border="0" title="More Info" /></a><a href="MCIR">Magical Code Injection Rainbow</a>
+	<div id="MCIR" style="width: 400px; background: #D2FBFF; display:none">
+	<b>Version: </b>2014-08-20+Git<br />
+	<b>Language: </b>PHP<br />
+	<b>Link: </b><a href="https://github.com/SpiderLabs/MCIR">home page</a><br />
+	</div></td>
+    
+    <td ><a href="javascript:animatedcollapse.toggle('bwapp')"><img src="images/Knob_Add.png" width="20px" height="20px" border="0" title="More Info" /></a><a href="bWAPP">bWAPP</a>
+	<div id="bwapp" style="width: 400px; background: #D2FBFF; display:none">
+    <b>Version: </b>1.9+Git<br />
+	<b>Language: </b>PHP<br />
+	<b>User Credentials (username/password): </b>bee/bug<br />
+	<b>Link: </b><a href="http://www.itsecgames.com/">home page</a><br />
+	</div></td>
+    
+    </tr>
+	
+    <tr>
+<td><a href="javascript:animatedcollapse.toggle('dvwa')"><img src="images/Knob_Add.png" width="20px" height="20px" border="0" title="More Info" /></a><a href="dvwa">Damn Vulnerable Web Application</a>
+	<div id="dvwa" style="width: 400px; background: #D2FBFF; display:none">
+	<b>Version: </b>1.8+GIT<br />
+	<b>Language: </b>PHP<br />
+	<b>User Credentials (username/password): </b>user/user<br />
+	<b>Admin Credentials (username/password): </b>admin/admin<br />
+	<b>Link: </b><a href="http://www.dvwa.co.uk/">home page</a><br />
+	</div></td>
+    
+    <td ></td>
+    
+    </tr>
+    
+    
+</table></table>
+<p>
+<table>
+<tr><th style="width:860px" title="Applications that have a wide variety of intentional security vulnerabilities, but are designed to look and work like a real application."><h4>Realistic, Intentionally Vulnerable Applications</h4></th></tr>
+<table>
+<tr><td><a href="javascript:animatedcollapse.toggle('OWASPVicnum')"><img src="images/Knob_Add.png" width="20px" height="20px" border="0" title="More Info" /></a><a href="vicnum">OWASP Vicnum</a>
+	<div id="OWASPVicnum" style="width: 400px; background: #D2FBFF; display:none">
+	<b>Version: </b>1.5<br />
+	<b>Language: </b>PHP/Perl<br />
+	<b>Link: </b><a href="http://www.owasp.org/index.php/Category:OWASP_Vicnum_Project">home page</a><br />
+	</div></td>
+	
+	
+ <td ><a href="javascript:animatedcollapse.toggle('oneliner')"><img src="images/Knob_Add.png" width="20px" height="20px" border="0" title="More Info" /></a><a href="oneliner_intro.php">OWASP 1-Liner</a>
+	<div id="oneliner" style="width: 400px; background: #D2FBFF; display:none">
+	<b>Version: </b>Git<br />
+	<b>Language: </b>Java / JavaScript<br />
+	<b>Link: </b><a href="http://1-liner.org/">home page</a><br />
+	</div></td>
+	</tr>
+	
+<tr>
+	<td ><a href="javascript:animatedcollapse.toggle('gruyere')"><img src="images/Knob_Add.png" width="20px" height="20px" border="0" title="More Info" /></a><a href="/gruyere/">Google Gruyere</a>
+	<div id="gruyere" style="width: 400px; background: #D2FBFF; display:none">
+	<b>Version: </b>2010-07-15<br />
+	<b>Language: </b>Python<br />
+	<b>User Credentials (username/password): </b>cheddar/orange<br />
+	<b>Admin Credentials (username/password): </b>administrator/secret<br />
+	<b>Link: </b><a href="http://google-gruyere.appspot.com/">home page</a><br />
+	</div></td>
+	<td ><a href="javascript:animatedcollapse.toggle('hackxor')"><img src="images/Knob_Add.png" width="20px" height="20px" border="0" title="More Info" /></a><a href="/hackxor_intro.php">Hackxor</a>
+	<div id="hackxor" style="width: 400px; background: #D2FBFF; display:none">
+	<b>Version: </b>2011-04-06<br />
+	<b>Language: </b>Java JSP<br />
+	<b>Link: </b><a href="http://hackxor.sourceforge.net/cgi-bin/index.pl">home page</a><br />
+	</div></td>
+	</tr>
+	<tr>
+	<td ><a href="javascript:animatedcollapse.toggle('WackoPicko')"><img src="images/Knob_Add.png" width="20px" height="20px" border="0" title="More Info" /></a></a><a href="WackoPicko">WackoPicko</a>
+	<div id="WackoPicko" style="width: 400px; background: #D2FBFF; display:none">
+	<b>Version: </b>2011-07-12+Git<br />
+	<b>Language: </b>PHP<br />
+	<b>User Credentials (username/password): </b>scanner1/scanner1<br />
+	<b>User Credentials (username/password): </b>scanner2/scanner2<br />
+	<b>User Credentials (username/password): </b>bryce/bryce<br />
+	<b>Admin Credentials (username/password): </b>admin/admin<br />
+	<b>Admin Credentials (username/password): </b>adamd/adamd<br />
+	<b>Link: </b><a href="https://github.com/adamdoupe/WackoPicko">home page</a><br />
+	</div></td>
+	
+	<td ><a href="javascript:animatedcollapse.toggle('bodgeit')"><img src="images/Knob_Add.png" width="20px" height="20px" border="0" title="More Info" /></a><a href="bodgeit/">BodgeIt</a>
+	<div id="bodgeit" style="width: 400px; background: #D2FBFF; display:none">
+	<b>Language: </b>Java JSP<br />
+	<b>Version: </b>1.4+SVN<br />
+	<b>User Credentials (username/password): </b>test@thebodgeitstore.com/password<br />
+	<b>Link: </b><a href="http://code.google.com/p/bodgeit/">home page</a><br />
+	</div></td></tr>
+    
+    <tr><td ><a href="javascript:animatedcollapse.toggle('cyclone')"><img src="images/Knob_Add.png" width="20px" height="20px" border="0" title="More Info" /></a><a href="cyclone/">Cyclone</a>
+	<div id="cyclone" style="width: 400px; background: #D2FBFF; display:none">
+	<b>Language: </b>Ruby on Rails<br />
+	<!--<b>Version: </b>xxxx<br />-->
+	<!--<b>Admin Credentials (username/password): </b>admin@owaspbwa.org/adminadmin<br />-->
+    <b>User Credentials (username/password): </b><br />cycloneuser-3@cyclonetransfers.com/password<br />
+	<b>Link: </b><a href="https://github.com/fridaygoldsmith/bwa_cyclone_transfers">home page</a><br />
+	</div></td>
+    
+     <td ><a href="javascript:animatedcollapse.toggle('peruggia')"><img src="images/Knob_Add.png" width="20px" height="20px" border="0" title="More Info" /></a><a href="peruggia">Peruggia</a>
+	<div id="peruggia" style="width: 400px; background: #D2FBFF; display:none">
+	<b>Version: </b>1.2<br />
+	<b>Language: </b>PHP<br />
+	<b>User Credentials (username/password): </b>user/user<br />
+	<b>Admin Credentials (username/password): </b>admin/admin<br />
+	<b>Link: </b><a href="http://peruggia.sourceforge.net/">home page</a><br />
+	</div></td>
+    </tr>
+</table></table>
+
+<p>
+<table>
+<tr><th style="width:860px" title="Open source applications with one or more known security issues."><h4>Old (Vulnerable) Versions of Real Applications</h4></th></tr>
+<table>
+<tr><td><a href="javascript:animatedcollapse.toggle('wordpress')"><img src="images/Knob_Add.png" width="20px" height="20px" border="0" title="More Info" /></a></a><a href="wordpress">WordPress</a>
+	<div id="wordpress" style="width: 400px; background: #D2FBFF; display:none">
+	<b>Version: </b>2.0.0<br />
+	<b>Language: </b>PHP<br />
+	<b>Release Date: </b>December 31, 2005<br />
+	<b>User Credentials (username/password): </b>user/user<br />
+	<b>Admin Credentials (username/password): </b>admin/admin<br />
+	<b>Link: </b><a href="http://wordpress.org/">home page</a><br />
+	<b>Plugins: </b><br />
+	&nbsp;&nbsp;&nbsp;<a href="http://www.wildbits.de/mygallery/">myGallery</a> version 1.2<br />
+	&nbsp;&nbsp;&nbsp;<a href="http://timrohrer.com/blog/?page_id=71">Spreadsheet for WordPress</a> version 0.6 
+	</div></td>
+	
+<td><a href="javascript:animatedcollapse.toggle('orangehrm')"><img src="images/Knob_Add.png" width="20px" height="20px" border="0" title="More Info" /></a></a><a href="orangehrm">OrangeHRM</a>
+	<div id="orangehrm" style="width: 400px; background: #D2FBFF; display:none">
+	<b>Version: </b>2.4.2<br />
+	<b>Language: </b>PHP<br />
+	<b>Release Date: </b>May 7, 2009<br />
+	<b>User Credentials (username/password): </b>user1/user1<br />
+	<b>User Credentials (username/password): </b>user2/user2<br />
+	<b>Admin Credentials (username/password): </b>admin/admin<br />
+	<b>Link: </b><a href="http://www.orangehrm.org/">home page</a><br />
+	</div></td></tr>
+	
+<tr><td ><a href="javascript:animatedcollapse.toggle('getboo')"><img src="images/Knob_Add.png" width="20px" height="20px" border="0" title="More Info" /></a></a><a href="getboo">GetBoo</a>
+	<div id="getboo" style="width: 400px; background: #D2FBFF; display:none">
+	<b>Version: </b>1.04<br />
+	<b>Language: </b>PHP<br />
+	<b>Release Date: </b>April 7, 2008<br />
+	<b>User Credentials (username/password): </b>user/user<br />
+	<b>User Credentials (username/password): </b>demo/demo<br />
+	<b>Admin Credentials (username/password): </b>admin/admin<br />
+	<b>Link: </b><a href="http://sourceforge.net/projects/getboo/">home page</a><br />
+	</div></td>
+	
+<td ><a href="javascript:animatedcollapse.toggle('gtd-php')"><img src="images/Knob_Add.png" width="20px" height="20px" border="0" title="More Info" /></a></a><a href="gtd-php">GTD-PHP</a>
+	<div id="gtd-php" style="width: 400px; background: #D2FBFF; display:none">
+	<b>Version: </b>0.7<br />
+	<b>Language: </b>PHP<br />
+	<b>Release Date: </b>September 30, 2006<br />
+	<b>Link: </b><a href="http://www.gtd-php.com/">home page</a><br />
+	</div></td></tr>
+	
+<tr><td><a href="javascript:animatedcollapse.toggle('yazd')"><img src="images/Knob_Add.png" width="20px" height="20px" border="0" title="More Info" /></a></a><a href="yazd/bay">Yazd</a>
+	<div id="yazd" style="width: 400px; background: #D2FBFF; display:none">
+	<b>Version: </b>1.0<br />
+	<b>Language: </b>Java<br />
+	<b>Release Date: </b>February 20, 2002<br />
+	<b>User Credentials (username/password): </b>user/user<br />
+	<b>User Credentials (username/password): </b>user2/user2<br />
+	<b>User Credentials (username/password): </b>mod/mod<br />
+	<b>Admin Credentials (username/password): </b>admin/admin<br />
+	<b>Link: </b><a href="http://www.forumsoftware.ca/">home page</a><br />
+	</div></td>
+	
+<!--<td><a href="javascript:animatedcollapse.toggle('phpbb2')"><img src="images/Knob_Add.png" width="20px" height="20px" border="0" title="More Info" /></a></a><a href="phpBB2">phpBB</a>
+	<div id="phpbb2" style="width: 400px; background: #D2FBFF; display:none">
+	<b>Version: </b>2.0.0<br />
+	<b>Language: </b>PHP<br />
+	<b>Admin Credentials (username/password): </b>admin/admin<br />
+	<b>User Credentials (username/password): </b>user/user<br />
+	<b>User Credentials (username/password): </b>mod/mod<br />
+	<b>Release Date: </b>April 4, 2002<br />
+	<b>Link: </b><a href="http://www.phpbb.com/">home page</a><br />
+	</div></td>-->
+	
+	<td ><a href="javascript:animatedcollapse.toggle('webcal')"><img src="images/Knob_Add.png" width="20px" height="20px" border="0" title="More Info" /></a></a><a href="webcal">WebCalendar</a>
+	<div id="webcal" style="width: 400px; background: #D2FBFF; display:none">
+	<b>Version: </b>1.0.3<br />
+	<b>Language: </b>PHP<br />
+	<b>User Credentials (username/password): </b>user/user<br />
+	<b>User Credentials (username/password): </b>assistant/assistant<br />
+	<b>Admin Credentials (username/password): </b>admin/admin<br />
+	<b>Release Date: </b>April 11, 2006<br />
+	<b>Link: </b><a href="http://www.k5n.us/webcalendar.php">home page</a><br />
+	</div></td>
+	</tr>
+<tr>
+<td ><a href="javascript:animatedcollapse.toggle('gallery2')"><img src="images/Knob_Add.png" width="20px" height="20px" border="0" title="More Info" /></a></a><a href="gallery2">Gallery2</a>
+	<div id="gallery2" style="width: 400px; background: #D2FBFF; display:none">
+	<b>Version: </b>2.1<br />
+	<b>Language: </b>PHP<br />
+	<b>User Credentials (username/password): </b>user/user<br />
+	<b>Admin Credentials (username/password): </b>admin/admin<br />
+	<b>Release Date: </b>March 23, 2006<br />
+	<b>Link: </b><a href="http://gallery.menalto.com/">home page</a><br />
+	</div></td>
+	
+	<td ><a href="javascript:animatedcollapse.toggle('tikiwiki')"><img src="images/Knob_Add.png" width="20px" height="20px" border="0" title="More Info" /></a></a><a href="tikiwiki">Tiki Wiki</a>
+	<div id="tikiwiki" style="width: 400px; background: #D2FBFF; display:none">
+	<b>Version: </b>1.9.5<br />
+	<b>Language: </b>PHP<br />
+	<b>User Credentials (username/password): </b>user/user<br />
+	<b>Admin Credentials (username/password): </b>admin/admin<br />
+	<b>Release Date: </b>September 5, 2006<br />
+	<b>Link: </b><a href="http://info.tiki.org/tiki-index.php">home page</a><br />
+	</div></td>
+	</tr>
+<tr>
+<td ><a href="javascript:animatedcollapse.toggle('joomla')"><img src="images/Knob_Add.png" width="20px" height="20px" border="0" title="More Info" /></a></a><a href="joomla">Joomla</a>
+	<div id="joomla" style="width: 400px; background: #D2FBFF; display:none">
+	<b>Version: </b>1.5.15<br />
+	<b>Language: </b>PHP<br />
+	<b>User Credentials (username/password): </b>author/author<br />
+	<b>User Credentials (username/password): </b>editor/editor<br />
+	<b>User Credentials (username/password): </b>publisher/publisher<br />
+	<b>User Credentials (username/password): </b>registered/registered<br />
+	<b>Admin Credentials (username/password): </b>admin/admin<br />
+	<b>Release Date: </b>November 4, 2009<br />
+	<b>Link: </b><a href="http://www.joomla.org">home page</a><br />
+	</div></td>
+	
+	<td ><a href="javascript:animatedcollapse.toggle('awstats')"><img src="images/Knob_Add.png" width="20px" height="20px" border="0" title="More Info" /></a></a><a href="awstats/awstats.pl?config=owaspbwa">AWStats</a>
+	<div id="awstats" style="width: 400px; background: #D2FBFF; display:none">
+	<b>Version: </b>6.4 (build 1.814)<br />
+	<b>Language: </b>Perl<br />
+	<b>Release Date: </b>February 25, 2005<br />
+	<b>Link: </b><a href="http://awstats.sourceforge.net/">home page</a><br />
+	</div></td>
+	
+<!--<td ><a href="javascript:animatedcollapse.toggle('redmine')"><img src="images/Knob_Add.png" width="20px" height="20px" border="0" title="More Info" /></a></a><a href="redmine">Redmine</a>
+	<div id="redmine" style="width: 400px; background: #D2FBFF; display:none">
+	<b>Version: </b>0.9.6<br />
+	<b>Language: </b>Ruby<br />
+	<b>User Credentials (username/password): </b>user/user<br />
+	<b>Admin Credentials (username/password): </b>admin/admin<br />
+	<b>Release Date: </b>July 08, 2010<br />
+	<b>Link: </b><a href="http://www.redmine.org/">home page</a><br />
+	</div></td>-->
+	
+</tr>
+</table></table>
+<p>
+<table>
+<tr><th style="width:860px" title="Applications designed for testing automated tools like web application security scanners."><h4>Applications for Testing Tools</h4></th></tr>
+<table>
+<tr>
+
+<td ><a href="javascript:animatedcollapse.toggle('zapwave')"><img src="images/Knob_Add.png" width="20px" height="20px" border="0" title="More Info" /></a><a href="zapwave/">OWASP ZAP-WAVE</a>
+	<div id="zapwave" style="width: 400px; background: #D2FBFF; display:none">
+	<b>Version: </b>0.2+SVN<br />
+	<b>Language: </b>Java JSP<br />
+	<b>Link: </b><a href="http://code.google.com/p/zaproxy/">home page</a><br />
+	</div></td>
+		
+	<td ><a href="javascript:animatedcollapse.toggle('wavsep')"><img src="images/Knob_Add.png" width="20px" height="20px" border="0" title="More Info" /></a><a href="wavsep/">WAVSEP</a>
+	<div id="wavsep" style="width: 400px; background: #D2FBFF; display:none">
+	<b>Version: </b>1.5<br />
+	<b>Language: </b>Java JSP<br />
+	<b>Link: </b><a href="http://code.google.com/p/wavsep/">home page</a><br />
+	</div></td>
+	</tr>
+	
+	<tr>
+	<td ><a href="javascript:animatedcollapse.toggle('wivet')"><img src="images/Knob_Add.png" width="20px" height="20px" border="0" title="More Info" /></a><a href="wivet/">WIVET</a>
+	<div id="wivet" style="width: 400px; background: #D2FBFF; display:none">
+	<b>Version: </b>3+SVN<br />
+	<b>Language: </b>PHP<br />
+	<b>Link: </b><a href="http://code.google.com/p/wivet/">home page</a><br />
+	</div></td>
+	
+	</tr>
+</table></table>
+<p>
+<table>
+<tr><th style="width:860px" title="Little applications or pages with intentional vulnerabilities to demonstrate specific concepts."><h4>Demonstration Pages/Small Applications</h4></th><tr>
+<table>
+<tr><td><a href="javascript:animatedcollapse.toggle('owaspCSRFGuard')"><img src="images/Knob_Add.png" width="20px" height="20px" border="0" title="More Info" /></a><a href="OWASP-CSRFGuard-Test-Application.html">OWASP CSRFGuard Test Application</a>
+	<div id="owaspCSRFGuard" style="width: 400px; background: #D2FBFF; display:none">
+	<b>Version: </b>2.2<br />
+	<b>Language: </b>Java<br />
+	<b>Link: </b><a href="http://www.owasp.org/index.php/Category:OWASP_CSRFGuard_Project">home page</a><br />
+	</div></td>
+	
+	<td ><a href="javascript:animatedcollapse.toggle('mandiantStruts')"><img src="images/Knob_Add.png" width="20px" height="20px" border="0" title="More Info" /></a><a href="mandiant-struts-forms.html">Mandiant Struts Forms</a>
+	<div id="mandiantStruts" style="width: 400px; background: #D2FBFF; display:none">
+	<b>Language: </b>Java Struts<br />
+	</div></td></tr>
+	
+<tr><td><a href="javascript:animatedcollapse.toggle('mono')"><img src="images/Knob_Add.png" width="20px" height="20px" border="0" title="More Info" /></a><a href="mono">Simple ASP.NET Forms</a>
+	<div id="mono" style="width: 400px; background: #D2FBFF; display:none">
+	<b>Language: </b>C# ASP.NET<br />
+	</div></td>
+	
+	<td ><a href="javascript:animatedcollapse.toggle('domXSSexample')"><img src="images/Knob_Add.png" width="20px" height="20px" border="0" title="More Info" /></a><a href="dom-xss-example.html">Simple Form with DOM Cross Site Scripting</a>
+	<div id="domXSSexample" style="width: 400px; background: #D2FBFF; display:none">
+	<b>Language: </b>JavaScript<br />
+	</div></td></tr>
+</table></table>
+
+<p>
+<table>
+<tr><th title="Demonstration of an OWASP application. Does not contain any intentional vulnerabilties."><h4>OWASP Demonstration Application</h4></th></tr>
+<tr><td><a href="javascript:animatedcollapse.toggle('appsensor')"><img src="images/Knob_Add.png" width="20px" height="20px" border="0" title="More Info" /></a></a><a href="AppSensorDemo/">OWASP AppSensor Demo Application</a>
+        <div id="appsensor" style="width: 400px; background: #D2FBFF; display:none">
+        <b>Language: </b>Java<br />
+        <b>Link: </b><a href="http://www.owasp.org/index.php/Category:OWASP_AppSensor_Project">home page</a><br />
+        </div></td></tr>
+</table>
+</center>
+<h4>Vulnerabilities in Applications</h4>
+<p>
+For information about the known vulnerabilities in these applications (or to submit some), visit <a href="https://sourceforge.net/p/owaspbwa/tickets/?limit=999&sort=_severity+asc">https://sourceforge.net/p/owaspbwa/tickets/?limit=999&sort=_severity+asc</a>.
+<p>
+<h4>For More Information</h4>
+For more information about the specific versions of applications running and how to adminsiter this VM, see <a href="http://code.google.com/p/owaspbwa/wiki/UserGuide">http://code.google.com/p/owaspbwa/wiki/UserGuide</a>.  
+<h4>Call for Feedback</h4>
+<p>
+If you encounter a problem with this VM (including with any of the installed applications), please submit an issue report on Google Code at <a href="http://code.google.com/p/owaspbwa/issues/list">http://code.google.com/p/owaspbwa/issues/list</a>.
+<p>
+<center><p>This project is sponsored by <a href="http://www.mandiant.com">Mandiant</a>, a <a href="http://www.fireeye.com">FireEye</a> Company</p>
+<p><a href="http://www.mandiant.com"><img src="images/mandiant.png"align="center" border=0></a></p></center>
+	
+<p>
+</body></html>
