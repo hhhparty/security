@@ -75,3 +75,94 @@ dataset = dataset.batch(global_batch_size)
 LEARNING_RATES_BY_BATCH_SIZE = {5: 0.1, 10: 0.15}
 learning_rate = LEARNING_RATES_BY_BATCH_SIZE[global_batch_size]
 ```
+
+
+## tensorflow2.0分布式训练实战：基于parameterServer架构
+
+>https://zhuanlan.zhihu.com/p/166117109
+>https://tensorflow.google.cn/api_docs/python/tf/distribute/experimental/ParameterServerStrategy
+
+### parameterServer
+
+Parameter server 异步更新策略是指每个 GPU 或者 CPU 计算完梯度后，无需等待其他 GPU 或 CPU 的梯度计算（有时可以设置需要等待的梯度个数），就可立即更新整体的权值，然后同步此权值，即可进行下一轮计算。Tensorflow2.0之后支持的parameterServer架构只能使用高级API estimator来搭建，而且注明了是部分支持，但目前并未遇到什么问题。
+
+> 联系： keras和estimator都属于对模型的封装，都会封装模型的训练流程的代码。都有分布式的支持，还有dataset的支持;
+> 区别：estimator在1.0中就有，主要的封装抽象在模型训练流程，需要自行定义模型结构。keras则对层次的模型训练流程都进行的抽象。当然，也可以使用keras对层次的封装来定义模型结构送到estimator中去使用。
+> 实战中：如果是tf1.0, 建议使用estimator，2.0以上建议使用keras API
+
+TensorFlow 一般将任务分为两类 job：
+- 一类叫参数服务器，parameter server，简称为 ps，用于汇总梯度并更新参数列表；
+- 一类就是普通任务，称为 worker，用于执行具体的计算。
+- 这就要求作为PS的节点需要具有较强的通信能力，而作为worker的节点具有强大的计算能力。
+
+在tensorflow2.0中，还需要定义一个chief节点，其功能主要是组内节点的调度并保存模型参数等。其架构如下图所示：
+
+<img src="images/tensorflow/parameterserverarch.jpg">
+
+#### tensorflow2.0分布式代码实践
+
+1 导入需要的库
+
+```python
+import tensorflow as tf
+import tensorflow.keras as keras
+import os
+os.environ['CUDA_VISIBLE_DEVICES'] = '0,1' # 指定该代码文件的可见GPU为第一个和第二个
+import numpy as np
+print(tf.__version__)#查看tf版本
+gpus=tf.config.list_physical_devices('GPU')
+print(gpus)#查看有多少个可用的GPU
+```
+
+2 使用keras.dataset API导入fashion_mnist数据集
+
+```python
+fashion_mnist = tf.keras.datasets.fashion_mnist
+
+(train_images, train_labels), (test_images, test_labels) = fashion_mnist.load_data()
+
+# 向数组添加维度 -> 新的维度 == (28, 28, 1)
+# 我们这样做是因为我们模型中的第一层是卷积层
+# 而且它需要一个四维的输入 (批大小, 高, 宽, 通道).
+# 批大小维度稍后将添加。
+train_images = train_images[..., None]
+test_images = test_images[..., None]
+
+# 获取[0,1]范围内的图像。
+train_images = train_images / np.float32(255)
+test_images = test_images / np.float32(255)
+
+```
+
+3 estimator要求的数据切割
+
+
+```python
+dataset = tf.data.Dataset.from_tensor_slices((train_images,train_labels))
+#查看切割后的数据：
+
+iterator = dataset.make_one_shot_iterator()
+one_element = iterator.get_next()
+with tf.Session() as sess:
+    for i in range(5):
+        print(sess.run(one_element))
+```
+
+4 定义数据输入函数input_fn
+
+```python
+def input_fn(X,y,shuffle, batch_size):
+    dataset = tf.data.Dataset.from_tensor_slices((X,y))
+    if shuffle: 
+        dataset = dataset.shuffle(buffer_size=100000)
+    dataset = dataset.repeat()
+    dataset = dataset.batch(batch_size)
+    return dataset
+```
+
+Dataset的常用Transformation操作：
+
+```
+dataset = tf.data.Dataset.from_tensor_slices(np.array([1.0, 2.0, 3.0, 4.0, 5.0]))
+dataset = dataset.map(lambda x: x * x) # 1.0, 4.0, 9.0, 16.0, 25.0
+```
