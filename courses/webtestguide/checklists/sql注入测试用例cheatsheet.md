@@ -257,7 +257,7 @@ mssql xp_cmdshell、自己创建clr、调用wscript.shell、调用Shell.Applicat
 
 
 
-参考：
+## 参考：
 - https://mp.weixin.qq.com/s?__biz=MzAxNDM3NTM0NQ==&mid=2657039441&idx=2&sn=6c7943ba7d78b05557ef03b5875ed1ec&chksm=803fd48fb7485d99d19b3945d9142c35aeb8344e156984c8dfc048a93793dd08e0c5473b795e&mpshare=1&scene=24&srcid=10234Y11mGORCKoTcjBRm3tl&sharer_sharetime=1603450492711&sharer_shareid=9530e1864f9ccae4832cd88b98041964&exportkey=AUwX7JFVpmgH2m9uJC%2FVNrw%3D&pass_ticket=nQcihpZIrgq%2F0dgwRHBaNkcP2TMN7UhBJZ%2BftGUPWoYWtdYy24W%2FTS9YUwwG9Jh%2B&wx_header=0#rd
 - https://mp.weixin.qq.com/s?__biz=MzA5ODA0NDE2MA==&mid=2649733472&idx=1&sn=80a329001a5a121a39a574b9be6b38b9&chksm=888c890fbffb0019a72cdfb85c5530381584069f09a17aedc677882441b784cc1c4b4443dedd&mpshare=1&scene=24&srcid=1023fVE1sphfNxZcBuieFmdH&sharer_sharetime=1603447869255&sharer_shareid=9530e1864f9ccae4832cd88b98041964&exportkey=Adrfgb9TOQsqv3gkdAmJgWc%3D&pass_ticket=nQcihpZIrgq%2F0dgwRHBaNkcP2TMN7UhBJZ%2BftGUPWoYWtdYy24W%2FTS9YUwwG9Jh%2B&wx_header=0#rd
 
@@ -266,3 +266,132 @@ mssql xp_cmdshell、自己创建clr、调用wscript.shell、调用Shell.Applicat
 - https://mp.weixin.qq.com/s?__biz=MzAwMjA5OTY5Ng==&mid=2247487719&idx=1&sn=7fac52127b489989c67f9b0b5d9d1824&chksm=9acec078adb9496e33675e1d7b673855a280d6c59c9fee915452ad27ad6f9c56e076fa60df9a&mpshare=1&scene=24&srcid=0810R1EssvjvmoM6q13lR46w&sharer_sharetime=1597026200547&sharer_shareid=9530e1864f9ccae4832cd88b98041964&exportkey=AbD7Wr1WHoqi2jijk53XIMU%3D&pass_ticket=nQcihpZIrgq%2F0dgwRHBaNkcP2TMN7UhBJZ%2BftGUPWoYWtdYy24W%2FTS9YUwwG9Jh%2B&wx_header=0#rd
 
 - https://github.com/aleenzz/MYSQL_SQL_BYPASS_WIKI
+
+
+## sqlmap 工具
+
+```
+leo@kali:~$ sqlmap --help
+        ___
+       __H__
+ ___ ___[.]_____ ___ ___  {1.4.10.22#dev}
+|_ -| . [,]     | .'| . |
+|___|_  [']_|_|_|__,|  _|
+      |_|V...       |_|   http://sqlmap.org
+
+Usage: python sqlmap [options]
+
+Options:
+  -h, --help            Show basic help message and exit
+  -hh                   Show advanced help message and exit
+  --version             Show program's version number and exit
+  -v VERBOSE            Verbosity level: 0-6 (default 1)
+
+  Target:
+    At least one of these options has to be provided to define the
+    target(s)
+
+    -u URL, --url=URL   Target URL (e.g. "http://www.site.com/vuln.php?id=1")
+    -g GOOGLEDORK       Process Google dork results as target URLs
+
+  Request:
+    These options can be used to specify how to connect to the target URL
+
+    --data=DATA         Data string to be sent through POST (e.g. "id=1")
+    --cookie=COOKIE     HTTP Cookie header value (e.g. "PHPSESSID=a8d127e..")
+    --random-agent      Use randomly selected HTTP User-Agent header value
+    --proxy=PROXY       Use a proxy to connect to the target URL
+    --tor               Use Tor anonymity network
+    --check-tor         Check to see if Tor is used properly
+
+  Injection:
+    These options can be used to specify which parameters to test for,
+    provide custom injection payloads and optional tampering scripts
+
+    -p TESTPARAMETER    Testable parameter(s)
+    --dbms=DBMS         Force back-end DBMS to provided value
+
+  Detection:
+    These options can be used to customize the detection phase
+
+    --level=LEVEL       Level of tests to perform (1-5, default 1)
+    --risk=RISK         Risk of tests to perform (1-3, default 1)
+
+  Techniques:
+    These options can be used to tweak testing of specific SQL injection
+    techniques
+
+    --technique=TECH..  SQL injection techniques to use (default "BEUSTQ")
+
+  Enumeration:
+    These options can be used to enumerate the back-end database
+    management system information, structure and data contained in the
+    tables
+
+    -a, --all           Retrieve everything
+    -b, --banner        Retrieve DBMS banner
+    --current-user      Retrieve DBMS current user
+    --current-db        Retrieve DBMS current database
+    --passwords         Enumerate DBMS users password hashes
+    --tables            Enumerate DBMS database tables
+    --columns           Enumerate DBMS database table columns
+    --schema            Enumerate DBMS schema
+    --dump              Dump DBMS database table entries
+    --dump-all          Dump all DBMS databases tables entries
+    -D DB               DBMS database to enumerate
+    -T TBL              DBMS database table(s) to enumerate
+    -C COL              DBMS database table column(s) to enumerate
+
+  Operating system access:
+    These options can be used to access the back-end database management
+    system underlying operating system
+
+    --os-shell          Prompt for an interactive operating system shell
+    --os-pwn            Prompt for an OOB shell, Meterpreter or VNC
+
+  General:
+    These options can be used to set some general working parameters
+
+    --batch             Never ask for user input, use the default behavior
+    --flush-session     Flush session files for current target
+
+  Miscellaneous:
+    These options do not fit into any other category
+
+    --sqlmap-shell      Prompt for an interactive sqlmap shell
+    --wizard            Simple wizard interface for beginner users
+
+```
+
+参数 --technique 用于指定检测注入时所用技术。默认情况下 Sqlmap 会使用自己支持的全部技术进行检测。 此参数后跟表示检测技术的大写字母，其值为 B、E、U、S、T 或 Q，含义如下：
+
+- B：Boolean-based blind（布尔型注入）
+- E：Error-based（报错型注入）
+- U：Union query-based（可联合查询注入）
+- S：Stacked queries（可多语句查询注入）
+- T：Time-based blind（基于时间延迟注入）
+- Q：Inline queries（嵌套查询注入）
+
+
+可以用 "--technique ES" 来指定使用两种检测技术。"--technique BEUSTQ" 与默认情况等效。
+
+`$ python sqlmap.py -u "http://127.0.0.1/sqli/Less-1/?id=1" --technique EB --banner`
+
+用 --time-sec 3 参数设置基于时间延迟注入中延时时长，默认为 5 秒
+
+在进行联合查询注入时，Sqlmap 会自动检测列数，范围是 1 到 10。当 level 值较高时列数检测范 围的上限会扩大到 50。
+
+可以用此参数指定列数检测范围，如 --union-cols 12-16 就会让 Sqlmap 的列数检测范围变成 12 到 16。
+
+默认情况下 Sqlmap 进行联合查询注入时使用空字符（NULL）。但当 level 值较高时 Sqlmap 会生成随机数用于联合查询注入。 因为有时使用空字符注入会失败而使用随机数会成功。但是，注入时过多使用空字符（NULL）会使注入失败率增高。因此可以结合 --union-char 替换null的字符串 参数改善。
+
+`$ python sqlmap.py -u "http://127.0.0.1/sqli/Less-4/" --union-cols 12-16 --union-char 666 -v 3 --banner`
+
+有些情况下在联合查询中必须指定一个有效和可访问的表名，否则联合查询会执行失败。参数 --union-from 表名
+
+`$ python sqlmap.py -u "http://127.0.0.1/sqli/Less-4/" --union-cols 12-16 --union-char 666 --union-from hello -v 3 --banner`
+
+
+探测目标指纹信息，参数 -f 或者 --fingerprint，它的效果与 --banner 相似。
+
+`$ python sqlmap.py -u "http://127.0.0.1/sqli/Less-3/?id=1" -f`
