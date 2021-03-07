@@ -112,7 +112,7 @@ sql注入会导致：
 - 发现OS问题命令
 
 第9题 try to retrieve all the users from the users table。
-选```'```和```'1'='1```
+选`'`和`'1'='1`
 。
 
 #### Numeric SQL
