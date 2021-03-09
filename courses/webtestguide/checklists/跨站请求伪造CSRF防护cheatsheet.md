@@ -7,6 +7,100 @@
 CSRF 是一种类型的攻击，它发生在某个恶意网站、邮件、博客、即时消息或程序利用或通过某个已经通过某个受信任完整认证的用户（victim）的浏览器执行一个意外活动时。一个CSRF攻击能够成功，是因为浏览器请求自动地包含了所有cookies（包含会话cookies)。因此，如果一个用户已经成功登录了某个网站，那么这个网站不能区别使用同一浏览器的是用户请求还是伪造请求？
 
 CSRF攻击的影响，取决于脆弱漏洞的严重程度和用户权限的大小。例如，攻击者可能会窃取资金、修改密码等。
+
+## 基础知识
+
+从cookie的存活时间，可分为2类cookie：
+- 一类有expired限制，会缓存在local 浏览器设定的本地文件里；
+- 一类没有指定 expired，默认当前会话结束即消失。
+
+从cookie的作用范围，可由两个因素确定:
+- 域名
+- 路径
+- 例如`Set-Cookie:domain=a.com;path=/`
+
+### P3P头
+P3P头是W3C制定的一项关于隐私的标准，全称THE PLATFORM FOR PRIVACY PREFERENCES.
+
+如果网站返回给浏览器的HTTP头中包含P3P头，则允许浏览器发送第3方cookie。例如使用iframe，script，img，link等标签时，可发送第3方cookie。
+
+例如：有两个域www.a.com,www.b.com.
+- www.b.com上有个页面，内容有`<iframe src="http://www.a.com/test.php"></iframe> `
+- www.a.com上有test.php，内容为`<?php header("Set-Cookie:test=axis;domain=.a.com; path=/") ?>`
+
+假设有访问过程：
+- 当用户访问 www.b.com 的页面时，会自动请求 www.a.com/test.php，从而得到www.a.com设置的cookie；
+- 浏览器接收此cookie，再次请求www.b.com 的页面时，如果没有同源策略，浏览器会将来自www.a.com的cookie发送给www.b.com
+- 但主流浏览器都不允许这么做。所以再次请求www.b.com 的页面时，不会带www.a.com的cookie访问b。
+
+如果www.a.com的test.php，内容改变为：
+```php
+<?php 
+  header("P3P;CP=CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR");
+  header("Set-Cookie:test=axis;expires=Sun,23-Dec-2018 08:12:13 GMT; domain=.a.com; path=/") 
+?>
+```
+
+再次重复上面的访问过程，浏览器就会允许将www.a.com的cookie 送到www.b.com上。而且P3P header 仅需要设置一次，就可以改变www.a.com的隐私策略。浏览器不再拦截cookie跨站。
+
+P3P头说明：
+- CP Compact Policy
+- CUR 是`<current/>`简写
+- a是always简写；
+- ADM 是`<admin/>`的简写
+- ...
+
+P3P头也可以直接引用一个XML策略文件。
+
+由于目前P3P头在网站中流行，所以不能把CSRF的防御放在浏览器对第三方cookie的拦截策略上。
+
+### POST 和 GET
+大多数CSRF攻击发起时，使用的HTML标签都是`<img> <iframe> <script>`等带`src`属性的标签，这类标签只能够发起一次GET请求。但这不是CSRF的唯一手段。
+
+注：PHP中使用$_Request接收请求信息时，也并不区分GET或POST，只有$_POST才是专用于POST方法的请求读取。而用户也可以使用GET方法提交数据。
+
+攻击者可以构造一个表单：
+```html
+<form action="http://www.a.com/register" id="register" method="post">
+  <input type="text" name="username" value=""/>
+  <input type="password" name="password" value=""/>
+  <input type="submit" name="submit" value="submit"/>
+</form>
+<script> 
+  var f = document.getElementById("register");
+  f.inputs[0].value = "test";
+  f.inputs[1].value = "password";
+  f.submit();
+</script>
+```
+
+攻击者还可以将此页面隐藏于某个隐蔽的iframe中。提交过程是自动的。
+
+2007年Gmail CSRF案例中，攻击者在用户登录gmail邮箱后（有了gmail的cookie），使用钓鱼邮件诱骗用户访问恶意页面，此页面有一个隐藏iframe，其src指向php写的csrf页面。这个页面将设置一条gmail邮箱filter规则，把当前用户所有邮件转发到攻击者邮箱。
+
+
+### CSRF 本质
+CSRF攻击成功的本质是重要操作的所有参数，都可以被攻击者所猜测或获取。只有这样攻击者才能够构造出一个伪造的请求；反之则不能。
+
+那么把参数加密、增加随机数、令攻击者无法猜测参数就是一种防御手段。
+
+例如：一个删除操作为 `http://host/path/delete?username=abc&item=123` ；把其中的username值改为哈希值即是一种不可预测性原则的防御。
+
+攻击者不知道hash的salt时，无法构造出这个请求。而服务器可以从session或cookie中取得username=abc，然后hash(abc,salt),与浏览器发来的hash值进行对比，一致时被认为是可信的。
+
+但为了使url可读可用，不是直接加密用户名的明文数据，而是在url中加一个token，token值是随机的、不可预测的，例如`http://host/path/delete?username=abc&item=123&token=[random(seed)]`
+
+token被放在用户的session中，或浏览器的cookie中。
+
+提交数据时，token需要同时放入表单和session中，提交请求时，服务器只需验证表单中的token与用户session或cookie中的token是否一致，即可知是否为合法请求。每次登录这个token是不一样的。
+
+token如果放在url中，还会通过referer泄露给其他网站，所以token最好放在表单中，数据提交通过post执行，这样就不会被referer头泄露了。
+
+如果页面存在xss漏洞，那么csrf token就无效了，因为xss模拟客户执行浏览器任何操作，所以可以读出token值，再构造合法请求，这个漏洞称为XSRF。
+
+
+
+
 ## 基本原则
 简单来看，下列原则应该可用于防御CSRF：
 - 检查你的框架中是否有内建的CSRF防护并使用它；

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<head>
+    <script>
+        function convert_grey(image_data){
+            for(var x=0;x<image_data.width;x++){
+                for(var y=0;y<image_data.height;y++){
+                    var i = x*4+y*4*image_data.width;
+                    var luma = Math.floor(image_data.data[i]*299/1000+image_data.data[i+1]*587/1000+image_data[i+2]*114/1000);
+                    image_data.data[i] = luma;
+                    image_data.data[i+1] = luma;
+                    image_data.data[i+2] = luma;
+                    image_data.data[i+3] = 255;
+                }
+                
+            }
+
+        }
+    </script>
+</head>
+<html>
+    <body>
+        <canvas id="demo" width="200" height="100" sytle="border:1px solid #c3c3c3;">Your browser does not support the canvas element.</canvas>
+
+        <script type="text/javascript">
+            var c = document.getElementById("demo");
+            var cxt =c.getContext("2d");
+            cxt.fillStyle = "#FF0000";
+            cxt.fillRect(0,0,150,75);
+
+        </script>
+    </body>
+</html>
+

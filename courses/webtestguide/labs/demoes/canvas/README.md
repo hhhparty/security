@@ -1,0 +1,2 @@
+# README
+使用HTML5 CANVAS 在线破解验证码。

