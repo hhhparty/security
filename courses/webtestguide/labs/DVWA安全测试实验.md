@@ -1,6 +1,11 @@
 # DVWA 安全测试实验
+## 安装
 
-
+安装方式，推荐docker 安装。基本命令如下：
+```
+# 安装 & 运行：
+docker run --rm -it -p 80:80 vulnerables/web-dvwa
+```
 ## 1 Information Gathering
 
 ### 1.1 WSTG-INFO-01 Conduct Search Engine Discovery and Reconnaissance for Information Leakage

@@ -1,5 +1,5 @@
 # tensorflow 4 简单实例
-
+> 声明：Tensorflow部分是学习北大曹老师Tensorflow2课程的笔记。
 实现鸢尾花分类
 
 ## 基本思路

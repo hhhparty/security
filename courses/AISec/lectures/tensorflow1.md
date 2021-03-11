@@ -1,4 +1,6 @@
 # Tensorflow 1
+> 声明：Tensorflow部分是学习北大曹老师Tensorflow2课程的笔记。
+
 
 ## 人工智能的三个学派
 

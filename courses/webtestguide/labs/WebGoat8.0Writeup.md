@@ -1,5 +1,17 @@
 # Webgoat 8.0 writeup
+## 安装
+WebGoat 8.0是最新版本的OWASP webgoat 项目。
 
+建议使用docker环境。
+
+启动 docker 容器的命令：
+```
+sudo docker run --rm -it -p 8080:8080 webgoat/webgoat-8.0
+
+```
+在浏览器上打开这个应用：http://10.10.10.129:8080/WebGoat/login
+
+然后进行注册。
 ## 通用部分
 ### HTTP Basics
 这部分内容旨在介绍HTTP协议的基本内容，如何工作。

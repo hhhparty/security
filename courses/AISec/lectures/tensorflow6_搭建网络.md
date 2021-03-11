@@ -1,5 +1,5 @@
 # tensorflow 6 搭建网络
-
+> 声明：Tensorflow部分是学习北大曹老师Tensorflow2课程的笔记。
 ## 用tensorflow api :tf.keras 搭建网络
 
 ### 六步法

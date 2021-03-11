@@ -1,5 +1,5 @@
 # tensorflow 3 常见函数
-
+> 声明：Tensorflow部分是学习北大曹老师Tensorflow2课程的笔记。
 
 
 ## 强制 tensor 转换为该数据类型

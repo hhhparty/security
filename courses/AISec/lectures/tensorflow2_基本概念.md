@@ -1,5 +1,5 @@
 # Tensorflow 2 基本概念
-
+> 声明：Tensorflow部分是学习北大曹老师Tensorflow2课程的笔记。
 ## Eager Execution
 
 TensorFlow 的 Eager Execution 是一种命令式编程环境，可立即评估运算，无需构建计算图：运算会返回具体的值，而非构建供稍后运行的计算图。这样能使您轻松入门 TensorFlow 并调试模型，同时也减少了样板代码。要跟随本指南进行学习，请在交互式 python 解释器中运行以下代码示例。
