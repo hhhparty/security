@@ -1,7 +1,10 @@
 # Struts2 漏洞
 
+
+
+
 ## struts2
->https://www.w3cschool.cn/struts_2/struts_examples.html
+
 
 Apache Struts 2最初被称为WebWork 2，它是一个简洁的、可扩展的框架，可用于创建企业级Java web应用程序。设计这个框架是为了从构建、部署、到应用程序维护方面来简化整个开发周期。
 
@@ -381,7 +384,7 @@ redirect:${#context["xwork.MethodAccessor.denyMethodExecution"]=false,#f=#_membe
 
 ### s2-045
 
-漏洞复现
+#### 漏洞复现
 
 直接发送如下数据包，可见`233*233`已成功执行：
 
@@ -419,6 +422,191 @@ Server: Jetty(9.2.11.v20150529)
 ```
 
 显然，Content-Length: 495即表示ognl计算成功，那么其他payload可以去尝试了。
+#### 漏洞分析
+<img src="images/struts2/st2_arch.png-w331s">
+
+可以看到 request 请求大部分都是在浅黄色的过滤器和绿色的拦截器中间流转。
+
+在有了具体的业务逻辑需要后台处理时，需要将 request 发送到对应的 Action 来处理，图中画的是 FilterDispatcher ，但在 Struts 2.5 以上已经将这个换成了 StrutsPrepareAndExecuteFilter 。
+
+看到上图，去除 Struts2自带的核心部分，可以看到大部分的过程都是在过滤器和拦截器中间流转，而且对流转的Action并没有加以区分。
+
+简单来说，过滤器对所有的请求都起到作用，主要用来对请求添加，修改或者分派转发至Action处理业务逻辑，图中的FilterDispatcher 就是起到这个作用的。
+
+拦截器能对配置文件中匹配的 request 进行处理，并能获取 request 当中的上下文环境及数据。
+
+漏洞触发后程序的调用栈先后顺序如下：
+```
+1.intercept:264,FileUploadInterceptor           文件上传拦截器处理报错信息
+2.findText:393,LocalizedTextUtil
+3.findText:573,LocalizedTextUtil                提取封装的Action中的值栈
+4.getDefaultMessage:729,LocalizedTextUtil       值到对象转换
+5.translateVariables:45,TextParseUtil
+6.translateVariables:123,TextParseUtil
+7.translateVariables:166,TextParseUtil          提取出ognl表达式并执行
+8.evaluate:13,OgnlTextParser                    最后执行ognl表达式
+```
+
+这次的漏洞成因则更为奇怪，解析出错误信息的ognl表达式并执行。 最后，当动态调试此类漏洞时，前往 ognl表达式执行的方法处下断点调试，马上就能一目了然的看到漏洞触发的完整调用栈。
+
+### s2-057
+这个漏洞触发，当Struts2的配置满足以下条件时：
+- alwaysSelectFullNamespace值为true
+- action元素未设置namespace属性，或使用了通配符
+
+namespace将由用户从uri传入，并作为OGNL表达式计算，最终造成任意命令执行漏洞。影响版本: 小于等于 Struts 2.3.34 与 Struts 2.5.16
+
+
+#### 原理分析
+
+如何在分析历史漏洞的基础上去发现一个新漏洞？
+
+>翻译自：Man Yue Mo，["How to find 5 RCEs in Apache Struts with CodeQL"](https://securitylab.github.com/research/apache-struts-CVE-2018-11776)
+##### Mapping the attack surface
+
+许多漏洞是由于从不可信的源（source）引入了数据（例如用户输入）到特定位置（sink）后，数据被以危险的方式去使用。例如：sql query，deserialization，other interpreting... 
+
+CodeQL 能够比较容易的查询这类漏洞。使用时需要简要描述source 和 sink，然后让 DataFlow 库完成工作。如果已知一些历史漏洞，那么将是开始此类研究工作的好方式。因为历史漏洞的poc或分析会让你了解source 和 sink。
+
+为了找到struts2的新漏洞，我们研究了S2-032,S2-033,S2-037等。类似别的Struts RCE，大多因为读取了不受信任的ognl表达式并在服务器端执行，攻击者设计了shell利用这个漏洞。上述3个漏洞非常有趣，不仅是因为它们让我们了解一些struts内部工作原理，还因为他们使用了3种方法去修复同样的问题。这个问题就是输入数据经变量`methodName`传递，它会作为`OgnlUtil::getValue()`方法的参数。
+
+```java
+String methodName = proxy.getMethod();    //<--- untrusted source, but where from?
+LOG.debug("Executing action method = {}", methodName);
+String timerKey = "invokeAction: " + proxy.getActionName();
+try {
+    UtilTimerStack.push(timerKey);
+    Object methodResult;
+    try {
+        methodResult = ognlUtil.getValue(methodName + "()", getStack().getContext(), action); //<--- RCE
+
+```
+
+上面的`proxy`有类型`ActionProxy`，它是一个接口。查看它的定义，除了上面用于指定被污染变量`methodName`的`getMethod()`，还有别的多个方法，例如`getActionName()` , `getNamespace()`等。这些方法看起来能够从URL种读取信息并返回。所以我假设所有的这类方法能够返回一个不可信输入。下面就是深入挖掘这些输入从哪来的。
+
+
+现在我们可以开始使用CodeQL 的语言来建模这些不可信sources，命名QL：
+```java
+class ActionProxyGetMethod extends Method {
+  ActionProxyGetMethod() {
+    getDeclaringType().getASupertype*().hasQualifiedName("com.opensymphony.xwork2", "ActionProxy") and
+    (
+      hasName("getMethod") or
+      hasName("getNamespace") or
+      hasName("getActionName")
+    )
+  }
+}
+
+predicate isActionProxySource(DataFlow::Node source) {
+   source.asExpr().(MethodAccess).getMethod() instanceof ActionProxyGetMethod
+}
+```
+##### 识别这些ONGL sinks
+上面已经识别和描述了一些不可信sources，下一步就是对sinks做同样的事。如上所述，许多Struts RCEs会将输入解释为OGNL表达式。Struts种有许多函数最终执行以OGNL执行他们的参数。
+
+上面说的3个漏洞种，他们利用了`OgnlUtil::getValue()`，而s2-045中利用了`TextParseUtil::translateVariables()`。我们没有把这些方法作为各自独立的sinks，而是视其为执行OGNL的通用函数，所以使用`OgnlUtil::compileAndExecute()` 和`OgnlUtl::compileAndExecuteMethod()` 作为近似的sinks。
+
+使用一个QL描述：
+```java
+predicate isOgnlSink(DataFlow::Node sink) {
+  exists(MethodAccess ma | ma.getMethod().hasName("compileAndExecute") or ma.getMethod().hasName("compileAndExecuteMethod") |
+    ma.getMethod().getDeclaringType().getName().matches("OgnlUtil") and
+    sink.asExpr() = ma.getArgument(0)
+  )
+}
+```
+
+##### 污染跟踪的首次尝试
+
+现在有了使用CodeSQL的sources和sinks，我们在一个taint-tracking中使用这些定义。我们使用DataFlow库来做跟踪，所以要定义一个DataFlow 配置：
+
+```java
+class OgnlTaintTrackingCfg extends DataFlow::Configuration {
+  OgnlTaintTrackingCfg() {
+    this = "mapping"
+  }
+
+  override predicate isSource(DataFlow::Node source) {
+    isActionProxySource(source)
+  }
+
+  override predicate isSink(DataFlow::Node sink) {
+    isOgnlSink(sink)
+  }
+
+  override predicate isAdditionalFlowStep(DataFlow::Node node1, DataFlow::Node node2) {
+    TaintTracking::localTaintStep(node1, node2) or
+    exists(Field f, RefType t | node1.asExpr() = f.getAnAssignedValue() and node2.asExpr() = f.getAnAccess() and
+      node1.asExpr().getEnclosingCallable().getDeclaringType() = t and
+      node2.asExpr().getEnclosingCallable().getDeclaringType() = t
+    )
+  }
+}
+
+from OgnlTaintTrackingCfg cfg, DataFlow::Node source, DataFlow::Node sink
+where cfg.hasFlow(source, sink)
+select source, sink
+```
+
+这里使用了先前定义的 `isActionProxySource` and `isOgnlSink` predicates.
+
+注意，上面重载了一个 predicate，名为isAdditionalFlowStep。它包含了污染数据在哪里可以被传播的步骤。例如，它可以让我们合并本项目的特定信息到flow 配置中。例如，如果我有通过某些网络层通信的组件，我可以使用CodeQL描述各种网络端点的情况，使DataFlow库可以抽象地跟踪被污染数据。
+
+对于此处的qurey，我增加了两个额外的flow steps供DataFlow使用。第一个是`TaintTracking::localTaintStep(node1, node2)` 。标准CodeQL TaintTracking library steps会跟踪标准的java library calls， string operations等。第二个step是一种允许我们由field访问跟踪污染数据的近似做法。
+
+```
+exists(Field f, RefType t | node1.asExpr() = f.getAnAssignedValue() and node2.asExpr() = f.getAnAccess() and
+  node1.asExpr().getEnclosingCallable().getDeclaringType() = t and
+  node2.asExpr().getEnclosingCallable().getDeclaringType() = t
+)
+```
+上面这段语句是说：如果某个field被安排了一些污染数据，那么对该field的一个访问也将考虑受污染，只要两个表达式都被同一类型的方法调用。简单讲，它们会合并下列case：
+
+```
+public void foo(String taint) {
+  this.field = taint;
+}
+
+public void bar() {
+  String x = this.field; //x is tainted because field is assigned to tainted value in `foo`
+}
+```
+可以看到bar中this.field并不总被污染，例如如果再bar函数执行前，foo没有被调用。因此，我们不能再默认的`DataFlow::Configuration`中包含这个flow步骤，我们不能保证数据总是以这个方式流动。然而为了捕捉漏洞，我发现增加这个是有用的，所以经常将其包含在我的`DataFlow::Configuration`中。除此以外还有一些额外的flow steps可以使用，用于发现bug。
+
+##### 初始结果和查询优化
+
+运行上面的代码，查看结果，我注意到由s2-032，s2-033，s2-037漏洞造成的问题还在。在看别的结果之前，我想研究一下为什么这些已经被修复的问题仍然被标记。这证明了虽然第一个漏洞最初是通过清除输入来修复的，但是在S2-037之后，Struts团队决定使用`OgnlUtil::callMethod()`替换调用`OgnlUtil::getValue() `。即`methodResult = ognlUtil.callMethod(methodName + "()", getStack().getContext(), action);`
+
+这个callMethod包装了一个对compileAndExecuteMethod()的调用：
+```
+public Object callMethod(final String name, final Map<String, Object> context, final Object root) throws OgnlException {
+  return compileAndExecuteMethod(name, context, new OgnlTask<Object>() {
+    public Object execute(Object tree) throws OgnlException {
+      return Ognl.getValue(tree, context, root);
+    }
+  });
+}
+```
+而 compileAndExecuteMethod 在执行前对表达式进行了额外的检查。
+```
+private <T> Object compileAndExecuteMethod(String expression, Map<String, Object> context, OgnlTask<T> task) throws OgnlException {
+  Object tree;
+  if (enableExpressionCache) {
+    tree = expressions.get(expression);
+    if (tree == null) {
+      tree = Ognl.parseExpression(expression);
+      checkSimpleMethod(tree, context); //<--- Additional check.
+    }
+```
+
+这意味着，我们可以从自己的sink中删掉compileAndExecuteMethod（）了。[再次运行](https://lgtm.com/query/1506466898138/)，作为一个sink的getMethod不见了。然而，在DefaultActionInvocation.java仍然有一些结果，例如调用getActioName().
+
+##### 路径探索和更多的查询精华
+略，详情查看原文。
+##### 新的漏洞
+仅剩下10对sources 和 sinks，可以手工检查他们是否真有问题。检查后发现一些是无效的，所以在查询中增加了一些barriers，以过滤出这些路径。这下就有一些结果了。
+
 
 ## 漏洞修复
 
@@ -546,3 +734,16 @@ content-type: %{(#fuck='multipart/form-data') .(#dm=@ognl.OgnlContext@DEFAULT_ME
 Ognl表达式由于其灵活性，存在一些变形逃逸的，但是S2-016之后的漏洞要绕过沙盒很难避开这两个对象及相关函数调用。绕过可以参考`ognl.jjt`文件，这个文件定义了ognl表达式的词法和语法结构，ognl的相关解析代码也是基于这个文件生成的，所以一般的绕过也可以基于此文件展开。
 
 
+## References
+
+- https://paper.seebug.org/247/
+- https://www.freebuf.com/column/224041.html
+- https://www.freebuf.com/vuls/229080.html
+- http://rickgray.me/2016/05/06/review-struts2-remote-command-execution-vulnerabilities/
+- https://docs.oracle.com/javase/tutorial/essential/environment/sysprop.html
+- https://www.w3cschool.cn/struts_2/struts_examples.html
+- https://www.cnblogs.com/cenyu/p/6233942.html
+- http://c.biancheng.net/view/4071.html
+- https://securitylab.github.com/research/apache-struts-CVE-2018-11776
+
+本文大量内容来自上述文章，致敬，侵删。
