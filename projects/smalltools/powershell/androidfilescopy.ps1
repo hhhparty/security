@@ -4,9 +4,9 @@ Write-Host "####################################################################
 Write-Host "Start the script...."
 Write-Host " "
 
-$destPath = "H:\aqiyi"
+$destPath = "H:\bilibili"
 $phoneName = "Lt"
-$phoneFilePath = "内部存储\Android\data\com.qiyi.video\files\app\download\video"
+$phoneFilePath = "内部存储\Android\data\tv.danmaku.bili\download"
 $summary = [hashtable]@{CopyCount=0;ExistedCount=0}
 
 function getPhoneRootPath($phoneName)
