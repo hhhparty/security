@@ -64,9 +64,9 @@ ln -s /usr/software/nodejs/bin/node   /usr/local/bin/
 
 `npm i @angular-devkit/build-angular@0.803.24`
 
-还有可能出现类似这样的错误：“ FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of me”
+还有可能出现类似这样的错误：“ FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory”
 
-所以要在 ng 脚本里写内容，例如 `vi /urs/local/nodejs/bin/ng`，在首行编辑如下：
+所以要在 ng 脚本里写内容，例如 `vi /usr/local/nodejs/bin/ng`，在首行编辑如下：
 
 ```#!/bin/sh  --max_old_space_size=4096```
 
@@ -142,7 +142,7 @@ sudo /usr/local/nginx/sbin/nginx -t
 ##### Running the Navigator offline
 安装上面所有步骤，然后将github[ CTI项目](https://github.com/mitre/cti/)下载下来。
 
-然后将CTI项目中的 enterprise-attack、mobile-attack等文件夹放到 attack-navigator-4.0/nav-app/src/assests目录下。
+然后将CTI项目中的 enterprise-attack、mobile-attack等文件夹放到 attack-navigator-4.0/nav-app/src/assests目录下。u
 
 修改nav-app/src/assests目录中的config.json文件中的路径，例如：
 ```json
@@ -210,6 +210,19 @@ $ echo fs.inotify.max_user_watches=102400 | sudo tee -a /etc/sysctl.conf
 $ sudo sysctl -p
 
 ```
+
+
+运行ng serve --host 0.0.0.0 还可能报错：FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory
+
+
+try running the build with this
+
+`node --max_old_space_size=8048 ./node_modules/@angular/cli/bin/ng serve`
+or other way is to add this to the package.json
+```
+"build-serve": "node --max_old_space_size=8048 ./node_modules/@angular/cli/bin/ng serve"
+```
+where 8048 is the max heap size.
 #### 最终编译后可离线使用版本的使用
 上面的都解决后，终于可以enjoy了。
 

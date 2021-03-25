@@ -31,11 +31,11 @@ tf.distribute.Strategy可以与Keras之类的高级API一起使用，也可以�
 
 
 tf2.2支持的六种可选策略：
-- `tf.distribute.MirroredStrategy` 支持在一台机器的多个 GPU 上进行同步分布式训练。该策略会为每个 GPU 设备创建一个副本。模型中的每个变量都会在所有副本之间进行镜像。这些变量将共同形成一个名为 MirroredVariable 的单个概念变量。这些变量会通过应用相同的更新彼此保持同步。
--  `tf.distribute.experimental.TPUStrategy` 在张量处理单元 (TPU) 上运行 TensorFlow 训练。TPU 是 Google 的专用 ASIC，旨在显著加速机器学习工作负载。您可通过 Google Colab、TensorFlow Research Cloud 和 Cloud TPU 平台进行使用。
-- `tf.distribute.experimental.MultiWorkerMirroredStrategy` 与 MirroredStrategy 非常相似。它实现了跨多个工作进程的同步分布式训练，而每个工作进程可能有多个 GPU。与 MirroredStrategy 类似，它也会跨所有工作进程在每个设备的模型中创建所有变量的副本。
+- `tf.distribute.MirroredStrategy` **支持在一台机器的多个 GPU**上进行同步分布式训练。该策略会为每个 GPU 设备创建一个副本。模型中的每个变量都会在所有副本之间进行镜像。这些变量将共同形成一个名为 MirroredVariable 的单个概念变量。这些变量会通过应用相同的更新彼此保持同步。
+-  `tf.distribute.experimental.TPUStrategy` 在**张量处理单元 (TPU) 上运行 TensorFlow 训练**。TPU 是 Google 的专用 ASIC，旨在显著加速机器学习工作负载。您可通过 Google Colab、TensorFlow Research Cloud 和 Cloud TPU 平台进行使用。
+- `tf.distribute.experimental.MultiWorkerMirroredStrategy` 与 MirroredStrategy 非常相似。它实现了**多机器多GPU的同步分布式训练**，即多个工作进程的同步分布式训练，而每个工作进程可能有多个 GPU。与 MirroredStrategy 类似，它也会跨所有工作进程在每个设备的模型中创建所有变量的副本。
 - `tf.distribute.experimental.CentralStorageStrategy` 也执行同步训练。变量不会被镜像，而是放在 CPU 上，且运算会复制到所有本地 GPU 。如果只有一个 GPU，则所有变量和运算都将被放在该 GPU 上。
-- `tf.distribute.experimental.ParameterServerStrategy` 支持在多台机器上进行参数服务器训练。在此设置中，有些机器会被指定为工作进程，有些会被指定为参数服务器。模型的每个变量都会被放在参数服务器上。计算会被复制到所有工作进程的所有 GPU 中。
+- `tf.distribute.experimental.ParameterServerStrategy` 支持在**多机器异步训练**，即多台机器上进行参数服务器训练。在此设置中，有些机器会被指定为工作进程，有些会被指定为参数服务器。模型的每个变量都会被放在参数服务器上。计算会被复制到所有工作进程的所有 GPU 中。
 
 除上述策略外，还有其他两种策略可能对使用 tf.distribute API 进行原型设计和调试有所帮助。
 - 默认策略: 默认策略是一种分布式策略，当作用域内没有显式分布策略时就会出现。此策略会实现 tf.distribute.Strategy 接口，但只具有传递功能，不提供实际分布。例如，strategy.run(fn) 只会调用 fn。使用该策略编写的代码与未使用任何策略编写的代码完全一样。您可以将其视为“无运算”策略。
@@ -43,28 +43,6 @@ tf2.2支持的六种可选策略：
 
 
 下面将使用`tf.distribute.MirroredStrategy`，这是再一台机器上多GPU卡进行同时训练的图形内复制（in-graph replication）。它将会把所有模型的变量复制到每个处理器上，然后通过`all-reduce`整合所有处理器的梯度，并将整合的结果应用于所有副本中。
-
-### ParameterServerStrategy
-
-Parameter Server 训练是一种通用的数据并行方法，使模型训练可以扩展到多个机器。一个parameter server 训练集群由 workers 和 parameters servers构成。变量们将在 parameter server 中生成，而由 workers 在每一步中读取和更新。
-
-TF2  parameter server 训练使用了一种基于架构的中心-协调器（central-coordinator），由`tf.distribute.experimental.coordinator.ClusterCoordinator` 类定义。
-
-在这种实现中，worker 和 parameter server 任务运行 `tf.distribute.Server`s监听来自 coordinator 的任务。 这个 coordinator 生成 resouces，分派训练任务，写checkpoints，而且处理任务错误。
-
-在coordinator的编程运行中，你将使用一个 ParameterServerStrategy 对象来定义一个学习步，并使用一个 `ClusterCoordinator` 来分派训练步到远程 workers。
-
-下面使最简单的生成它们的方式：
-```
-strategy = tf.distribute.experimental.ParameterServerStrategy(
-        tf.distribute.cluster_resolver.TFConfigClusterResolver(),
-        variable_paritioner=variable_partitioner)
-coordinator = tf.distribute.experimental.coordinator.ClusterCoordinator(strategy)
-```
-
-注意，如果使用`TFConfigClusterResolver`，你需要配置`TF_CONFIG`环境变量。这近似于`TF_CONFIG`在`MultiWorkerMirroredStrategy` 但有additional caveats。
-
-在TF v1.x中，ParameterServerStrategy 仅在使用 estimator 的 `tf.compat.v1.distribute.experimental.ParameterServerStrategy` 时可用。
 
 
 
@@ -113,9 +91,155 @@ LEARNING_RATES_BY_BATCH_SIZE = {5: 0.1, 10: 0.15}
 learning_rate = LEARNING_RATES_BY_BATCH_SIZE[global_batch_size]
 ```
 
-## Parameter Server Training
+## 分布式策略下的自定义训练过程（Custom Training Loop）
+
+### 应用MirroredStrategy
+分为以下步骤：
+
+- 定义分布式策略：`strategy = tf.distribute.MirroredStrategy(...)`
+- 在strategy.scope中定义model，optimizer，metrics...
+
+```
+with strategy.scope():
+    model = ...
+    optimizer = ...
+    metrics = ...
+```
+
+- 定义分布式数据集：`dataset = strategy.distribute_datasets_from_function(...)`
+
+- 定义训练步
+
+```python
+
+@tf.function
+def step_fn(iterator):
+    def replica_fn(inputs):
+        # 计算 loss，gradient
+        # 应用 gradient
+        # 更新 metrics
+    return strategy.run(replica_fn,args=(next(iterator),))
+
+```
+- 定义训练轮数
+
+```python
+for epoch in range(train_epochs):
+    iterator = iter(dataset)
+    for step in range(steps_per_epoch):
+        step_fn(next(iterator))
+    print('metrics result:',metrics.result())
+```
+
+### 应用 ParameterServerStrategy
+分为以下步骤：
+
+- 定义分布式策略：`strategy = tf.distribute.ParameterServerStrategy(cluster_resolver)`
+
+
+- 定义coordinator ： `coordinator = tf.distribute.experimental.coordinator.ClusterCoordinator(strategy)`
+
+
+- 在strategy.scope中定义model，optimizer，metrics...
+
+```python
+with strategy.scope():
+    model = ...
+    optimizer = ...
+    metrics = ...
+```
+
+- 定义分布式数据集：`dataset = strategy.distribute_datasets_from_function(...)`
+
+- 定义训练步
+
+```python
+
+@tf.function
+def step_fn(iterator):
+    def replica_fn(inputs):
+        # 计算 loss，gradient
+        # 应用 gradient
+        # 更新 metrics
+    return strategy.run(replica_fn,args=(next(iterator),))
+
+```
+- 定义训练轮数
+
+```python
+for epoch in range(train_epochs):
+    iterator = iter(dataset)
+    for step in range(steps_per_epoch):
+        coordinator.schedule(step_fn,args=(iterator,)) #分发到worker上，并取回参数
+        step_fn(next(iterator))
+    coordinator.join()
+    print('metrics result:',metrics.result())
+```
+## 实现多机器分布训练的模式 Parameter Server
 
 > source: https://tensorflow.google.cn/tutorials/distribute/parameter_server_training
+
+
+Parameter Server 训练是一种通用的数据并行方法，使模型训练可以扩展到多个机器。一个parameter server 训练集群由 workers 和 parameters servers构成。待训练的变量们将在 parameter server 中生成，然后由 workers 在每一训练步中读取和更新。默认情况下，workers读取和更新变量时不进行彼此间的同步。这也是有时 parameter server 类型的训练被称为异步训练的原因。
+
+TF2  parameter server 训练使用了一种基于架构的中心-协调器（central-coordinator），由`tf.distribute.experimental.coordinator.ClusterCoordinator` 类定义。
+
+在这种实现中，worker 和 parameter server 任务运行 `tf.distribute.Server`s监听来自 coordinator 的任务。 Coordinator 生成 resouces，分派训练任务，存储 checkpoints，而且处理任务错误。
+
+TF的开发人员认为这个架构和新的ClusterCoordinator将提供更灵活简单的编程模型。
+### ClusterCoordinator
+
+ClusterCoordinator 需要与 `tf.distribute.Strategy` 对象协同工作。`tf.distribute.Strategy`用于传递cluster的信息、定义训练步，正如我们在使用 MirroredStrategy的自定义训练。然后 ClusterCoordinator 对象分派这些训练步的执行任务到远程的workers。目前，tf2中的 ClusterCoordinator 仅能与`tf.distribute.experimental.ParameterServerStrategy`协同。
+
+由 ClusterCoordinator 对象提供的最重要的API是 schedule 。这个 schedule api将 `tf.function`加入队列，然后返回一个 RemoteValue 。这个队列函数将在后台线程被分派到远程 workers ，而且它们的 RemoteValues 将被异步的填写。因为 schedule 不要求 worker 同意（assigment）， 被传递的 tf.function 可以在任何可用的worker上执行。如果worker在完成计算前变得不可用，这个function将重新在别的可用的worker上执行。这一点，再加上function执行不是原子的，导致一个function可能会执行多次。
+
+除了分派远程functions，ClusterCoordinator 也帮着在所有workers上生成数据，以及当某个worker从失效中恢复后重建数据。
+
+
+### 学习向导安装
+
+`pip install -q portpicker`
+
+```
+import multiprocessing
+import os
+import random
+import portpicker
+import tensorflow as tf
+import tensorflow.keras as keras
+import tensorflow.keras.layers.experimental.preprocessing as kpl
+```
+### cluster setup
+如上所诉，一个 parameter server 训练 cluster 要求一个 coordinator 任务，以运行你的训练过程，一个或多个workers，以及运行tf servers 的 parameter server 任务，例如：tf.distribute.Server, 还有可能的额外评估任务来运行side-car 评估。这要求安装：
+
+- coordinator task 需要指导所有别的tf servers的ip addr 和 ports，除了评估器。
+- workers 和 parameter servers 需要知道它们应当监听哪个端口。为简单起见，当我们完成这些任务而生成tf server时，我们通常传递完整的cluster 信息。
+- 评估任务不必知道训练cluster的安装信息，即便知道，也不能尝试去连接训练cluster。
+- workers 和 parameter servers 应当有诸如 “worker” 和 “ps” 的任务类型，coordinator 应当使用 chief 作为任务类型（历史原因）。
+
+在本文中，我们将生成一个 in-process cluster ，以便整个的 parameter server 训练能够运行在colab中，后面再介绍 real clusters。
+
+#### in-process cluster
+下面我们启动一些tf servers ，并连接它们。
+
+
+
+
+在coordinator的编程运行中，你将使用一个 ParameterServerStrategy 对象来定义一个学习步，并使用一个 `ClusterCoordinator` 来分派训练步到远程 workers。
+
+下面使最简单的生成它们的方式：
+```
+strategy = tf.distribute.experimental.ParameterServerStrategy(
+        tf.distribute.cluster_resolver.TFConfigClusterResolver(),
+        variable_paritioner=variable_partitioner)
+coordinator = tf.distribute.experimental.coordinator.ClusterCoordinator(strategy)
+```
+
+注意，如果使用`TFConfigClusterResolver`，你需要配置`TF_CONFIG`环境变量。这近似于`TF_CONFIG`在`MultiWorkerMirroredStrategy` 但有additional caveats。
+
+在TF v1.x中，ParameterServerStrategy 仅在使用 estimator 的 `tf.compat.v1.distribute.experimental.ParameterServerStrategy` 时可用。
+
+
 
 tf的开发者相信这个架构和新的 `ClusterCoordinator`类提供了一种更灵活和简单的编程模型。
 
@@ -140,7 +264,7 @@ import tensorflow.keras as keras
 import tensorflow.keras.layers.experimental.preprocessing as kpl
 ```
 ### Cluster Setup
-如上所述，parameter server 训练 cluster，要求一个coordinator 运行你的训练程序任务，一个或多个workers 和 运行tf servers 任务的 parameter servers，例如：tf.distribute.Server。可能还需要一个评估任务（可以参考下面的 side-car 评估部分）。
+如上所述，parameter server 训练 cluster，要求一个运行你的训练程序的 coordinator 任务，一个或多个workers 和 运行tf servers 的 parameter servers  任务，例如：tf.distribute.Server。可能还需要一个评估任务（可以参考下面的 side-car 评估部分）。
 
 - coordinator 任务需要直到所有别的tf servers的地址和端口，但不需要知道评估器的。
 - workers 和 parameter servers 需要知道它们需要监听哪个端口。简单起见，我们在生成tf servers执行任务时，通常传递完整的cluster 信息。
@@ -151,6 +275,15 @@ import tensorflow.keras.layers.experimental.preprocessing as kpl
 
 #### in-process cluster
 ```python
+import multiprocessing
+import os
+import random
+import portpicker
+import tensorflow as tf
+import tensorflow.keras as keras
+import tensorflow.keras.layers.experimental.preprocessing as kpl
+
+
 def create_in_process_cluster(num_workers, num_ps):
     """Creates and starts local servers and returns the cluster_resolver."""
     worker_ports = [portpicker.pick_unused_port() for _ in range(num_workers)]
@@ -162,20 +295,17 @@ def create_in_process_cluster(num_workers, num_ps):
         cluster_dict["ps"] = ["localhost:%s" % port for port in ps_ports]
 
     cluster_spec = tf.train.ClusterSpec(cluster_dict)
-    print(cluster_spec)
+
     # Workers need some inter_ops threads to work properly.
     worker_config = tf.compat.v1.ConfigProto()
     if multiprocessing.cpu_count() < num_workers + 1:
         worker_config.inter_op_parallelism_threads = num_workers + 1
 
     for i in range(num_workers):
-        tf.distribute.Server(
-            cluster_spec, job_name="worker", task_index=i, config=worker_config,
-            protocol="grpc")
+        tf.distribute.Server(cluster_spec, job_name="worker", task_index=i, config=worker_config,protocol="grpc")
 
     for i in range(num_ps):
-        tf.distribute.Server(
-            cluster_spec, job_name="ps", task_index=i, protocol="grpc")
+        tf.distribute.Server(cluster_spec, job_name="ps", task_index=i, protocol="grpc")
 
     cluster_resolver = tf.distribute.cluster_resolver.SimpleClusterResolver(cluster_spec, rpc_layer="grpc")
     return cluster_resolver
@@ -187,15 +317,19 @@ os.environ["GRPC_FAIL_FAST"] = "use_caller"
 NUM_WORKERS = 3
 NUM_PS = 2
 cluster_resolver = create_in_process_cluster(NUM_WORKERS, NUM_PS)
+
 ```
 
-### 使用自定义的迭代完成训练
 
-使用`tf.distribute.Strategy`的自定义训练loop提供了更为灵活的定义训练迭代的方法。在当前tf2中的 parameter server 训练，仅自定义的训练循环是被支持的。这里我们呢使用了 `ParameterServerStrategy`来定义一个训练步，然后使用ClusterCoordinator 分派训练步的执行到远程workers。
+#### 使用自定义的迭代完成训练
 
-#### 生成 ParameterServerStrategy
+使用`tf.distribute.Strategy`的自定义训练loop提供了更为灵活的定义训练迭代的方法。在当前tf2中的 parameter server 训练，仅支持自定义训练循环。
 
-为写一个在自定义训练loop中的训练步，第一步是生成ParameterServerStrategy。
+这里我们使用了 `ParameterServerStrategy`来定义一个训练步，然后使用ClusterCoordinator 分派训练步的执行到远程workers。
+
+##### 生成 ParameterServerStrategy
+
+要写一个自定义训练loop中的训练步，第一步是生成ParameterServerStrategy。一会儿再介绍variable_partitioner。
 
 ```python
 #tf 2.4.1
@@ -208,39 +342,299 @@ strategy = tf.distribute.experimental.ParameterServerStrategy(
     variable_partitioner=variable_partitioner)
 
 ```
-之后如果你可以生成一个model，定义一个数据集和一个step函数。
+然后，你可以生成一个model，定义一个数据集和一个step函数，就像再其它分布式策略 [tutorial](https://tensorflow.google.cn/tutorials/distribute/custom_training) 中见到的一样。下面就来生成这些组件。
 
 ##### 设置data
-首先我们写一个函数生成dataset，它会包含使用keras预处理层的预处理逻辑。我们将生成除dataset_fn之外的一些layers ，但是应用transformation 在 dataset_fn中。由于你要把dataset_fn包装在tf.function中. tf.function中不允许变量在其中生成。
+首先我们写一个函数生成dataset，它包含使用keras预处理层的预处理逻辑。我们在 `dataset_fn` 外面生成这些 layers ，但在 `dataset_fn` 里面应用transformation，因为你要把dataset_fn包装进tf.function中，而tf.function中不允许变量在其中生成。
 
 ```python
-feature_vocab = [
-    "avenger", "ironman", "batman", "hulk", "spiderman", "kingkong",
-    "wonder_woman"
-]
+#simple dataset
+feature_vocab = ["avenger", "ironman", "batman", "hulk", "spiderman", "kingkong","wonder_woman"]
+#simple label
 label_vocab = ["yes", "no"]
 
 with strategy.scope():
-  feature_lookup_layer = kpl.StringLookup(vocabulary=feature_vocab)
+    feature_lookup_layer = kpl.StringLookup(vocabulary=feature_vocab)
 
-  label_lookup_layer = kpl.StringLookup(vocabulary=label_vocab,
-                                        num_oov_indices=0,
-                                        mask_token=None)
+    label_lookup_layer = kpl.StringLookup(vocabulary=label_vocab, num_oov_indices=0,mask_token=None)
 
-  raw_feature_input = keras.layers.Input(
-      shape=(3,), dtype=tf.string, name="feature")
-  feature_id_input = feature_lookup_layer(raw_feature_input)
-  feature_preprocess_stage = keras.Model(
-      {"features": raw_feature_input}, feature_id_input)
+    raw_feature_input = keras.layers.Input(shape=(3,), dtype=tf.string, name="feature")
+    feature_id_input = feature_lookup_layer(raw_feature_input)
+    feature_preprocess_stage = keras.Model({"features": raw_feature_input}, feature_id_input)
 
-  raw_label_input = keras.layers.Input(
-      shape=(1,), dtype=tf.string, name="label")
-  label_id_input = label_lookup_layer(raw_label_input)
-  label_preprocess_stage = keras.Model({"label": raw_label_input}, label_id_input)
+    raw_label_input = keras.layers.Input(shape=(1,), dtype=tf.string, name="label")
+    label_id_input = label_lookup_layer(raw_label_input)
+    label_preprocess_stage = keras.Model({"label": raw_label_input}, label_id_input)
 ```
 
-未完
+然后，我们生成包装在dataset_fn中的训练数据集：
 
+```python
+
+def dataset_fn(_):
+    raw_dataset = tf.data.Dataset.from_tensor_slices(examples)
+    train_dataset = raw_dataset.map(
+        lambda x: (
+            {"features": feature_preprocess_stage(x["features"])},
+            label_preprocess_stage(x["label"])
+        )).shuffle(200).batch(32).repeat()
+    return train_dataset
+```
+
+##### 构建model
+第二步，生成模型和其它对象。确保在`strategy.scope`下生成所有变量。
+
+```python
+# These variables created under the `strategy.scope` will be placed on parameter
+# servers in a round-robin fashion.
+with strategy.scope():
+    # Create the model. The input needs to be compatible with KPLs.
+    model_input = keras.layers.Input( shape=(3,), dtype=tf.int64, name="model_input")
+
+    emb_layer = keras.layers.Embedding(input_dim=len(feature_lookup_layer.get_vocabulary()), output_dim=20)
+    emb_output = tf.reduce_mean(emb_layer(model_input), axis=1)
+    dense_output = keras.layers.Dense(units=1, activation="sigmoid")(emb_output)
+    model = keras.Model({"features": model_input}, dense_output)
+
+    optimizer = keras.optimizers.RMSprop(learning_rate=0.1)
+    accuracy = keras.metrics.Accuracy()
+```
+##### 定义训练步
+
+第三步，生成训练步，并使用tf.function包装器。
+
+```python
+@tf.function
+def step_fn(iterator):
+
+    def replica_fn(batch_data, labels):
+        with tf.GradientTape() as tape:
+            pred = model(batch_data, training=True)
+            per_example_loss = keras.losses.BinaryCrossentropy(
+                  reduction=tf.keras.losses.Reduction.NONE)(labels, pred)
+            loss = tf.nn.compute_average_loss(per_example_loss)
+            gradients = tape.gradient(loss, model.trainable_variables)
+
+        optimizer.apply_gradients(zip(gradients, model.trainable_variables))
+
+        actual_pred = tf.cast(tf.greater(pred, 0.5), tf.int64)
+        accuracy.update_state(labels, actual_pred)
+        return loss
+
+    batch_data, labels = next(iterator)
+    losses = strategy.run(replica_fn, args=(batch_data, labels))
+    return strategy.reduce(tf.distribute.ReduceOp.SUM, losses, axis=None)
+```
+
+在上面步骤的function中，在step_fn 中调用 strategy.run 和 strategy.reduce有利于支持GPUs或未来的复制worker，尽管它们现在还没有实现。
+
+##### 分派训练步到远程workers
+
+在ParameterServerStrategy定义了所有计算后，我们将使用 ClusterCoordinator 类生成 resources 并将训练步骤分发到远程workers。
+
+先生成一个 ClusterCoordinator 对象并传递给 strategy 对象。
+
+`coordinator = tf.distribute.experimental.coordinator.ClusterCoordinator(strategy)`
+
+然后我们为每个worker生成一个dataset和iterator。在下面的 per_worker_dataset_fn 中，将 dataset_fn包装到 distribute_datasets_from_function 是可选的，但它将来会有效支持无缝预提取到GPUs，支持ParameterServerStrategy。
+
+```py
+
+@tf.function
+def per_worker_dataset_fn():
+    return strategy.distribute_datasets_from_function(dataset_fn)
+
+per_worker_dataset = coordinator.create_per_worker_dataset(per_worker_dataset_fn)
+per_worker_iterator = iter(per_worker_dataset)
+```
+
+最后的步骤是使用 schedule 分发计算到远程 workders 。schedule方法将一个 tf.function 入队并返回一个 future-like RemoteValue。队列里的函数们将在后台线程里分给远程workers，并且RemoteValue将异步被填写。join方法可用于等待，直到所有scheduled 函数被执行。
+
+```python
+num_epoches = 4
+steps_per_epoch = 5
+for i in range(num_epoches):
+    accuracy.reset_states()
+    for _ in range(steps_per_epoch):
+        coordinator.schedule(step_fn, args=(per_worker_iterator,))
+    # Wait at epoch boundaries.
+    coordinator.join()
+    print ("Finished epoch %d, accuracy is %f." % (i, accuracy.result().numpy()))
+```
+
+若想获取RemoteValue的结果，可以：
+```python
+loss = coordinator.schedule(step_fn, args=(per_worker_iterator,))
+print ("Final loss is %f" % loss.fetch())
+
+```
+或者，你可以启动所有步骤并在等待完成时做些什么：
+```python
+
+for _ in range(total_steps):
+    coordinator.schedule(step_fn, args=(per_worker_iterator,))
+while not coordinator.done():
+    time.sleep(10)
+    # Do something like logging metrics or writing checkpoints.
+```
+为了完成训练并服务工作流（特别的例子）可以查看 [这个test](https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/keras/distribute/parameter_server_training_test.py)
+
+
+##### 有关 dataset 生成的更多内容
+
+上面代码生成的数据集使用了 create_per_worker_dataset API。它为每个worker生成了一个dataset，并返回了一个容器对象。你可对其调用 iter 方法来生成一个 per-worker 迭代器。这个 per-worker 迭代器包含了每个worker的一个iterator，而且在对特定worker执行函数之前，将在传递给schedule方法的函数的输入参数中替换相应的每个worker的切片。 
+
+当前schedule函数假设每个worker都是一样的，所以分派数据时也是平均分配。除了包含一个dataset.shuffle操作的worker，数据可能被shuffled。因此，我们推荐数据集被复制定义并schedule一个确定的steps数，而不是依赖来自某个数据集的OutOfRangeError。
+
+另一个重要的事情是tf.data 数据集不支持在任务边界穿越时隐式的序列化和反序列化。这在函数中传递给 create_per_worker_dataset 生成整个数据集时很重要。
+
+##### variable sharding（分片）
+Variable Sharding 指的是切分一个变量为多个小的变量。我们称这些小的变量为 Variable shards。这个操作有助于在访问这些shards时，分布化网络负载；也有助于在多ps间处理一个正常variable的分布计算和存储。
+
+要实现变量分片，你可以在构建ParameterServerStrategy 对象时，传递一个 variable_partitioner 。当一个变量被生成并且它被期望返回一定数量的、根据某个变量维度的变量shards时，这个variable_partitioner 将每次被调用。一些开箱即用的 variable_partitioner 例如：tf.distribute.experimental.partitioners.FixedShardsPartitioner
+
+上面的例子，我们把所有变量都划分为2个shards，每个shard将被分配到不同的ps上。
+
+```
+assert len(emb_layer.weights) == 2
+assert emb_layer.weights[0].shape == (5, 20)
+assert emb_layer.weights[1].shape == (4, 20)
+assert emb_layer.weights[0].device == "/job:ps/replica:0/task:0/device:CPU:0"
+assert emb_layer.weights[1].device == "/job:ps/replica:0/task:1/device:CPU:0"
+```
+
+当一个 variable_partitioner 传递进来，如果你直接在 strategy.scope()中生成一个变量，他将成为一个有variables属性的容器类型，这个属性可供访问shards列表。大多数情况下，这个容器通过连接所有shards，自动的转换为一个Tensor。最终，它可以用于普通variable。另一方面，一些tf方法，例如tf.nn.embedding_lookup 为这个容器类型提供了有效的实现，而且这些方法自动地连接聚合shards。
+
+### Evaluation
+在分布式训练中，有多种方法定义和运行评估过程。下面描述每种的细节。如果没有首选项，建议使用inline 的evaluation方法。
+
+#### inline evaluation
+
+在这种方法中，coordinator 在训练和评估之间交替进行，因此我们称之为inline评估。inline 评估有几个好处。例如，它可以支持单个任务无法容纳的大型评估模型和评估数据集。再比如，评估结果可以用来为下一个epoch的训练做决策。
+
+有两种方法实现 inline 评估：
+- 直接评估：对于小型模型和评估数据集，coordinator可以使用其上的评估数据，在分布式模型上执行直接地评估。
+
+```python
+
+eval_dataset = tf.data.Dataset.from_tensor_slices(
+      feature_and_label_gen(num_examples=16)).map(
+          lambda x: (
+              {"features": feature_preprocess_stage(x["features"])},
+              label_preprocess_stage(x["label"])
+          )).batch(8)
+
+eval_accuracy = keras.metrics.Accuracy()
+for batch_data, labels in eval_dataset:
+  pred = model(batch_data, training=False)
+  actual_pred = tf.cast(tf.greater(pred, 0.5), tf.int64)
+  eval_accuracy.update_state(labels, actual_pred)
+
+print ("Evaluation accuracy: %f" % eval_accuracy.result())
+```
+
+- 分布式评估：对于大模型或大数据集，不适合直接运行在coordinator上的，coordinator任务可以使用worker执行分布式评估任务，即使用schedule/join
+
+```python
+with strategy.scope():
+    #在ps上定义评估metric 
+    eval_accuracy = keras.metrics.Accuracy()
+@tf.function
+def eval_step(iterator):
+  def replica_fn(batch_data, labels):
+    pred = model(batch_data, training=False)
+    actual_pred = tf.cast(tf.greater(pred, 0.5), tf.int64)
+    eval_accuracy.update_state(labels, actual_pred)
+  batch_data, labels = next(iterator)
+  strategy.run(replica_fn, args=(batch_data, labels))
+
+def eval_dataset_fn():
+  return tf.data.Dataset.from_tensor_slices(
+      feature_and_label_gen(num_examples=16)).map(
+          lambda x: (
+              {"features": feature_preprocess_stage(x["features"])},
+              label_preprocess_stage(x["label"])
+          )).shuffle(16).repeat().batch(8)
+
+per_worker_eval_dataset = coordinator.create_per_worker_dataset(eval_dataset_fn)
+per_worker_eval_iterator = iter(per_worker_eval_dataset)
+
+eval_steps_per_epoch = 2
+for _ in range(eval_steps_per_epoch):
+  coordinator.schedule(eval_step, args=(per_worker_eval_iterator,))
+coordinator.join()
+print ("Evaluation accuracy: %f" % eval_accuracy.result())
+```
+
+#### Side-car evaluation
+另一种方法称为“边车评估”，它是创建一个专用的评估程序任务，该任务重复读取检查点并在最新的检查点上运行评估。如果您不需要根据评估结果更改培训循环，它可使您的培训计划尽早完成。但是，它需要附加的评估程序任务和定期检查点以触发评估。
+
+tf2的设计人员并不推荐使用side-car evaluation。
+
+### 现实世界的 clusters
+
+现实中，你将运行所有的任务在不同机器不同的处理器上。最简单的方式式配置集群信息在每个任务上，来设置 TF_CONFIG 环境变量，并使用 TFConfigClusterResolver  来解析 TF_CONFIG。 具体请参考[分布式训练指引](https://tensorflow.google.cn/guide/distributed_training#setting_up_tf_config_environment_variable)
+
+如果你使用Kubernetes或别的配置模板来启动训练，那么非常可能这些模板已经设置了 TF_CONFIG。
+
+#### 设置 TF_CONFIG 环境变量
+
+假设你有3个workers 和 2个ps，worker 1 的 TF_CONFIG 可能是：
+
+```
+os.environ["TF_CONFIG"] = json.dumps({
+    "cluster": {
+        "worker": ["host1:port", "host2:port", "host3:port"],
+        "ps": ["host4:port", "host5:port"],
+        "chief": ["host6:port"]
+    },
+   "task": {"type": "worker", "index": 1}
+})
+```
+
+The “TF_CONFIG” of the evaluator can be:
+
+```
+os.environ["TF_CONFIG"] = json.dumps({
+    "cluster": {
+        "evaluator": ["host7:port"]
+    },
+   "task": {"type": "evaluator", "index": 0}
+})
+```
+The “cluster” part in the above “TF_CONFIG” string for the evaluator is optional.
+
+#### 如果你对所有任务使用同样的binary
+If you prefer to run all these tasks using a single binary, you will need to let your program branch into different roles at the very beginning:
+
+```
+cluster_resolver = tf.distribute.cluster_resolver.TFConfigClusterResolver()
+if cluster_resolver.task_type in ("worker", "ps"):
+  # start a TensorFlow server and wait.
+elif cluster_resolver.task_type == "evaluator":
+  # run side-car evaluation
+else:
+  # run the coordinator.
+The following code starts a TensorFlow server and waits:
+
+
+# Set the environment variable to allow reporting worker and ps failure to the
+# coordinator. This is a workaround and won't be necessary in the future.
+os.environ["GRPC_FAIL_FAST"] = "use_caller"
+
+cluster_resolver = tf.distribute.cluster_resolver.TF_ConfigClusterResolver()
+server = tf.distribute.Server(
+    cluster_resolver.cluster_spec(),
+    job_name=cluster_resolver.task_type,
+    task_index=cluster_resolver.task_id,
+    protocol=cluster_resolver.rpc_layer or "grpc",
+    start=True)
+server.join()
+```
+#### 处理任务失败
+
+TODO： 
+https://tensorflow.google.cn/tutorials/distribute/parameter_server_training#clusters_in_real-world
 
 ## tensorflow2.0分布式训练实战：基于parameterServer架构
 

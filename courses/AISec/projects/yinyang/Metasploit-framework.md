@@ -6,7 +6,6 @@ For metasploit-framework 6.x：
 
 1.`git clone https://github.com/rapid7/metasploit-framework.git`
 
-
 2.`mv metasploit-framework /opt/` 然后`cd /opt/metasploit-framework/`
 
 3.安装ruby: `sudo apt-get install ruby`
