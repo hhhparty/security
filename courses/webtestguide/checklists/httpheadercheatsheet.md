@@ -34,3 +34,12 @@
 - Transfer-Encoding
 - Upgrade
 - Via
+
+## x-
+### x-www-form-urlencoded
+服务器知道参数用符号&间隔，如果参数值中需要&，则必须对其进行编码。编码格式就是application/x-www-form-urlencoded（将键值对的参数用&连接起来，如果有空格，将空格转换为+加号；有特殊符号，将特殊符号转换为ASCII HEX值）。
+
+application/x-www-form-urlencoded是浏览器默认的编码格式。对于Get请求，是将参数转换?key=value&key=value格式，连接到url后
+### multipart/form-data
+
+在开发者工具中可以看出multipart/form-data不会对参数编码，使用的boundary(分割线)，相当于&，boundary的值是----Web**AJv3。
