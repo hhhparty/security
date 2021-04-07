@@ -1,4 +1,4 @@
-# 漏洞复现分析系列 1 Redis 基于主从复制的RCE 4.X/5.X
+# 漏洞复现与分析——Redis基于主从复制的RCE 4.X/5.X
 
 ## 获取docker image 并运行
 
