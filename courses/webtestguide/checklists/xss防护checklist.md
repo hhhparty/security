@@ -1,33 +1,34 @@
 # Cross Site Scripting Prevention Cheat Sheet
 
-## Introduction
+## 介绍
 
-This article provides a simple positive model for preventing [XSS](https://owasp.org/www-community/attacks/xss/) using output encoding properly. While there are a huge number of XSS attack vectors, following a few simple rules can completely defend against this serious attack.
+本文提供了一个简单主动防御模型，使用正确的输出编码来防止 [XSS](https://owasp.org/www-community/attacks/xss/) 。即便有无数的xss攻击向量，但根据一个简单的规则，就可以完全抵御这一严重的攻击。
 
-This article does not explore the technical or business impact of XSS. Suffice it to say that it can lead to an attacker gaining the ability to do anything a victim can do through their browser.
+本文不探索xss的技术或业务影响。
 
-Both [reflected and stored XSS](https://owasp.org/www-community/attacks/xss/#stored-and-reflected-xss-attacks) can be addressed by performing the appropriate validation and encoding on the server-side. [DOM Based XSS](https://owasp.org/www-community/attacks/DOM_Based_XSS) can be addressed with a special subset of rules described in the [DOM based XSS Prevention Cheat Sheet](DOM_based_XSS_Prevention_Cheat_Sheet.md).
+This article does not explore the technical or business impact of XSS. Suffice it to say（ 可以这样说），它可以导致攻击者获得通过其浏览器执行受害者可以执行的任何操作的能力。
 
-For a cheatsheet on the attack vectors related to XSS, please refer to the [XSS Filter Evasion Cheat Sheet](https://owasp.org/www-community/xss-filter-evasion-cheatsheet). More background on browser security and the various browsers can be found in the [Browser Security Handbook](https://code.google.com/archive/p/browsersec/).
+Both [reflected and stored XSS](https://owasp.org/www-community/attacks/xss/#stored-and-reflected-xss-attacks) 都可以通过在服务器端进行恰当的验证和编码来解决。 [DOM Based XSS](https://owasp.org/www-community/attacks/DOM_Based_XSS) 可以使用 [DOM based XSS Prevention Cheat Sheet](DOM_based_XSS_Prevention_Cheat_Sheet.md) 中的一个规则子集来解决。
 
-Before reading this cheatsheet, it is important to have a fundamental understanding of [Injection Theory](https://owasp.org/www-community/Injection_Theory).
+XSS有关的攻击向量，可以参考 [XSS Filter Evasion Cheat Sheet](https://owasp.org/www-community/xss-filter-evasion-cheatsheet). 有关浏览器安全和各种浏览器的更多内容可参考 [Browser Security Handbook](https://code.google.com/archive/p/browsersec/).
 
-### A Positive XSS Prevention Model
+都本文前，有必要理解 [Injection Theory](https://owasp.org/www-community/Injection_Theory).
 
-This article treats an HTML page like a template, with slots where a developer is allowed to put untrusted data. These slots cover the vast majority of the common places where a developer might want to put untrusted data. Putting untrusted data in other places in the HTML is not allowed. This is a "whitelist" model, that denies everything that is not specifically allowed.
+### 主动  XSS 防御模型
 
-Given the way browsers parse HTML, each of the different types of slots has slightly different security rules. When you put untrusted data into these slots, you need to take certain steps to make sure that the data does not break out of that slot into a context that allows code execution. In a way, this approach treats an HTML document like a parameterized database query - the data is kept in specific places and is isolated from code contexts with encoding.
+本文将一个HTML页面视为一个模板（template），这个模板上有许多slots可供开发者设计为允许用户输入不可信数据的地方。这些slots数量庞大，而其他HTML位置不允许输入不可信数据。这是一种白名单模型，即拒绝任何非指定内容。
 
-This document sets out the most common types of slots and the rules for putting untrusted data into them safely. Based on the various specifications, known XSS vectors, and a great deal of manual testing with all the popular browsers, we have determined that the rules proposed here are safe.
+每个不同类型的slots，有着不同的安全规则，当你输入不可信数据时，你需要执行一些步骤确保这些数据不会越出这个slot成为可执行代码。在某种程度上，这种方法将HTML文档视为参数化数据库查询—数据保存在特定位置，并通过编码与代码上下文隔离。
 
-The slots are defined and a few examples of each are provided. Developers **SHOULD NOT** put data into any other slots without a very careful analysis to ensure that what they are doing is safe. Browser parsing is extremely tricky and many innocuous looking characters can be significant in the right context.
+本文列出了最常见的一些slots，以及安全处置不可信数据的规则。基于各种规范，已知的xss vectors，和大量流性浏览器上的手工测试，我们认为这种方式是安全的。
 
-### Why Can't I Just HTML Entity Encode Untrusted Data
+下面这些slots都给了一些例子. Developers **SHOULD NOT** 在没有仔细分析和安全确认的情况下将数据放入slots中。浏览器接卸是非常复杂的，一些特殊字符可能被认为是安全的。
 
-HTML entity encoding is okay for untrusted data that you put in the body of the HTML document, such as inside a `<div>` tag. It even sort of works for untrusted data that goes into attributes, particularly if you're religious about using quotes around your attributes. But HTML entity encoding doesn't work if you're putting untrusted data inside a `<script>`
-tag anywhere, or an event handler attribute like onmouseover, or inside CSS, or in a URL. So even if you use an HTML entity encoding method everywhere, you are still most likely vulnerable to XSS. **You MUST use the encode syntax for the part of the HTML document you're putting untrusted data into.** That's what the rules below are all about.
+### 为什么不能仅仅 HTML Entity Encode Untrusted Data
 
-### You Need a Security Encoding Library
+HTML实体编码仅对少数html元素有安全作用，它适用于将不可信数据放在HTML body中，例如放在`<div>`标记中。它甚至适用于放入属性的不可信数据，特别是如果您对在属性周围使用引号抱有宗教信仰的话。但是，如果将不受信任的数据放入`<script>`标签中，或者事件处理程序属性，如 onmouseover，或在CSS内，或在URL中，那么将是不安全的。因此，即使您在任何地方都使用HTML实体编码方法，您仍然很可能容易受到XSS的攻击。**您必须对放入不受信任的数据的HTML部分使用编码语法。** 这就是下面的规则。
+
+### 你需要一个安全编码库
 
 Writing these encoders is not tremendously difficult, but there are quite a few hidden pitfalls. For example, you might be tempted to use some of the escaping shortcuts like `\"` in JavaScript. However, these values are dangerous and may be misinterpreted by the nested parsers in the browser. You might also forget to escape the escape character, which attackers can use to neutralize your attempts to be safe. OWASP recommends using a security-focused encoding library to make sure these rules are properly implemented.
 
@@ -37,11 +38,11 @@ The [OWASP Java Encoder Project](https://owasp.org/www-project-java-encoder/) pr
 
 ## XSS Prevention Rules
 
-The following rules are intended to prevent all XSS in your application. While these rules do not allow absolute freedom in putting untrusted data into an HTML document, they should cover the vast majority of common use cases. You do not have to allow **all** the rules in your organization. Many organizations may find that **allowing only Rule \#1 and Rule \#2 are sufficient for their needs**. Please add a note to the discussion page if there is an additional context that is often required and can be secured with encoding.
+下面的规则用于防御所有的xss攻击。然而这些规则不是绝对的，只是覆盖了大量的常见案例。不必使用所有的规则，很多组织仅采用规则1和规则2，就满足了需求。
 
-**Do NOT** simply encode/escape the list of example characters provided in the various rules. It is NOT sufficient to encode/escape only that list. Blacklist approaches are quite fragile. The whitelist rules here have been carefully designed to provide protection even against future vulnerabilities introduced by browser changes.
+*不要*简单的在各种规则中编码或过滤样本字符列表，这是不充分的。黑名单方法是非常优先的，白名单规则需要精心设计防止因浏览器更新而引来未来的脆弱性。
 
-### RULE \#0 - Never Insert Untrusted Data Except in Allowed Locations
+### RULE \#0 - 绝不在允许位置之外插入不可信数据
 
 The first rule is to **deny all** - don't put untrusted data into your HTML document unless it is within one of the slots defined in Rule \#1 through Rule \#5. The reason for Rule \#0 is that there are so many strange contexts within HTML that the list of encoding rules gets very complicated. We can't think of any good reason to put untrusted data in these contexts. This includes "nested contexts" like a URL inside a JavaScript -- the encoding rules for those locations are tricky and dangerous.
 
@@ -79,9 +80,9 @@ Directly in CSS:
 </style>
 ```
 
-Most importantly, never accept actual JavaScript code from an untrusted source and then run it. For example, a parameter named "callback" that contains a JavaScript code snippet. No amount of encoding/escaping can fix that.
+非常重要的是，绝不从不可信数据源接受真实的JavaScript代码并运行它。例如一个名为 "callback" 参数，包含了 JavaScript code snippet. 没有 encoding/escaping  可以修复这些问题。
 
-### RULE \#1 - HTML Encode Before Inserting Untrusted Data into HTML Element Content
+### RULE \#1 - 在插入不可信数据前进行 HTML Encode，然后再插入 HTML 元素内容
 
 Rule \#1 is for when you want to put untrusted data directly into the HTML body somewhere. This includes inside normal tags like `div`, `p`, `b`, `td`, etc. Most web frameworks have a method for HTML encoding/escaping for the characters detailed below. However, this is **absolutely not sufficient for other HTML contexts.** You need to implement the other rules detailed here as well.
 
@@ -109,7 +110,7 @@ Encode the following characters with HTML entity encoding to prevent switching i
  &apos; not recommended because its not in the HTML spec (See: section 24.4.1) &apos; is in the XML and XHTML specs.
 ```
 
-### RULE \#2 - Attribute Encode Before Inserting Untrusted Data into HTML Common Attributes
+### RULE \#2 - 在插入属性前进行 Attribute Encode
 
 Rule \#2 is for putting untrusted data into typical attribute values like `width`, `name`, `value`, etc. This should not be used for complex attributes like `href`, `src`, `style`, or any of the event handlers like onmouseover. It is extremely important that event handler attributes should follow Rule \#3 for HTML JavaScript Data Values.
 
@@ -137,7 +138,7 @@ The reason this rule is so broad is that developers frequently leave attributes 
 
 Unquoted attributes can be broken out of with many characters, including `[space]` `%` `*` `+` `,` `-` `/` `;` `<` `=` `>` `^` and `|`.
 
-### RULE \#3 - JavaScript Encode Before Inserting Untrusted Data into JavaScript Data Values
+### RULE \#3 - 在插入JavaScript数据值前对不可信数据进行 JavaScript Encode 
 
 Rule \#3 concerns dynamically generated JavaScript code - both script blocks and event-handler attributes. The only safe place to put untrusted data into this code is inside a quoted "data value." Including untrusted data inside any other JavaScript context is quite dangerous, as it is extremely easy to switch into an execution context with characters including (but not limited to) semi-colon, equals, space, plus, and many more, so use with caution.
 
@@ -282,7 +283,7 @@ Unquoted attributes can be broken out of with many characters including `[space]
 
 Also, the `</style>` tag will close the style block even though it is inside a quoted string because the HTML parser runs before the JavaScript parser. Please note that we recommend aggressive CSS encoding and validation to prevent XSS attacks for both quoted and unquoted attributes.
 
-### RULE \#5 - URL Encode Before Inserting Untrusted Data into HTML URL Parameter Values
+### RULE \#5 - 在向HTML URL参数值插入不可信数据前，进行 URL Encode
 
 Rule \#5 is for when you want to put untrusted data into HTTP GET parameter value.
 
@@ -306,7 +307,7 @@ if (isValidURL) {
 }
 ```
 
-### RULE \#6 - Sanitize HTML Markup with a Library Designed for the Job
+### RULE \#6 - 使用面向业务（Designed for the Job）的库净化（Sanitize） HTML 标签
 
 If your application handles markup -- untrusted input that is supposed to contain HTML -- it can be very difficult to validate. Encoding is also difficult, since it would break all the tags that are supposed to be in the input. Therefore, you need a library that can parse and clean HTML formatted text. There are several available at OWASP that are simple to use:
 
@@ -346,11 +347,11 @@ The `SanitizeHelper` module provides a set of methods for scrubbing text of unde
 - [PHP HTML Purifier](http://htmlpurifier.org/)
 - [Python Bleach](https://pypi.python.org/pypi/bleach)
 
-### RULE \#7 - Avoid JavaScript URLs
+### RULE \#7 - 避免 JavaScript URLs
 
 Untrusted URLs that include the protocol javascript: will execute JavaScript code when used in URL DOM locations such as anchor tag HREF attributes or iFrame src locations. Be sure to validate all untrusted URLs to ensure they only contain safe schemes such as HTTPS.
 
-### RULE \#8 - Prevent DOM-based XSS
+### RULE \#8 - 防止 DOM-based XSS
 
 For details on what DOM-based XSS is, and defenses against this type of XSS flaw, please see the OWASP article on [DOM based XSS Prevention Cheat Sheet](DOM_based_XSS_Prevention_Cheat_Sheet.md).
 
@@ -358,7 +359,7 @@ For details on what DOM-based XSS is, and defenses against this type of XSS flaw
 
 Preventing all XSS flaws in an application is hard, as you can see. To help mitigate the impact of an XSS flaw on your site, OWASP also recommends you set the HTTPOnly flag on your session cookie and any custom cookies you have that are not accessed by any JavaScript you wrote. This cookie flag is typically on by default in .NET apps, but in other languages you have to set it manually. For more details on the HTTPOnly cookie flag, including what it does, and how to use it, see the OWASP article on [HTTPOnly](https://owasp.org/www-community/HttpOnly).
 
-### Bonus Rule \#2: Implement Content Security Policy
+### Bonus Rule \#2: 实现内容安全策略
 
 There is another good complex solution to mitigate the impact of an XSS flaw called Content Security Policy. It's a browser side mechanism which allows you to create source whitelists for client side resources of your web application, e.g. JavaScript, CSS, images, etc. CSP via special HTTP header instructs the browser to only execute or render resources from those sources.
 

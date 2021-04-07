@@ -4,12 +4,21 @@
 $src_path = "H:\bilibili\"
 
 $dir = Get-ChildItem -Path $src_path
-$target_path = Join-Path $src_path "target"
-mkdir $target_path
-$targetPathShell = (New-Object -com Shell.Application).NameSpace($target_path)
+$target_path = "M:\bilibili\target\"
+if(! (Test-Path -Path $target_path))
+{
+    mkdir $target_path
+}
+
+#$targetPathShell = (New-Object -com Shell.Application).NameSpace($target_path)
 foreach( $d in $dir)
 {
     $out_path = Join-Path $src_path $d.Name
+    $target_dir = Join-Path $target_path $d.Name
+    if(! (Test-Path -Path $target_dir))
+    {
+        mkdir $target_dir
+    }
     $clist = Get-ChildItem $out_path -Name c_*
     $num = 1
     foreach($cd in $clist)
@@ -23,22 +32,21 @@ foreach( $d in $dir)
         #Write-Host $v_path
         $audio_path = Join-Path $c_path "audio.m4s"
         $video_path = Join-Path $c_path "video.m4s"
-        $dest_path = Join-Path $out_path $out_name
+        $dest_path = Join-Path $target_dir $out_name
         Write-Host $audio_path
         Write-Host $video_path
         Write-Host $dest_path
-
         if(! (Test-Path -Path $dest_path))
         {
             ffmpeg.exe -i $audio_path -i $video_path -codec copy $dest_path
         }
-        else
-        {
-               
-            $targetPathShell.CopyHere($dest_path)
-            
-         }
+        
+        
+        sleep 1
+        
         $num = $num+1
+        
     }
+    
     
 }
