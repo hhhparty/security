@@ -143,14 +143,21 @@ echo $? # 回应为 0
 ```let "sus=2**3"echo "sus = $sus" # sus = 8```
 
 
+
 ## ```$``` 钱号(dollar sign)
 变量替换(Variable Substitution)的代表符号。
-```vrs=123echo "vrs = $vrs" # vrs = 123```
+例如shell文件中有：
+```shell 
+vrs=123 
+echo "vrs = $vrs" 
+```
+执行此文件可得 vrs = 123
 
 另外，在 Regular Expressions 里被定义为 "行" 的最末端 (end-of-line)。这个常用在grep、sed、awk 以及 vim(vi) 当中。
 
 
 ## ```${} ```变量的正规表达式
+
 bash 对 ${} 定义了不少用法。以下是取自线上说明的表列
 ```   
 ${parameter:-word}   ${parameter:=word}   ${parameter:?word}   ${parameter:+word}   ${parameter:offset}   ${parameter:offset:length}   ${!prefix*}   ${#parameter}   ${parameter#word}   ${parameter##word}   ${parameter%word}   ${parameter%%word}   ${parameter/pattern/string}   ${parameter//pattern/string}
@@ -164,7 +171,7 @@ ${parameter:-word}   ${parameter:=word}   ${parameter:?word}   ${parameter:+word
 
 个位数的，可直接使用数字，但两位数以上，则必须使用 {} 符号来括住。
 
-```$*``` 则是代表所有引用变量的符号。使用时，得视情况加上双引号。
+```$*``` 则代表所有引用变量的符号。使用时，得视情况加上双引号。
 
 ```echo "$*"```
 

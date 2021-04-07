@@ -1,0 +1,43 @@
+<html>
+
+<head>
+    <title>ajax demo</title>
+</head>
+<body>
+
+
+    <script>
+        function demo()
+        {
+            var a = document.getElementById('someinputid');
+            var url = 'demoweb?a=' + encodeURIComponent(someinput.value);
+            
+            if (typeof XMLHttpRequest != 'undefined')
+            {
+                req = new XMLHttpRequest();
+            }
+            else if(windows.ActiveXObject)
+            {
+                req = new ActiveXObject('Microsoft.XMLHTTP');
+            }
+            req.open('GET',url,true);
+            req.onreadystatechange = callback;
+            req.send(null);
+
+        }
+        function callback()
+        {
+            if (req.readyState == 4)
+            {
+                if (req.status == 200)
+                {
+                    var rewards = document.getElementById('someid');
+                    
+                    //TODO rewards.innerHTML = 'some html';
+                }
+            }
+
+        }
+    </script>
+</body>
+</html>
