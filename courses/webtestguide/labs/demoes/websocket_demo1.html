@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>websocket demo</title>
+        <script type="text/javascript">
+            function WebSocketTest()
+            {
+                if("WebSocket" in window)
+                {
+                    alert("当前浏览器支持 WebSocket！");
+                    
+                    // open a websocket
+                    var ws = new WebSocket("ws://10.10.10.152:10000/echo");
+                    ws.onopen=function()
+                    {
+                        // Web Socket connected，using send() forward data.
+                        ws.send("some data, such as abcde 12345");
+                        alert("数据发送中...");
+                    };
+
+                    ws.onmessage = function(event)
+                    {
+                        var received_msg = event.data;
+                        alert("Data is received.");
+                    };
+
+                    ws.onclose = function()
+                    {
+                        alert("Connect is closed.");
+                    }
+
+                }
+                else
+                {
+                    //浏览器不支持websocket
+                    alert("当前浏览器不支持websocket");
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <div id="sse">
+            <a href="javascript:WebSocketTest()">测试 WebSocket...</a>
+        </div>
+    </body>
+</html>
+

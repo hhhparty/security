@@ -1,4 +1,5 @@
 # 第8讲附章 Oracle SQL 注入
+参考：https://xz.aliyun.com/t/7897
 
 ## OWASP WEB TEST GUIDE 
 ### 概述

