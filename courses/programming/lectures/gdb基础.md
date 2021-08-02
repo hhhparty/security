@@ -83,6 +83,8 @@ GDB提供了一大堆命令，而下面的命令是最常用的：
 
 - display x ， 静态显示变量x的值，它会在每个step或pause后显示。如果你静态检查一个值时会比较有用。
 - undisplay x，删除某个已经由display命令显示的变量的静态显示
+
+
 ### 调用函数
 调用用户定义的或系统的函数。这是非常有用的功能，但是调用有问题的函数（buggy functions）时要警惕。
 - call myfunction() 
@@ -94,7 +96,7 @@ GDB提供了一大堆命令，而下面的命令是最常用的：
 
 - bt 或 backtrace，向后跟踪或打印当前函数堆栈，显示你在当前程序中的位置。如果 main 调用了函数 a(), 而 a 调用了 b(), b 调用了 c(), 那么 bt命令的结果如下：
 
-```
+```shell
 c <= current location 
 b 
 a 
@@ -153,8 +155,153 @@ int divint(int a, int b)
 }   
 ```
 
-执行下列步骤：
+执行下列编译步骤：
 - 编译该程序：`g++ -Wall -g crash.cc -o crash`；
 - 设置core dump 文件大小为unlimited：`ulimit -c unlimited`；
 - 然后执行该程序 `./crash` ， 会产生一个core文件，记录了程序发生错误时内存里相关信息；
-- 执行`gdb ./crash core` ，加载可执行文件crash和core文件；
+
+
+
+执行下列调试步骤：
+- `gdb ./crash` 启动调试 crash 
+- `(gdb) r` 在调试器中运行程序，由于存在错误，所以在执行除数为0的语句时会停下来，信号量为SIGFPE。例如：
+
+```shell
+(gdb) r
+Starting program: /home/leo/workspace/debug/demo02/crash1 
+
+Program received signal SIGFPE, Arithmetic exception.
+0x00005555555551c8 in divint (a=3, b=0) at crash1.cc:18
+18		return a/b;
+
+```
+
+- `(gdb) l` , 显示程序停止处的语句(注意只有使用-g编译才能显示源代码)
+
+```shell
+(gdb) l
+13		return 0;
+14	}
+15	
+16	int divint(int a, int b)
+17	{
+18		return a/b;
+19	}
+(gdb) 
+```
+
+- `(gdb) where` 或 `(gdb) bt` 向后跟踪或打印当前函数堆栈，显示你在当前程序中的位置，也即显示当前哪条语句引发程序执行错误。
+- `(gdb) up` 从stack trace 的默认级别0到级别1，例如：
+
+```shell
+(gdb) where
+#0  0x00005555555551c8 in divint (a=3, b=0) at crash1.cc:18
+#1  0x00005555555551a5 in main () at crash1.cc:11
+(gdb) bt
+#0  0x00005555555551c8 in divint (a=3, b=0) at crash1.cc:18
+#1  0x00005555555551a5 in main () at crash1.cc:11
+(gdb) up
+#1  0x00005555555551a5 in main () at crash1.cc:11
+11		cout << divint(x,y);
+(gdb) bt
+#0  0x00005555555551c8 in divint (a=3, b=0) at crash1.cc:18
+#1  0x00005555555551a5 in main () at crash1.cc:11
+(gdb) bt
+#0  0x00005555555551c8 in divint (a=3, b=0) at crash1.cc:18
+#1  0x00005555555551a5 in main () at crash1.cc:11
+(gdb) 
+```
+
+- （可选）退出gdb后，执行`gdb ./crash core` ，加载可执行文件crash和core文件，这几乎等同于启动 gdb 并键入“r”命令.
+
+### 示例2
+
+编写如下c++源文件，命名为crash2.cc。
+
+```c++
+#include <iostream>  
+using namespace std; 
+
+void setint(int*, int); 
+int main() 
+{ 
+   int a; 
+   setint(&a, 10); 
+   cout << a << endl; 
+   
+   int* b; 
+   setint(b, 10); 
+   cout << *b << endl; 
+   
+   return 0; 
+} 
+
+void setint(int* ip, int i)
+{
+   *ip = i; 
+}
+```
+
+之后，编译可调试的可执行文件：`g++ -Wall -g ./crash2.cc -o crash2` , g++ 编译器会告警main函数中的指针变量b未被初始化。编译后运行程序：
+
+```shell
+./crash2
+#以下为结果
+10
+zsh: segmentation fault  ./crash2
+
+```
+
+使用gdb进行调试:
+- `gdb ./crash2`
+- `(gdb) r`
+
+结果如下：
+```
+(gdb) r
+Starting program: /home/leo/workspace/debug/demo02/crash2 
+10
+
+Program received signal SIGSEGV, Segmentation fault.
+0x00005555555551f7 in setint (ip=0x0, i=10) at ./crash2.cc:21
+21		*ip = i;
+```
+
+可以看到形参指针ip为0x0，这是os不允许访问的位置。所以报了SIGSEGV。接着查看stack trace：
+
+```
+(gdb) bt
+#0  0x00005555555551f7 in setint (ip=0x0, i=10) at ./crash2.cc:21
+#1  0x00005555555551b5 in main () at ./crash2.cc:13
+```
+
+main函数调用setint（13行）,错误发生在setint中赋值语句（21行）。但为什么不能赋值？可以使用step into跟踪。
+
+```
+(gdb) r
+The program being debugged has been started already.
+Start it from the beginning? (y or n) y
+Starting program: /home/leo/workspace/debug/demo02/crash2 
+
+Breakpoint 1, main () at ./crash2.cc:9
+9		setint(&a,10);
+(gdb) n
+10		cout << a << endl;
+(gdb) s
+10
+13		setint(b,10);
+(gdb) s
+setint (ip=0x0, i=10) at ./crash2.cc:21
+21		*ip = i;
+1: ip = (int *) 0x0
+2: *ip = <error: Cannot access memory at address 0x0>
+3: ip = (int *) 0x0
+(gdb) p *ip
+Cannot access memory at address 0x0
+(gdb) p ip
+$10 = (int *) 0x0
+(gdb) 
+
+```
+
+可见出错前的语句中，变量ip是“Cannot access memory at address 0x0”
