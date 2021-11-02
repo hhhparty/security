@@ -1,0 +1,186 @@
+<mxfile host="65bd71144e">
+    <diagram id="AQZFCSv9TLjpyZZwPTAx" name="Page-1">
+        <mxGraphModel dx="898" dy="564" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="29" value="7" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="470" y="145" width="55" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="33" value="车辆（Vehicle）" style="swimlane;" parent="1" vertex="1">
+                    <mxGeometry x="58" y="60" width="380" height="210" as="geometry">
+                        <mxRectangle x="81.25" y="60" width="120" height="23" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="11" value="传感系统&lt;br&gt;Sense" style="rounded=0;whiteSpace=wrap;html=1;" parent="33" vertex="1">
+                    <mxGeometry x="22.75" y="94" width="90" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="行动系统&lt;br&gt;Act" style="rounded=0;whiteSpace=wrap;html=1;" parent="33" vertex="1">
+                    <mxGeometry x="22.75" y="164" width="90" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="运算系统&lt;br&gt;Compute" style="rounded=0;whiteSpace=wrap;html=1;" parent="33" vertex="1">
+                    <mxGeometry x="141.75" y="129" width="90" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" value="车机系统&lt;br&gt;Handset" style="rounded=0;whiteSpace=wrap;html=1;" parent="33" vertex="1">
+                    <mxGeometry x="262.75" y="36" width="90" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="信息娱乐系统&lt;br&gt;Infotainment" style="rounded=0;whiteSpace=wrap;html=1;" parent="33" vertex="1">
+                    <mxGeometry x="262.75" y="94" width="90" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" value="联网系统&lt;br&gt;Connect" style="rounded=0;whiteSpace=wrap;html=1;" parent="33" vertex="1">
+                    <mxGeometry x="262.75" y="164" width="90" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" value="" style="endArrow=none;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="33" target="13" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="308.75" y="144" as="sourcePoint"/>
+                        <mxPoint x="322.75" y="201" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="19" value="" style="endArrow=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="33" source="15" target="16" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="272.75" y="251" as="sourcePoint"/>
+                        <mxPoint x="322.75" y="151" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="20" value="" style="endArrow=none;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="33" source="12" target="11" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="202.75" y="241" as="sourcePoint"/>
+                        <mxPoint x="312.75" y="174" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="21" value="" style="endArrow=none;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" parent="33" source="13" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="112.75" y="144" as="sourcePoint"/>
+                        <mxPoint x="66.75" y="144" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="22" value="" style="endArrow=none;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" parent="33" source="15" target="14" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="182.75" y="291" as="sourcePoint"/>
+                        <mxPoint x="252.75" y="141" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="23" value="2" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" parent="33" vertex="1">
+                    <mxGeometry x="24.75" y="171.5" width="15" height="15" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" value="1" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" parent="33" vertex="1">
+                    <mxGeometry x="24.75" y="101.5" width="15" height="15" as="geometry"/>
+                </mxCell>
+                <mxCell id="26" value="3" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" parent="33" vertex="1">
+                    <mxGeometry x="180.25" y="109" width="15" height="15" as="geometry"/>
+                </mxCell>
+                <mxCell id="27" value="4" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" parent="33" vertex="1">
+                    <mxGeometry x="262.75" y="136.5" width="15" height="15" as="geometry"/>
+                </mxCell>
+                <mxCell id="28" value="5" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" parent="33" vertex="1">
+                    <mxGeometry x="300.25" y="72" width="15" height="15" as="geometry"/>
+                </mxCell>
+                <mxCell id="74" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;endArrow=none;endFill=0;" edge="1" parent="1" source="40">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="498" y="150" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="650" y="40"/>
+                            <mxPoint x="498" y="40"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="40" value="OEM 后端（Back end）" style="swimlane;" parent="1" vertex="1">
+                    <mxGeometry x="550" y="60" width="200" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="32" value="OTA 升级&lt;br&gt;OTA update" style="rounded=0;whiteSpace=wrap;html=1;" parent="40" vertex="1">
+                    <mxGeometry x="30" y="37" width="140" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="34" value="远程车辆功能&lt;br&gt;Remote vehicle function" style="rounded=0;whiteSpace=wrap;html=1;" parent="40" vertex="1">
+                    <mxGeometry x="30" y="77" width="140" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="35" value="远程诊断&lt;br&gt;Remote diagnostic" style="rounded=0;whiteSpace=wrap;html=1;" parent="40" vertex="1">
+                    <mxGeometry x="30" y="117" width="140" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="36" value="用户管理&lt;br&gt;User management" style="rounded=0;whiteSpace=wrap;html=1;" parent="40" vertex="1">
+                    <mxGeometry x="30" y="157" width="140" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="37" value="8" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" parent="40" vertex="1">
+                    <mxGeometry x="37" y="44.5" width="15" height="15" as="geometry"/>
+                </mxCell>
+                <mxCell id="38" value="9" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" parent="40" vertex="1">
+                    <mxGeometry x="37" y="164.5" width="15" height="15" as="geometry"/>
+                </mxCell>
+                <mxCell id="75" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;endArrow=none;endFill=0;" edge="1" parent="1" source="42">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="498" y="140" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="869" y="40"/>
+                            <mxPoint x="498" y="40"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="42" value="第三方后端（3rd back end）" style="swimlane;" parent="1" vertex="1">
+                    <mxGeometry x="768.75" y="60" width="200" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="43" value="内容提供者&lt;br&gt;Content provider" style="rounded=0;whiteSpace=wrap;html=1;" parent="42" vertex="1">
+                    <mxGeometry x="30" y="37" width="140" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="44" value="高精度地图提供者&lt;br&gt;High-definition-map" style="rounded=0;whiteSpace=wrap;html=1;" parent="42" vertex="1">
+                    <mxGeometry x="30" y="77" width="140" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="45" value="交通数据&lt;br&gt;Traffic data" style="rounded=0;whiteSpace=wrap;html=1;" parent="42" vertex="1">
+                    <mxGeometry x="30" y="117" width="140" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="46" value="规则化数据访问&lt;br&gt;Regulatory data access" style="rounded=0;whiteSpace=wrap;html=1;" parent="42" vertex="1">
+                    <mxGeometry x="30" y="157" width="140" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="48" value="7" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" parent="42" vertex="1">
+                    <mxGeometry x="10" y="107" width="15" height="15" as="geometry"/>
+                </mxCell>
+                <mxCell id="64" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;endArrow=none;endFill=0;" edge="1" parent="1" source="51" target="40">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="51" value="OEM 前端（OEM front end）" style="swimlane;" parent="1" vertex="1">
+                    <mxGeometry x="550" y="290" width="200" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="52" value="车辆配置工具&lt;br&gt;Car configurator" style="rounded=0;whiteSpace=wrap;html=1;" parent="51" vertex="1">
+                    <mxGeometry x="30" y="37" width="140" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="53" value="驾驶日志&lt;br&gt;Drive log" style="rounded=0;whiteSpace=wrap;html=1;" parent="51" vertex="1">
+                    <mxGeometry x="30" y="77" width="140" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="54" value="服务&lt;br&gt;Service" style="rounded=0;whiteSpace=wrap;html=1;" parent="51" vertex="1">
+                    <mxGeometry x="30" y="117" width="140" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="55" value="移动应用&lt;br&gt;Mobile app" style="rounded=0;whiteSpace=wrap;html=1;" parent="51" vertex="1">
+                    <mxGeometry x="30" y="157" width="140" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="65" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;endArrow=none;endFill=0;" edge="1" parent="1" source="58" target="42">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="58" value="第三方前端（3rd front end）" style="swimlane;" parent="1" vertex="1">
+                    <mxGeometry x="768.75" y="290" width="200" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="59" value="音乐播放器&lt;br&gt;Music player" style="rounded=0;whiteSpace=wrap;html=1;" parent="58" vertex="1">
+                    <mxGeometry x="30" y="37" width="140" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="60" value="天气监控&lt;br&gt;Weather monitor" style="rounded=0;whiteSpace=wrap;html=1;" parent="58" vertex="1">
+                    <mxGeometry x="30" y="77" width="140" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="61" value="地图编辑&lt;br&gt;Map editor" style="rounded=0;whiteSpace=wrap;html=1;" parent="58" vertex="1">
+                    <mxGeometry x="30" y="117" width="140" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="62" value="移动应用&lt;br&gt;Mobile app" style="rounded=0;whiteSpace=wrap;html=1;" parent="58" vertex="1">
+                    <mxGeometry x="30" y="157" width="140" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="63" value="10" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+                    <mxGeometry x="778.75" y="450" width="15" height="15" as="geometry"/>
+                </mxCell>
+                <mxCell id="66" value="ICV面临的网络安全威胁（包括但不限于）：&lt;br&gt;1. 传感器欺骗（Sensor spoofing）：利用传感系统漏洞访问（控制）自动驾驶功能、引擎、制动等系统。&lt;br&gt;&lt;br&gt;2. 接管（Take over）：接管关键安全控制单元，例如引擎控制或制动。&lt;br&gt;&lt;br&gt;3. 窃听（Espionage）：滥用语音识别模块功能，监听车内语音。&lt;br&gt;&lt;br&gt;4. 物理访问（Physical access）：直接访问车载诊断部件，以操作车辆数据、引擎参数和芯片参数。&lt;br&gt;&lt;br&gt;5. 娱乐内容（Entertainment content）：通过蓝牙、USB、WiFi等访问信息娱乐系统。&lt;br&gt;&lt;br&gt;6. 远程信息处理（Telematics）：利用网络接入模块漏洞，远程解锁汽车门窗。&lt;br&gt;&lt;br&gt;7. 拒绝访问攻击（Denial of service）：阻断依赖后台服务器向车辆提供数据。&lt;br&gt;&lt;br&gt;8. OTA：通过在线升级系统访问/控制车载软件。&lt;br&gt;&lt;br&gt;9. 未授权访问（Unauthorized access）：访问后端车辆服务和用户数据。&lt;br&gt;&lt;br&gt;10. 数据窃取（Data theft）：通过不安全的第三方访问车辆用户隐私数据。" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="91" y="580" width="434" height="329" as="geometry"/>
+                </mxCell>
+                <mxCell id="31" value="6" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+                    <mxGeometry x="491" y="103.5" width="15" height="15" as="geometry"/>
+                </mxCell>
+                <mxCell id="73" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.55;entryY=0.95;entryDx=0;entryDy=0;entryPerimeter=0;endArrow=none;endFill=0;" edge="1" parent="1" source="16" target="29">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

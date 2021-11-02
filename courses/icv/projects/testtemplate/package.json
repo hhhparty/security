@@ -1,0 +1,18 @@
+{
+    //扩展的激活事件
+    "activationEvents": [
+        "onCommand:extension.sayHello"
+    ],
+
+    //入口文件
+    "main":"./src/extension",
+
+    //贡献点，vscode 插件大部分功能配置处
+    "contributes": {
+        "commands":[
+            "command" : "extension.sayHello",
+            "title" : "Hello World"
+
+        ]
+    }
+}
