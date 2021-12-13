@@ -31,6 +31,11 @@
 # 2.设置国内镜像
 sudo npm install -g cnpm --registry=https://registry.npm.taobao.org 
 
+#修改npm镜像
+npm config set registry https://registry.npm.taobao.org==
+#查看npm配置信息
+npm config list
+
 # 3.安装Yeoman 和 VS code extension generator
 sudo cnpm install -g yo generator-code
 
