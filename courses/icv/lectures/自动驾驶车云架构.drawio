@@ -1,0 +1,376 @@
+<mxfile host="65bd71144e">
+    <diagram id="Riul5mte67i_7Y0biUW3" name="Page-1">
+        <mxGraphModel dx="898" dy="449" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="8" value="高精的图服务平台" style="swimlane;flipH=0;" vertex="1" parent="1">
+                    <mxGeometry x="61" y="70" width="120" height="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="2" value="底图服务" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="8">
+                    <mxGeometry x="20" y="35" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="动态信息发布" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="8">
+                    <mxGeometry x="20" y="85" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="众包更新" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="8">
+                    <mxGeometry x="20" y="135" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="数据服务平台" style="swimlane;flipH=0;" vertex="1" parent="1">
+                    <mxGeometry x="190" y="70" width="120" height="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="数据采集" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="9">
+                    <mxGeometry x="20" y="35" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="数据处理" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="9">
+                    <mxGeometry x="20" y="68" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="场景库" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="9">
+                    <mxGeometry x="20" y="135" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="36" value="2D/3D 回放" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="9">
+                    <mxGeometry x="20" y="102" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="仿真模拟平台" style="swimlane;flipH=0;" vertex="1" parent="1">
+                    <mxGeometry x="318" y="70" width="120" height="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" value="仿真平台" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="13">
+                    <mxGeometry x="20" y="35" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="数据标注" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="13">
+                    <mxGeometry x="20" y="85" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" value="模型训练" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="13">
+                    <mxGeometry x="20" y="135" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" value="训练平台" style="swimlane;flipH=0;" vertex="1" parent="1">
+                    <mxGeometry x="447" y="70" width="120" height="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="18" value="大数据AI" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="17">
+                    <mxGeometry x="20" y="35" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="38" value="模型管理" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="17">
+                    <mxGeometry x="20" y="68" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="39" value="分布式训练" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="17">
+                    <mxGeometry x="20" y="135" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="40" value="感知规控算法" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="17">
+                    <mxGeometry x="20" y="102" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="54" value="云计算与存储" style="swimlane;" vertex="1" parent="1">
+                    <mxGeometry x="60" y="255" width="638" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="49" value="数据存储" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="54">
+                    <mxGeometry x="40" y="40" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="50" value="数据迁移" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="54">
+                    <mxGeometry x="135" y="40" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="51" value="通用算力" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="54">
+                    <mxGeometry x="244" y="40" width="90" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="52" value="AI 算力" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="54">
+                    <mxGeometry x="385" y="40" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="53" value="实时计算算力" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="54">
+                    <mxGeometry x="485" y="40" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="41" value="关联服务平台" style="swimlane;flipH=0;" vertex="1" parent="1">
+                    <mxGeometry x="575" y="70" width="120" height="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="42" value="OTA" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="41">
+                    <mxGeometry x="20" y="35" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="48" value="安全管理" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="41">
+                    <mxGeometry x="20" y="72.5" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="56" value="" style="endArrow=classic;html=1;entryX=0.25;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="220" y="633" as="sourcePoint"/>
+                        <mxPoint x="219.5" y="598" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="57" value="训练数据上传" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="110" y="603" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="122" value="模型下发" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="550" y="597.5" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="123" value="" style="endArrow=classic;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="538.5" y="598" as="sourcePoint"/>
+                        <mxPoint x="539" y="633" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="124" value="" style="swimlane;startSize=0;" vertex="1" parent="1">
+                    <mxGeometry x="40" y="397.5" width="680" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="101" value="高精的图服务平台" style="swimlane;flipH=0;" vertex="1" parent="124">
+                    <mxGeometry x="25" y="14" width="120" height="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="102" value="底图服务" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="101">
+                    <mxGeometry x="20" y="35" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="103" value="动态信息发布" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="101">
+                    <mxGeometry x="20" y="85" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="104" value="众包更新" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="101">
+                    <mxGeometry x="20" y="135" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="105" value="数据服务平台" style="swimlane;flipH=0;" vertex="1" parent="124">
+                    <mxGeometry x="154" y="14" width="120" height="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="106" value="数据采集" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="105">
+                    <mxGeometry x="20" y="35" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="107" value="数据处理" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="105">
+                    <mxGeometry x="20" y="68" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="108" value="场景库" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="105">
+                    <mxGeometry x="20" y="135" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="109" value="2D/3D 回放" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="105">
+                    <mxGeometry x="20" y="102" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="110" value="仿真模拟平台" style="swimlane;flipH=0;" vertex="1" parent="124">
+                    <mxGeometry x="282" y="14" width="120" height="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="111" value="仿真平台" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="110">
+                    <mxGeometry x="20" y="35" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="112" value="数据标注" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="110">
+                    <mxGeometry x="20" y="85" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="113" value="模型训练" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="110">
+                    <mxGeometry x="20" y="135" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="114" value="训练平台" style="swimlane;flipH=0;" vertex="1" parent="124">
+                    <mxGeometry x="411" y="14" width="120" height="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="115" value="大数据AI" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="114">
+                    <mxGeometry x="20" y="35" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="116" value="模型管理" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="114">
+                    <mxGeometry x="20" y="68" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="117" value="分布式训练" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="114">
+                    <mxGeometry x="20" y="135" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="118" value="感知规控算法" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="114">
+                    <mxGeometry x="20" y="102" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="119" value="关联服务平台" style="swimlane;flipH=0;" vertex="1" parent="124">
+                    <mxGeometry x="539" y="14" width="120" height="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="120" value="OTA" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="119">
+                    <mxGeometry x="20" y="35" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="121" value="云控平台" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="119">
+                    <mxGeometry x="20" y="72.5" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="125" value="" style="swimlane;startSize=0;" vertex="1" parent="1">
+                    <mxGeometry x="39" y="633" width="681" height="417" as="geometry"/>
+                </mxCell>
+                <mxCell id="171" value="自动驾驶操作系统" style="swimlane;horizontal=0;" vertex="1" parent="125">
+                    <mxGeometry x="26" y="23.5" width="559" height="296.5" as="geometry"/>
+                </mxCell>
+                <mxCell id="172" value="功能软件" style="swimlane;horizontal=0;" vertex="1" parent="171">
+                    <mxGeometry x="33" y="7.5" width="507" height="91.5" as="geometry"/>
+                </mxCell>
+                <mxCell id="177" value="算法接口API" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="172">
+                    <mxGeometry x="38" y="8.25" width="292" height="21.75" as="geometry"/>
+                </mxCell>
+                <mxCell id="178" value="其他接口API" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="172">
+                    <mxGeometry x="340" y="8.25" width="148" height="21.75" as="geometry"/>
+                </mxCell>
+                <mxCell id="179" value="自动驾驶通用框架（感知、规划、控制）" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="172">
+                    <mxGeometry x="38" y="36.5" width="450" height="21.75" as="geometry"/>
+                </mxCell>
+                <mxCell id="182" value="深度学习和视觉模块" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="172">
+                    <mxGeometry x="38" y="65" width="120" height="21.75" as="geometry"/>
+                </mxCell>
+                <mxCell id="183" value="传感器模块" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="172">
+                    <mxGeometry x="168" y="65" width="70" height="21.75" as="geometry"/>
+                </mxCell>
+                <mxCell id="184" value="网联模块" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="172">
+                    <mxGeometry x="251" y="65" width="70" height="21.75" as="geometry"/>
+                </mxCell>
+                <mxCell id="185" value="云控模块" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="172">
+                    <mxGeometry x="335" y="65" width="70" height="21.75" as="geometry"/>
+                </mxCell>
+                <mxCell id="186" value="其他模块" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="172">
+                    <mxGeometry x="418" y="65" width="70" height="21.75" as="geometry"/>
+                </mxCell>
+                <mxCell id="176" value="功能软件" style="swimlane;horizontal=0;" vertex="1" parent="171">
+                    <mxGeometry x="33" y="103.5" width="387" height="96.5" as="geometry"/>
+                </mxCell>
+                <mxCell id="188" value="POSIX/ARA" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="176">
+                    <mxGeometry x="38" y="10" width="82" height="21.75" as="geometry"/>
+                </mxCell>
+                <mxCell id="189" value="管理平面和实时控制平面" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="176">
+                    <mxGeometry x="127" y="10" width="172" height="21.75" as="geometry"/>
+                </mxCell>
+                <mxCell id="190" value="分布式通信" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="176">
+                    <mxGeometry x="305" y="10" width="80" height="21.75" as="geometry"/>
+                </mxCell>
+                <mxCell id="191" value="Linux 等" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="176">
+                    <mxGeometry x="38" y="40" width="82" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="192" value="Linux 优化/其他安全实时内核" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="176">
+                    <mxGeometry x="127" y="40" width="172" height="21.75" as="geometry"/>
+                </mxCell>
+                <mxCell id="195" value="Hypervisor 及 BSP Drivers" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="176">
+                    <mxGeometry x="126.5" y="68" width="172" height="21.75" as="geometry"/>
+                </mxCell>
+                <mxCell id="197" value="AUTOSAR RTE" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="171">
+                    <mxGeometry x="430" y="113.5" width="110" height="26.5" as="geometry"/>
+                </mxCell>
+                <mxCell id="198" value="Safety RTOS" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="171">
+                    <mxGeometry x="430" y="150" width="40" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="199" value="BSW" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="171">
+                    <mxGeometry x="480" y="150" width="60" height="19.12" as="geometry"/>
+                </mxCell>
+                <mxCell id="200" value="MCAL" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="171">
+                    <mxGeometry x="480" y="180.88" width="60" height="19.12" as="geometry"/>
+                </mxCell>
+                <mxCell id="203" value="硬件平台" style="swimlane;horizontal=0;" vertex="1" parent="171">
+                    <mxGeometry x="33" y="206" width="526" height="84" as="geometry"/>
+                </mxCell>
+                <mxCell id="204" value="异构分布硬件架构" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="203">
+                    <mxGeometry x="38" y="12.5" width="482" height="21.75" as="geometry"/>
+                </mxCell>
+                <mxCell id="205" value="AI 单元 GPU/FPGA/ASIC AI 芯片 + CPU" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="203">
+                    <mxGeometry x="39" y="42.5" width="231" height="21.75" as="geometry"/>
+                </mxCell>
+                <mxCell id="206" value="计算单元-多核-多CPU" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="203">
+                    <mxGeometry x="276" y="42.5" width="124" height="21.75" as="geometry"/>
+                </mxCell>
+                <mxCell id="207" value="控制单元-MCU" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="203">
+                    <mxGeometry x="405" y="42.5" width="116" height="21.75" as="geometry"/>
+                </mxCell>
+                <mxCell id="180" value="工具链（开发、仿真、调试、测试等）" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="125">
+                    <mxGeometry x="630" y="23" width="39" height="300" as="geometry"/>
+                </mxCell>
+                <mxCell id="181" value="安全体系" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="125">
+                    <mxGeometry x="592" y="23" width="30" height="300" as="geometry"/>
+                </mxCell>
+                <mxCell id="208" value="车辆平台" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="125">
+                    <mxGeometry x="26" y="390" width="74" height="21.75" as="geometry"/>
+                </mxCell>
+                <mxCell id="209" value="外围硬件" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="125">
+                    <mxGeometry x="26" y="360" width="74" height="21.75" as="geometry"/>
+                </mxCell>
+                <mxCell id="210" value="摄像头、雷达、GPS、惯导等传感器" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="125">
+                    <mxGeometry x="111" y="360" width="269" height="21.75" as="geometry"/>
+                </mxCell>
+                <mxCell id="211" value="V2X （云控、地图等）" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="125">
+                    <mxGeometry x="391" y="360" width="139" height="21.75" as="geometry"/>
+                </mxCell>
+                <mxCell id="212" value="动力、底盘控制等" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="125">
+                    <mxGeometry x="541" y="360" width="129" height="21.75" as="geometry"/>
+                </mxCell>
+                <mxCell id="213" value="自动驾驶车辆工程、功能需求、平台技术、整车集成" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="125">
+                    <mxGeometry x="111" y="390" width="559" height="21.75" as="geometry"/>
+                </mxCell>
+                <mxCell id="214" value="GMSL/CSI，ETH，CAN..." style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="125">
+                    <mxGeometry x="141" y="327" width="179" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="215" value="4G/5G/LTE..." style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="125">
+                    <mxGeometry x="368" y="327" width="179" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="216" value="CAN/FlexRay" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="125">
+                    <mxGeometry x="543" y="327" width="120" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="148" value="车、云协同" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="343.25" y="603" width="73.5" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="149" value="" style="swimlane;startSize=0;" vertex="1" parent="1">
+                    <mxGeometry x="870" y="520" width="680" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="150" value="高精的图服务平台" style="swimlane;flipH=0;" vertex="1" parent="149">
+                    <mxGeometry x="25" y="14" width="120" height="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="151" value="底图服务" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="150">
+                    <mxGeometry x="20" y="35" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="152" value="动态信息发布" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="150">
+                    <mxGeometry x="20" y="85" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="153" value="众包更新" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="150">
+                    <mxGeometry x="20" y="135" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="154" value="数据服务平台" style="swimlane;flipH=0;" vertex="1" parent="149">
+                    <mxGeometry x="154" y="14" width="120" height="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="155" value="数据采集" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="154">
+                    <mxGeometry x="20" y="35" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="156" value="数据处理" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="154">
+                    <mxGeometry x="20" y="68" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="157" value="场景库" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="154">
+                    <mxGeometry x="20" y="135" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="158" value="2D/3D 回放" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="154">
+                    <mxGeometry x="20" y="102" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="159" value="仿真模拟平台" style="swimlane;flipH=0;" vertex="1" parent="149">
+                    <mxGeometry x="282" y="14" width="120" height="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="160" value="仿真平台" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="159">
+                    <mxGeometry x="20" y="35" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="161" value="数据标注" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="159">
+                    <mxGeometry x="20" y="85" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="162" value="模型训练" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="159">
+                    <mxGeometry x="20" y="135" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="163" value="训练平台" style="swimlane;flipH=0;" vertex="1" parent="149">
+                    <mxGeometry x="411" y="14" width="120" height="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="164" value="大数据AI" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="163">
+                    <mxGeometry x="20" y="35" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="165" value="模型管理" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="163">
+                    <mxGeometry x="20" y="68" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="166" value="分布式训练" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="163">
+                    <mxGeometry x="20" y="135" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="167" value="感知规控算法" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="163">
+                    <mxGeometry x="20" y="102" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="168" value="关联服务平台" style="swimlane;flipH=0;" vertex="1" parent="149">
+                    <mxGeometry x="539" y="14" width="120" height="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="169" value="OTA" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="168">
+                    <mxGeometry x="20" y="35" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="170" value="安全管理" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="168">
+                    <mxGeometry x="20" y="72.5" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="218" value="" style="endArrow=classic;startArrow=classic;html=1;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="160" y="990" as="sourcePoint"/>
+                        <mxPoint x="160" y="955" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="219" value="" style="endArrow=classic;startArrow=classic;html=1;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="442" y="990" as="sourcePoint"/>
+                        <mxPoint x="442" y="955" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="220" value="" style="endArrow=classic;startArrow=classic;html=1;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="589" y="990" as="sourcePoint"/>
+                        <mxPoint x="589" y="955" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
