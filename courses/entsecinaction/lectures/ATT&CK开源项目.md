@@ -12,18 +12,21 @@ Linux 上安装 Node.js, 直接使用已编译好的包
 [Node 官网已经把 linux 下载版本](https://nodejs.org/en/download/)更改为已编译好的版本了，我们可以直接下载解压后使用：
 
 ```bash
-# wget https://nodejs.org/dist/v10.9.0/node-v10.9.0-linux-x64.tar.xz    // 下载
-# tar xf  node-v10.9.0-linux-x64.tar.xz       // 解压
-# cd node-v10.9.0-linux-x64/                  // 进入解压目录
-# ./bin/node -v                               // 执行node命令 查看版本
+wget https://nodejs.org/dist/v10.9.0/node-v10.9.0-linux-x64.tar.xz    // 下载
+
+tar xf  node-v10.9.0-linux-x64.tar.xz       // 解压
+
+cd node-v10.9.0-linux-x64/                  // 进入解压目录
+
+./bin/node -v                               // 执行node命令 查看版本
 v10.9.0
 ```
 
 解压文件的 bin 目录底下包含了 node、npm 等命令，我们可以使用 ln 命令来设置软连接：
 
 ```bash
-ln -s /usr/software/nodejs/bin/npm   /usr/local/bin/ 
-ln -s /usr/software/nodejs/bin/node   /usr/local/bin/
+ln -s /usr/some-software/nodejs/bin/npm   /usr/local/bin/ 
+ln -s /usr/some-software/nodejs/bin/node   /usr/local/bin/
 ```
 可选操作：配置nodejs的数据源为国内淘宝数据源。
 ```npm config set registry https://registry.npm.taobao.org```
@@ -52,7 +55,7 @@ ln -s /usr/software/nodejs/bin/node   /usr/local/bin/
 #### 安装navigator  （Install and Run）
 ##### First time
 - Navigate to the nav-app directory
-- ```Run npm install```
+- Run `npm install`
 
 - Serve application on local machine，Run ```ng serve``` within the nav-app directory
 - Navigate to localhost:4200 in browser

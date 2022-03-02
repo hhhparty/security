@@ -2,12 +2,18 @@
 <html>
     <head>
         <title>1</title>
+        <script src="js/jquery.min.js" type="text/javascript"></script>
         <script>
-           
-
+            $("p").removeClass("high"); 
+            function a(){
+                alert(123);
+            }
         </script>
     </head>
     <body>
+        <div>
+            <input type="button" onclick="javascript:a()">
+        </div>
         <div class="eight columns centered"><div class="alert-box secondary">SQL Query: SELECT * FROM users WHERE idusers=<script>prompt(1)</script> LIMIT 1<a href="" class="close">&times;</a></div></div>	</center>
 </div>  
         </body>

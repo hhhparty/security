@@ -72,6 +72,7 @@ typedef struct {
 }Elf32_Ehdr;
 ```
 <img src="images/elf/readelf读elf文件头.png">
+
 #### Program Header Table
 描述文件中的各种segments，用来告诉系统如何创建进程映像的。
 
@@ -231,3 +232,29 @@ typedef struct {
 
 根据pid看map
 ```cat /proc/[pid]/maps```
+
+
+## 常用分析示例
+
+### 二进制文件基本分析：
+- 使用 `file <二进制文件名>` 分析文件类型；
+- 使用 `strings <二进制文件名>` 分析文件内的字符串；
+- 使用 `xxd <二进制文件名> | less` 查看二进制文件的 16进制内容。
+  - xxd 命令常用于给出指定文件的十六进制形式。，类似于 uuencdoe，也可以将二进制数据转化为 mail-safe ASCII 形式，而且可用于打patch。
+  - `xxd -s 0x30 test.txt` 跳过 0x30 个字节后显示内容
+  - `xxd -l 0x30 test.txt` 仅显示长度为 0x30个字节内容。
+  - `xxd -c 5 test.txt`  设置列数为 5
+  - `xxd -b test.txt` 以二进制形式显示
+  - `xxd -i test.txt` 以C代码形式输出（将文件的16进制以数组形式组织为c语言）。
+  - `xxd test.txt | xxd -r > somefile`将test.txt的16进制形式再转换为二进制放入somefile文件。
+- 使用 objdump 查看文件的信息、文件汇编代码
+  - 例如：`objdump -Mintel -D ./hello | grep "main>:" -A 8`
+- 使用 readelf 查看文件信息、入口点等
+  - 例如 `readelf -h ./hello | grep Entry`
+
+
+### 内存和寄存器
+
+64位系统中，有 $2^{64}$ 个字节课寻址的内存。即从0x0000000000000000 ～ 0xffffffffffffffff。
+
+每个进程dou ben

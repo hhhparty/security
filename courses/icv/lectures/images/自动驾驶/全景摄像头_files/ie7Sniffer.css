@@ -1,0 +1,37 @@
+/* For IE7 Sniffer messgae */
+#ie-container {
+width: 100%;
+text-align: center;
+position: relative;
+}
+
+#ie-display {
+display: relative;
+background-color: #fdf5d9;
+padding: 10px 10px 10px 25px;
+border-bottom: 1px solid #f5cf48;
+margin: 0 auto;
+text-align: center;
+}
+#ie-display #ie-ico-exclamation {
+position: relative;
+margin:  0 6px 4px 0;
+vertical-align: middle;
+}
+#ie-display #browser-options {
+height:40px;
+}
+#ie-display #browser-options a{
+margin: 0 15px;
+}
+
+#ie-display #close-ie, #unsupportedMessage #close-ie {
+float: right;
+display: block;
+width: 20px;
+height: 20px;
+position: relative;
+margin-top: -15px;
+background: url("../img/btn.close.gif") no-repeat 2px 0;
+text-indent: -9999px;
+}

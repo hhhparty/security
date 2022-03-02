@@ -1,0 +1,64 @@
+<mxfile host="65bd71144e">
+    <diagram id="uWHD7YBRE7kugEyg_PUX" name="Page-1">
+        <mxGraphModel dx="898" dy="562" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="Work Package 1&lt;br&gt;项目管理与协调" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="190" y="80" width="450" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="Work Package 3&lt;br&gt;蓝图设计与&lt;br&gt;一般性研究" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="190" y="210" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="Work Package 4&lt;br&gt;研究与开发&lt;br&gt;路线图" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="360" y="210" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="Work Package 5&lt;br&gt;示范案例" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="274" y="290" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="Work Package 2&lt;br&gt;治理设计与引导" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="20" y="210" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="" style="endArrow=classic;startArrow=classic;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="3" target="4">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="350" y="270" as="sourcePoint"/>
+                        <mxPoint x="400" y="220" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="8" value="" style="endArrow=classic;startArrow=classic;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="3" target="5">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="350" y="270" as="sourcePoint"/>
+                        <mxPoint x="400" y="220" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="250" y="320"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="9" value="" style="endArrow=classic;startArrow=classic;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="4" target="5">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="260" y="280" as="sourcePoint"/>
+                        <mxPoint x="284" y="330" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="420" y="320"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="10" value="Work Package 7&lt;br&gt;用于证明和验证的&lt;br&gt;开发式工具和框架" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="450" y="290" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="Work Package 6&lt;br&gt;网络安全技术&lt;br&gt;和能力构建" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="510" y="210" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="Work Package 10&lt;br&gt;强化和创新" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="740" y="210" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="Work Package 7&lt;br&gt;标准化" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="590" y="290" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" value="Work Package 9&lt;br&gt;能力传播与外联、提高认知、渗透" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="190" y="380" width="450" height="60" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

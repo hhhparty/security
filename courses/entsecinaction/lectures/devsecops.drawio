@@ -1,0 +1,82 @@
+<mxfile host="65bd71144e">
+    <diagram id="XEpyalO8GeyGyB1pE8Km" name="Page-1">
+        <mxGraphModel dx="898" dy="562" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="3" target="4">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="项目启动&lt;br&gt;Start" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+                    <mxGeometry x="50" y="160" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="4" target="6">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="需求分析&lt;br&gt;Require-ments" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+                    <mxGeometry x="137" y="160" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="6" target="8">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="设计&lt;br&gt;Design" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+                    <mxGeometry x="224" y="160" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="8" target="10">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="构建&lt;br&gt;Develop-ment&lt;br&gt;&amp;amp;Build" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+                    <mxGeometry x="311" y="160" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="10" target="12">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="测试&lt;br&gt;Test" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+                    <mxGeometry x="398" y="160" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="12" target="14">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="发布&lt;br&gt;Release" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+                    <mxGeometry x="484" y="160" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="14" target="16">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" value="部署&lt;br&gt;Deploy-ment" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+                    <mxGeometry x="571" y="160" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="19" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="16" target="18">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" value="运营&lt;br&gt;Oprations" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+                    <mxGeometry x="658" y="160" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="18" value="终止&lt;br&gt;End" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+                    <mxGeometry x="745" y="160" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="&lt;h1 style=&quot;font-size: 12px&quot;&gt;Security by design&lt;/h1&gt;&lt;p style=&quot;font-size: 12px&quot;&gt;资产分类分级、威胁分析与建模、漏洞分析、风险分析、安全设计。&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;fontSize=12;" vertex="1" parent="1">
+                    <mxGeometry x="137" y="90" width="193" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="22" value="&lt;h1 style=&quot;font-size: 12px&quot;&gt;Security by development&lt;/h1&gt;&lt;p style=&quot;font-size: 12px&quot;&gt;安全培训、编码规范、代码审计、供应链安全审计。&lt;/p&gt;&lt;p style=&quot;font-size: 12px&quot;&gt;可以使用Sonarqube、blackduck、dependencycheck等plugin加强IDE安全。&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;fontSize=12;" vertex="1" parent="1">
+                    <mxGeometry x="254" y="240" width="160" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" value="&lt;h1 style=&quot;font-size: 12px&quot;&gt;SAST&lt;/h1&gt;&lt;div&gt;白盒扫描（&lt;span&gt;开源组建安全扫描）&lt;/span&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;fontSize=12;" vertex="1" parent="1">
+                    <mxGeometry x="359" y="90" width="99" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" value="&lt;h1 style=&quot;font-size: 12px&quot;&gt;DAST/IAST&lt;/h1&gt;&lt;div&gt;灰盒扫描、&lt;span&gt;黑盒扫描&lt;/span&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;fontSize=12;" vertex="1" parent="1">
+                    <mxGeometry x="414" y="240" width="200" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" value="&lt;h1 style=&quot;font-size: 12px&quot;&gt;安全发布&lt;/h1&gt;&lt;div&gt;机密性保护（加密、脱敏）、&lt;/div&gt;&lt;div&gt;完整性保护（签名、混淆）&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;fontSize=12;" vertex="1" parent="1">
+                    <mxGeometry x="484" y="90" width="166" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="26" value="&lt;h1 style=&quot;font-size: 12px&quot;&gt;安全部署&lt;/h1&gt;&lt;div&gt;软件配置完整性保护、数据加密&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;fontSize=12;" vertex="1" parent="1">
+                    <mxGeometry x="570" y="240" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="27" value="&lt;h1 style=&quot;font-size: 12px&quot;&gt;安全运营&lt;/h1&gt;&lt;div&gt;检测、响应、更新&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;fontSize=12;" vertex="1" parent="1">
+                    <mxGeometry x="670" y="90" width="130" height="40" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
