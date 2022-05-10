@@ -1,0 +1,3 @@
+# TPLINK TLR 402 宽带路由器安全性分析
+
+主控芯片：Marvell 88E8-LG01 A286151A.2 0830 B1P TW

@@ -141,6 +141,35 @@ b'\x90'
 >>> asm('nop')
 b'\xe3 \xf0\x00'
 ```
+### asm 函数
+asm函数可以将给定的shellcode（汇编代码）进行汇编并返回其字节内容。
+
+Arguments:
+        shellcode(str): Assembler code to assemble.
+        vma(int):       Virtual memory address of the beginning of assembly
+        extract(bool):  Extract the raw assembly bytes from the assembled
+                        file.  If :const:`False`, returns the path to an ELF file
+                        with the assembly embedded.
+        shared(bool):   Create a shared object.
+        kwargs(dict):   Any attributes on :data:`.context` can be set, e.g.set
+                        ``arch='arm'``.
+    
+    Examples:
+    
+        >>> asm("mov eax, SYS_select", arch = 'i386', os = 'freebsd')
+        b'\xb8]\x00\x00\x00'
+        >>> asm("mov eax, SYS_select", arch = 'amd64', os = 'linux')
+        b'\xb8\x17\x00\x00\x00'
+        >>> asm("mov rax, SYS_select", arch = 'amd64', os = 'linux')
+        b'H\xc7\xc0\x17\x00\x00\x00'
+        >>> asm("mov r0, #SYS_select", arch = 'arm', os = 'linux', bits=32)
+        b'R\x00\xa0\xe3'
+        >>> asm("mov #42, r0", arch = 'msp430')
+        b'0@*\x00'
+        >>> asm("la %r0, 42", arch = 's390', bits=64)
+        b'A\x00\x00*'
+
+
 
 ### 设置日志详细度
 ```
@@ -413,4 +442,23 @@ hex(unpack('AAAA'))
 
 hex(u16('AA'))
 # '0x4141'
+```
+
+## exp 编写框架
+官方给的示例如下：
+```py
+
+from pwn import *
+
+context(arch = 'i386', os='linux',log_level='debug')
+
+# 远程shell
+r = remote('exploitme.example.com',31337)
+# 本地进程
+# r = process("./text")
+
+
+# EXP CODE Goes Here
+r.send(asm(shellcraft.sh()))
+r.interactive()
 ```

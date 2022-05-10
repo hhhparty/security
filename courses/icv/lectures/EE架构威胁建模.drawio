@@ -1,0 +1,191 @@
+<mxfile host="65bd71144e">
+    <diagram id="RREEJKZW6znYRXV1Z6Xt" name="Page-1">
+        <mxGraphModel dx="505" dy="907" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="4" value="小鹏P7总线网络为例" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="30" y="50" width="150" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="自动驾驶域（ADCAN）" style="swimlane;" vertex="1" parent="1">
+                    <mxGeometry x="70" y="150" width="240" height="256" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=classic;endFill=1;startArrow=classic;startFill=1;" edge="1" parent="11" source="3" target="5">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="智能驾驶模块" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="11">
+                    <mxGeometry x="20" y="76" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="整车控制模块" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="11">
+                    <mxGeometry x="140" y="76" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="惯性测量模块" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="11">
+                    <mxGeometry x="20" y="116" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" value="" style="edgeStyle=none;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;endArrow=classic;endFill=1;startArrow=classic;startFill=1;" edge="1" parent="11" source="7" target="6">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="全景模块" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="11">
+                    <mxGeometry x="140" y="116" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="智能控制器" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="11">
+                    <mxGeometry x="20" y="156" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" style="edgeStyle=none;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;endArrow=classic;endFill=1;startArrow=classic;startFill=1;" edge="1" parent="11" source="9" target="8">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="倒车雷达控制器" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="11">
+                    <mxGeometry x="140" y="156" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="视觉模块" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="11">
+                    <mxGeometry x="20" y="196" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" value="&lt;span style=&quot;font-style: normal; font-weight: normal; letter-spacing: 0.544px; text-align: justify; text-indent: 0px; text-transform: none; word-spacing: 0px; text-decoration: none; display: inline; float: none; font-size: 9px;&quot;&gt;&lt;font color=&quot;#ffffff&quot; style=&quot;font-size: 9px;&quot;&gt;主要用于自动驾驶单元与惯性测量单元、视觉模块、雷达、整车控制器、全景模块之间的通信。&lt;/font&gt;&lt;/span&gt;" style="text;whiteSpace=wrap;html=1;fontSize=9;" vertex="1" parent="11">
+                    <mxGeometry x="130" y="196" width="110" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" value="车身CAN网络（BCAN）" style="swimlane;" vertex="1" parent="1">
+                    <mxGeometry x="330" y="150" width="240" height="246" as="geometry"/>
+                </mxCell>
+                <mxCell id="18" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;startArrow=classic;startFill=1;" edge="1" parent="17" source="19" target="29">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="120" y="211"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="19" value="车身控制器" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="17">
+                    <mxGeometry x="80" y="30" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=classic;endFill=1;startArrow=classic;startFill=1;" edge="1" parent="17" source="21" target="22">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="灯语控制器" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="17">
+                    <mxGeometry x="20" y="76" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="22" value="整车控制模块" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="17">
+                    <mxGeometry x="140" y="76" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" value="氛围灯控制模块" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="17">
+                    <mxGeometry x="20" y="116" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" value="" style="edgeStyle=none;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;endArrow=classic;endFill=1;startArrow=classic;startFill=1;" edge="1" parent="17" source="25" target="23">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" value="安全气囊控制器" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="17">
+                    <mxGeometry x="140" y="116" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="26" value="座椅记忆调节模块" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="17">
+                    <mxGeometry x="20" y="156" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="27" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;endArrow=classic;endFill=1;startArrow=classic;startFill=1;" edge="1" parent="17" source="19" target="26">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="140" y="171" as="sourcePoint"/>
+                        <Array as="points">
+                            <mxPoint x="120" y="171"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="29" value="安全带控制模块" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="17">
+                    <mxGeometry x="20" y="196" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="70" value="&lt;span style=&quot;color: rgb(255 , 255 , 255) ; font-family: &amp;#34;helvetica&amp;#34; ; font-size: 8px ; font-style: normal ; font-weight: 400 ; letter-spacing: 0.544px ; text-align: justify ; text-indent: 0px ; text-transform: none ; word-spacing: 0px ; background-color: rgb(42 , 42 , 42) ; display: inline ; float: none&quot;&gt;主要用于车身附件之间的CAN通信，比如车身控制模块与安全带控制模块、安全气囊控制模块、灯语控制模块、座椅记忆控制模块、氛围灯控制模块之间的信号交互。&lt;/span&gt;" style="text;whiteSpace=wrap;html=1;fontSize=8;fontColor=#FFFFFF;" vertex="1" parent="17">
+                    <mxGeometry x="130" y="170" width="100" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="44" value="仪表CAN网络（ICAN）" style="swimlane;" vertex="1" parent="1">
+                    <mxGeometry x="587" y="150" width="240" height="240" as="geometry"/>
+                </mxCell>
+                <mxCell id="47" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=classic;endFill=1;startArrow=classic;startFill=1;" edge="1" parent="44" source="48" target="49">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="48" value="组合仪表" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="44">
+                    <mxGeometry x="20" y="76" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="49" value="中央大屏主机" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="44">
+                    <mxGeometry x="140" y="76" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="50" value="T-Box" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="44">
+                    <mxGeometry x="20" y="116" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="56" value="中央网关" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="210" y="90" width="590" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" style="edgeStyle=none;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;startArrow=classic;startFill=1;" edge="1" parent="1" source="56" target="10">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="190" y="210" as="sourcePoint"/>
+                        <Array as="points">
+                            <mxPoint x="190" y="200"/>
+                            <mxPoint x="190" y="361"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="57" style="edgeStyle=none;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;fontSize=12;fontColor=#FFFFFF;startArrow=classic;startFill=1;endArrow=classic;endFill=1;" edge="1" parent="1" source="19" target="56">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="51" value="" style="edgeStyle=none;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;endArrow=classic;endFill=1;startArrow=classic;startFill=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="56" target="50">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="700" y="190" as="sourcePoint"/>
+                        <Array as="points">
+                            <mxPoint x="710" y="220"/>
+                            <mxPoint x="710" y="281"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="58" value="传感器CAN网络（SCAN）" style="swimlane;" vertex="1" parent="1">
+                    <mxGeometry x="70" y="429" width="240" height="240" as="geometry"/>
+                </mxCell>
+                <mxCell id="59" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=classic;endFill=1;startArrow=classic;startFill=1;" edge="1" parent="58" source="60" target="61">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="60" value="智能控制器" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="58">
+                    <mxGeometry x="20" y="76" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="61" value="中距测距雷达" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="58">
+                    <mxGeometry x="140" y="76" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="62" value="左后毫米波雷达" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="58">
+                    <mxGeometry x="20" y="116" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="63" value="" style="edgeStyle=none;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;endArrow=classic;endFill=1;startArrow=classic;startFill=1;" edge="1" parent="58" source="64" target="62">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="64" value="右前毫米波雷达" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="58">
+                    <mxGeometry x="140" y="116" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="65" value="右后毫米波雷达" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="58">
+                    <mxGeometry x="20" y="156" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="66" style="edgeStyle=none;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;endArrow=classic;endFill=1;startArrow=classic;startFill=1;" edge="1" parent="58" source="67" target="65">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="67" value="左前毫米波雷达" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="58">
+                    <mxGeometry x="140" y="156" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="69" style="edgeStyle=none;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;fontSize=12;fontColor=#FFFFFF;startArrow=classic;startFill=1;endArrow=classic;endFill=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="3" target="65">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="170" y="691" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="40" y="241"/>
+                            <mxPoint x="40" y="470"/>
+                            <mxPoint x="190" y="470"/>
+                            <mxPoint x="190" y="600"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="71" value="其他网络连接模块" style="swimlane;" vertex="1" parent="1">
+                    <mxGeometry x="330" y="429" width="240" height="240" as="geometry"/>
+                </mxCell>
+                <mxCell id="73" value="以太网模块" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="71">
+                    <mxGeometry x="20" y="76" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="74" value="LIN模块" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="71">
+                    <mxGeometry x="140" y="76" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="77" value="LVDS模块" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="71">
+                    <mxGeometry x="140" y="116" width="80" height="30" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

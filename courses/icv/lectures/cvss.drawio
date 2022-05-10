@@ -1,0 +1,28 @@
+<mxfile host="65bd71144e">
+    <diagram id="XCeIt_HmDKMXTxui885G" name="Page-1">
+        <mxGraphModel dx="613" dy="570" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="4" value="" style="swimlane;startSize=0;" parent="1" vertex="1">
+                    <mxGeometry x="100" y="120" width="200" height="310" as="geometry"/>
+                </mxCell>
+                <mxCell id="2" value="攻击向量&lt;br&gt;Attack Vector" style="rounded=1;whiteSpace=wrap;html=1;" parent="4" vertex="1">
+                    <mxGeometry x="10" y="30" width="120" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="攻击复杂度&lt;br&gt;Attack Complexity" style="rounded=1;whiteSpace=wrap;html=1;" parent="4" vertex="1">
+                    <mxGeometry x="10" y="70" width="120" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="权限要求&lt;br&gt;Privilege Required" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="4">
+                    <mxGeometry x="10" y="110" width="120" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="用户接口&lt;br&gt;User Interaction" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="4">
+                    <mxGeometry x="10" y="150" width="120" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="用户接口&lt;br&gt;User Interaction" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="4">
+                    <mxGeometry x="10" y="190" width="120" height="30" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

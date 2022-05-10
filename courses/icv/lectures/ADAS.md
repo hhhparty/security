@@ -1,4 +1,6 @@
-# ADAS 术语
+# ADAS 
+
+## 术语
 
 1. 先进驾驶辅助系统 Advanced driver Assistance system;ADAS 利用安装在车辆上的传感器、通信、决策及执行等装置，实时监测驾驶员、车辆及其行驶环境，并通过信息和/或运动控制等方式辅助驾驶员执行驾驶任务或中避免或减轻碰撞危害的各类系统的总称。
 
@@ -205,3 +207,23 @@
 41. 指令变道辅助 Instruction Lane Change Assis; ILC
 
 车辆在开启横向控制功能后，当系统监测到转向拨杆被驾驶员使能时，且周围环境允许变道时，系统会主动控制车辆变换车道。
+
+
+
+## 汽车高级辅助驾驶系统通常包括
+导航与实时交通系统TMC；
+电子警察系统ISA （Intelligent speed adaptation或intelligent speed advice）；
+车联网（Vehicular communication systems）；
+自适应巡航ACC（Adaptive cruise control）；
+车道偏移报警系统LDWS（ Lane departure warning system）；
+车道保持系统（Lane change assistance）；
+碰撞避免或预碰撞系统（Collisionavoidance system或Precrash system）；
+夜视系统（Night Vision）；
+自适应灯光控制（Adaptive light control）
+行人保护系统（Pedestrian protection system）
+自动泊车系统（Automatic parking）
+交通标志识别（Traffic sign recognition）
+盲点探测（ Blind spot detection） 
+驾驶员疲劳探测（Driver drowsiness detection）
+下坡控制系统（Hill descent control）
+电动汽车报警（Electric vehicle warning sounds）系统。

@@ -281,6 +281,23 @@ gcc编译：
 ```RELRO：-z norelro / -z lazy / -z now (关闭 / 部分开启 / 完全开启)```
 
 
+## Installing Pwntools
+This process is as straightforward as it can be. Ubuntu 18.04 and 20.04 are the only "officially supported" platforms, in that they're the only platforms we do automated testing on.
+
+$ apt-get update
+$ apt-get install python3 python3-pip python3-dev git libssl-dev libffi-dev build-essential
+$ python3 -m pip install --upgrade pip
+$ python3 -m pip install --upgrade pwntools
+Verifying Installation
+Everything should be A-OK if the following command succeeds:
+
+$ python -c 'from pwn import *'
+Foreign Architectures
+If you want to assemble or disassemble code for foreign architectures, you need an appropriate binutils installation. For Ubuntu and Mac OS X users, the installation instructions are available on docs.pwntools.com.
+
+$ apt-get install binutils-*
+
+
 ## PWN 
 
 PWN 是一个找到漏洞、利用漏洞的过程。
@@ -303,3 +320,21 @@ PWN 是一个找到漏洞、利用漏洞的过程。
 - 堆栈保护，或Stack、Canary found，即在堆栈返回地址前加入安全cookie。
 - ASLR/PIE，地址随机化，(PIE,Position independent executable）地址无关可执行，Windows下为ASLR，每次加载程序时，基址不同。
 - RELRO: Relocation Read Only，重定向只读。即由linker 指定 binary的一块经过动态链接处理过重定位之后的区域为只读。
+
+
+## pwntools tutorial 1 Basic Buffer Overflow
+
+基于堆栈的缓冲区溢出，这是最为基础的pwn。这里的堆栈没有数据执行保护DEP，而且二进制代码没有被地址随机化。
+
+这个教程中，我们学习以下几个要点：
+process tube
+gdb.attach for debugging processes
+ELF for searching for assembly instructions
+cyclic and cyclic_find for calculating offsets
+pack for packing integers into byte strings
+asm for assembling shellcode
+shellcraft for providing a shellcode library
+tube.interactive for enjoying your shell
+
+
+

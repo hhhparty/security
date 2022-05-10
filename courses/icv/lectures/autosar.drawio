@@ -1,0 +1,88 @@
+<mxfile host="65bd71144e">
+    <diagram id="5QozZkaYUn0dPwoy_PlI" name="Page-1">
+        <mxGraphModel dx="898" dy="570" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="应用层&lt;br&gt;Application Layer" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="110" width="650" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="运行环境层&lt;br&gt;Runtime Environment Layer" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="160" width="650" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="微控制器&lt;br&gt;MCU" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="360" width="650" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="系统服务&lt;br&gt;System Services" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="210" width="60" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="内存服务&lt;br&gt;Mem Serv" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="109" y="210" width="81" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="车载设备抽象&lt;br&gt;OBD Abstr" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="109" y="260" width="81" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="微控制器驱动&lt;br&gt;Microctl Driver" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="109" y="310" width="81" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="内存硬件抽象&lt;br&gt;Mem HD Abstr" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="196" y="210" width="81" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="内存硬件抽象&lt;br&gt;Mem HD Abstr" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="196" y="260" width="81" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="内存驱动&lt;br&gt;Mem Drivers" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="196" y="310" width="81" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="密码服务&lt;br&gt;Crypto Serv" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="282" y="210" width="81" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="密码硬件抽象&lt;br&gt;Crypto HD Ab" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="282" y="260" width="81" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" value="密码驱动&lt;br&gt;Crypto Drivers" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="282" y="310" width="81" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="外部通信服务" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="370" y="210" width="81" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" value="无线通信&lt;br&gt;硬件抽象" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="370" y="260" width="81" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" value="无线通信驱动&lt;br&gt;Wcomm Driv" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="370" y="310" width="81" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="18" value="通信服务&lt;br&gt;Comm Srv" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="457" y="210" width="81" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="19" value="通信硬件抽象&lt;br&gt;Comm HD Ab" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="457" y="260" width="81" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" value="通信驱动&lt;br&gt;Comm Driver" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="457" y="310" width="81" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="I/O硬件抽象&lt;br&gt;HD Abs" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="543" y="210" width="81" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="22" value="I/O驱动&lt;br&gt;I/O Drivers" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="543" y="310" width="81" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" value="复杂驱动&lt;br&gt;Complex Drivers" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="630" y="210" width="60" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="27" value="Text" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="430" y="270" width="60" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="28" value="BSW Layer" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="700" y="260" width="60" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="30" value="Autosar com" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="140" y="520" width="81" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="31" value="Autosar com" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="140" y="565" width="81" height="40" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

@@ -204,7 +204,7 @@ ISO 21434 提出了从下至上（漏洞分析）方法、从上至下（如攻�
 
 考虑示例 2。该设备是从网关ECU向前照灯系统传输信息的CAN总线。本节仅考虑危险场景1，即意外失去前照灯。
 
-##### 示例 I1
+##### 示例 8
 
 在DSL语言中，可以指定已识别的资产和危险场景如下：
 
@@ -235,7 +235,7 @@ dmgScenario(“hl turns off overnight driving”,can2,int, [maj,neg,maj,neg]).
 
 下面的图显示了一个防火墙用于缓解已识别的威胁：
 
-<img src="images/isosae21434/Headlamp system with a Firewall.png">
+<img src="images/isosae21434/HeadlampsystemwithaFirewallandaSecurityMonitor.png">
 
 总的来看，该机制可以自动化下列iso21434风险评估部分：
 - 对给定危险场景，识别威胁
@@ -253,7 +253,7 @@ dmgScenario(“hl turns off overnight driving”,can2,int, [maj,neg,maj,neg]).
 
 此增量功能可能会引入新的威胁。潜在威胁是攻击者注入恶意代码到车身控制器ECU，可能因未授权访问导致车身控制器完整性受损。
 
-<img src="images/isosae21434/Headlamp system with a Firewall and a Security Monitor.png">
+<img src="images/isosae21434/HeadlampsystemwithaFirewallandaSecurityMonitor.png">
 
 ##### 自动设计探索
 接下来，该机制会自动提出缓解已识别威胁的解决方案。图6描述了两种解决方案。它建议部署一个安全监视器来缓解已识别的威胁。其目标是通过强制执行访问控制策略来减轻来自公共元素的恶意访问，例如“只有来自公共元素的授权用户才能将数据写入身体控制ECU”。
@@ -269,53 +269,3 @@ Figure 6a illustrates a security monitor associated with the Body Control ECU, w
 
 
 ### 相关研究
-
-Recent white papers [12][32] also give an overview
-on ISO 21434. They both discuss the set of guidelines proposed for securing automotive vehicles.
-The white paper [12] focuses on the activities performed in the risk assessment. It proposes an approach to automotive cybersecurity engineering.
-This approach suggests the use of offense and defense mechanisms for helping engineers to implement the guidelines of ISO 21434. The white paper
-[32] proposes a layered approach for securing automotive vehicles. The advantage of this approach
-is to reduce the probability of an attack’s success
-by providing multi-layered response to attacks for
-protection, detection, and response. This paper proposes an incremental approach to enable the continuous certification for automotive vehicles.
-ThreatGet is a model-based engineering tool for
-security analysis [30][5]. ThreatGet can perform security analysis on system architectures following the
-ISO 21434 risk assessment. ThreatGet automatically
-identifies threats given a path between a source and
-a target element. ThreatGet lists possible countermeasure that can be selected by users to mitigate
-the identified threats. The main advantages of the
-machinery presented here over ThreatGet include
-that it can automate more parts of the ISO 21434
-risk assessment such as both attack feasibility rating
-and risk determination. It explicitly shows where
-countermeasures shall be deployed in the system
-architecture to mitigate identified threats. It enables
-the construction of security arguments in the form
-of a GSN model. To the best of our knowledge,
-ThreatGet does not support the generation of such
-security arguments. Finally, this paper considers an
-incremental approach to risk assessment, thus enabling continuous certification.
-Goal-oriented approaches, such as GSN [6] and
-KAOS [20], have been used for modeling safety cases.
-Similar to these approaches, several papers [13]
-have proposed using Attack Trees [31] for modeling
-risk assessments. Extensions include quantitative
-models for evaluating how defenses can be used
-to mitigate attacks [13, 15]. A key difference to the
-approach proposed here is the focus on automated analysis. Whereas in the previous work, Attack
-Defense trees shall be manually constructed, the
-proposed approach can carry out such analysis in
-an automated fashion.
-A number of work [29, 21, 24] have proposed using
-general models encompassing both safety and
-security concerns. For example, GSN extensions
-with security features, so that in a single framework, one can express both security and safety [24].
-Moreover, our previous work [23, 27] proposed mechanisms for extracting security relevant information from safety analysis, such as Fault Tree Analysis
-or Failure Mode and Effects Analysis.
-While this paper is inspired by these previous work,
-the main focus here is on incremental methods for
-safety and security co-analysis. As illustrated by the
-running example and in our previous work [18], the
-proposed approach takes into account both safety
-and security during trade-offs to determine the best
-design increments.

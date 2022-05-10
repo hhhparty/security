@@ -1,0 +1,259 @@
+<mxfile host="65bd71144e">
+    <diagram id="ETQGj1aNQBzHZ_E9De1k" name="Page-1">
+        <mxGraphModel dx="816" dy="520" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="5" value="OTA云端系统" style="swimlane;horizontal=0;" parent="1" vertex="1">
+                    <mxGeometry x="18" y="70" width="410" height="190" as="geometry"/>
+                </mxCell>
+                <mxCell id="2" value="车型管理" style="rounded=0;whiteSpace=wrap;html=1;" parent="5" vertex="1">
+                    <mxGeometry x="40" y="20" width="70" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="车辆管理" style="rounded=0;whiteSpace=wrap;html=1;" parent="5" vertex="1">
+                    <mxGeometry x="40" y="60" width="70" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="零件管理" style="rounded=0;whiteSpace=wrap;html=1;" parent="5" vertex="1">
+                    <mxGeometry x="40" y="100" width="70" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="车云通信接口" style="rounded=0;whiteSpace=wrap;html=1;" parent="5" vertex="1">
+                    <mxGeometry x="40" y="140" width="310" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="基线管理" style="rounded=0;whiteSpace=wrap;html=1;" parent="5" vertex="1">
+                    <mxGeometry x="120" y="20" width="70" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="固件管理" style="rounded=0;whiteSpace=wrap;html=1;" parent="5" vertex="1">
+                    <mxGeometry x="120" y="60" width="70" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="应用管理" style="rounded=0;whiteSpace=wrap;html=1;" parent="5" vertex="1">
+                    <mxGeometry x="120" y="100" width="70" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="升级策略" style="rounded=0;whiteSpace=wrap;html=1;" parent="5" vertex="1">
+                    <mxGeometry x="200" y="20" width="70" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="任务管理" style="rounded=0;whiteSpace=wrap;html=1;" parent="5" vertex="1">
+                    <mxGeometry x="280" y="60" width="70" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" value="升级监控" style="rounded=0;whiteSpace=wrap;html=1;" parent="5" vertex="1">
+                    <mxGeometry x="200" y="60" width="70" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="配置管理" style="rounded=0;whiteSpace=wrap;html=1;" parent="5" vertex="1">
+                    <mxGeometry x="280" y="20" width="70" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" value="用户/权限&lt;br&gt;管理" style="rounded=0;whiteSpace=wrap;html=1;" parent="5" vertex="1">
+                    <mxGeometry x="200" y="100" width="70" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="77" value="对外&lt;br&gt;交互&lt;br&gt;通信&lt;br&gt;接口" style="rounded=0;whiteSpace=wrap;html=1;" parent="5" vertex="1">
+                    <mxGeometry x="360" y="20" width="40" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" value="OTA车端系统" style="swimlane;horizontal=0;" parent="1" vertex="1">
+                    <mxGeometry x="58" y="340" width="370" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="18" value="接入网关" style="rounded=0;whiteSpace=wrap;html=1;" parent="17" vertex="1">
+                    <mxGeometry x="40" y="56" width="310" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="19" value="固件/应用&lt;br&gt;下载" style="rounded=0;whiteSpace=wrap;html=1;" parent="17" vertex="1">
+                    <mxGeometry x="40" y="96" width="70" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" value="升级控制" style="rounded=0;whiteSpace=wrap;html=1;" parent="17" vertex="1">
+                    <mxGeometry x="40" y="136" width="70" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" value="数据上报" style="rounded=0;whiteSpace=wrap;html=1;" parent="17" vertex="1">
+                    <mxGeometry x="200" y="96" width="70" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" value="升级日志" style="rounded=0;whiteSpace=wrap;html=1;" parent="17" vertex="1">
+                    <mxGeometry x="200" y="136" width="70" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" value="本地备份" style="rounded=0;whiteSpace=wrap;html=1;" parent="17" vertex="1">
+                    <mxGeometry x="280" y="96" width="70" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="27" value="安全校验" style="rounded=0;whiteSpace=wrap;html=1;" parent="17" vertex="1">
+                    <mxGeometry x="120" y="96" width="70" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="28" value="安全启动" style="rounded=0;whiteSpace=wrap;html=1;" parent="17" vertex="1">
+                    <mxGeometry x="120" y="136" width="70" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="44" value="LTE/5G 模块" style="rounded=0;whiteSpace=wrap;html=1;" parent="17" vertex="1">
+                    <mxGeometry x="40" y="16" width="150" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="56" value="WIFI模块" style="rounded=0;whiteSpace=wrap;html=1;" parent="17" vertex="1">
+                    <mxGeometry x="200" y="16" width="150" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="80" value="诊断系统" style="rounded=0;whiteSpace=wrap;html=1;" parent="17" vertex="1">
+                    <mxGeometry x="280" y="136" width="70" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="57" value="其他应用系统" style="swimlane;horizontal=0;" parent="1" vertex="1">
+                    <mxGeometry x="498" y="70" width="310" height="190" as="geometry"/>
+                </mxCell>
+                <mxCell id="58" value="研发系统" style="rounded=0;whiteSpace=wrap;html=1;" parent="57" vertex="1">
+                    <mxGeometry x="90" y="20" width="90" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="59" value="生产制造系统" style="rounded=0;whiteSpace=wrap;html=1;" parent="57" vertex="1">
+                    <mxGeometry x="90" y="80" width="90" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="60" value="售后服务系统" style="rounded=0;whiteSpace=wrap;html=1;" parent="57" vertex="1">
+                    <mxGeometry x="90" y="140" width="90" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="61" value="通信&lt;br&gt;网关" style="rounded=0;whiteSpace=wrap;html=1;" parent="57" vertex="1">
+                    <mxGeometry x="40" y="20" width="40" height="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="65" value="存储" style="rounded=0;whiteSpace=wrap;html=1;" parent="57" vertex="1">
+                    <mxGeometry x="190" y="20" width="90" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="67" value="PKI" style="rounded=0;whiteSpace=wrap;html=1;" parent="57" vertex="1">
+                    <mxGeometry x="190" y="80" width="90" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="69" value="分布式" style="rounded=0;whiteSpace=wrap;html=1;" parent="57" vertex="1">
+                    <mxGeometry x="190" y="140" width="90" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="72" value="" style="endArrow=classic;startArrow=classic;html=1;dashed=1;" parent="1" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="178" y="330" as="sourcePoint"/>
+                        <mxPoint x="178" y="270" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="75" value="" style="endArrow=classic;startArrow=classic;html=1;dashed=1;" parent="1" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="338" y="330" as="sourcePoint"/>
+                        <mxPoint x="338" y="270" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="78" value="" style="endArrow=classic;startArrow=classic;html=1;dashed=1;" parent="1" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="438" y="150" as="sourcePoint"/>
+                        <mxPoint x="488" y="150" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="81" value="终端" style="swimlane;horizontal=0;" vertex="1" parent="1">
+                    <mxGeometry x="498" y="340" width="200" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="82" value="检修终端" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="81">
+                    <mxGeometry x="90" y="20" width="90" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="83" value="用户手机" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="81">
+                    <mxGeometry x="90" y="75" width="90" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="84" value="其他IoT终端" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="81">
+                    <mxGeometry x="90" y="130" width="90" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="85" value="通信&lt;br&gt;网关" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="81">
+                    <mxGeometry x="40" y="20" width="40" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="91" value="" style="endArrow=classic;startArrow=classic;html=1;dashed=1;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="438" y="370" as="sourcePoint"/>
+                        <mxPoint x="488" y="370" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="92" value="" style="endArrow=classic;startArrow=classic;html=1;dashed=1;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="558" y="330" as="sourcePoint"/>
+                        <mxPoint x="558" y="270" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="93" value="域控制器-A" style="swimlane;horizontal=0;" vertex="1" parent="1">
+                    <mxGeometry x="58" y="810" width="260" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="94" value="ECU-1 UDS Server" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="93">
+                    <mxGeometry x="107" y="56" width="130" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="107" style="edgeStyle=none;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;" edge="1" parent="93" source="102" target="94">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="78" y="71"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="108" style="edgeStyle=none;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;" edge="1" parent="93" source="102" target="105">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="78" y="115"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="109" style="edgeStyle=none;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;" edge="1" parent="93" source="102" target="106">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="78" y="155"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="102" value="域控制器 UDS Server" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="93">
+                    <mxGeometry x="40" y="16" width="150" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="105" value="ECU-2 UDS Server" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="93">
+                    <mxGeometry x="107" y="100" width="130" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="106" value="ECU-n UDS Server" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="93">
+                    <mxGeometry x="107" y="140" width="130" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="126" value="CAN" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="93">
+                    <mxGeometry x="30" y="86" width="60" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="110" value="域控制器-B" style="swimlane;horizontal=0;" vertex="1" parent="1">
+                    <mxGeometry x="360" y="810" width="260" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="111" value="ECU-1 UDS Server" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="110">
+                    <mxGeometry x="107" y="56" width="130" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="112" style="edgeStyle=none;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;" edge="1" parent="110" source="115" target="111">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="78" y="71"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="113" style="edgeStyle=none;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;" edge="1" parent="110" source="115" target="116">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="78" y="115"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="114" style="edgeStyle=none;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;" edge="1" parent="110" source="115" target="117">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="78" y="155"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="115" value="域控制器&amp;nbsp; UDS Server" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="110">
+                    <mxGeometry x="40" y="16" width="150" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="116" value="ECU-2 UDS Server" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="110">
+                    <mxGeometry x="107" y="100" width="130" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="117" value="ECU-n UDS Server" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="110">
+                    <mxGeometry x="107" y="140" width="130" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="127" value="CAN" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="110">
+                    <mxGeometry x="30" y="90" width="60" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="129" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;endArrow=none;endFill=0;" edge="1" parent="1" source="118" target="93">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="130" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;endArrow=none;endFill=0;" edge="1" parent="1" source="118" target="110">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="118" value="GW/中央控制器" style="swimlane;horizontal=0;" vertex="1" parent="1">
+                    <mxGeometry x="230" y="585" width="210" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="119" value="OTA 软件升级管理器" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="118">
+                    <mxGeometry x="41" y="56" width="149" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="123" value="OTA 接入网关&amp;nbsp;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="118">
+                    <mxGeometry x="40" y="16" width="150" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="124" value="OTA 软件升级诊断管理" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="118">
+                    <mxGeometry x="41" y="100" width="149" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="125" value="存储与日志" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="118">
+                    <mxGeometry x="41" y="140" width="149" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="131" value="Ether/CANFD" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="305" y="770" width="60" height="30" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

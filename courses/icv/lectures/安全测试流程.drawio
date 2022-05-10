@@ -1,0 +1,473 @@
+<mxfile host="65bd71144e">
+    <diagram id="XP5t95VCVWaZ12p6FEl_" name="Page-1">
+        <mxGraphModel dx="381" dy="372" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="ICV 网络安全测试基本技术过程" style="swimlane;childLayout=stackLayout;resizeParent=1;resizeParentMax=0;startSize=20;" vertex="1" parent="1">
+                    <mxGeometry y="40" width="840" height="620" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="技术经理" style="swimlane;startSize=20;" vertex="1" parent="2">
+                    <mxGeometry y="20" width="120" height="600" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;fontSize=8;" edge="1" parent="3" source="6" target="12">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="项目&lt;br style=&quot;font-size: 8px;&quot;&gt;启动" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fontSize=8;" vertex="1" parent="3">
+                    <mxGeometry x="47.5" y="30" width="25" height="25" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="3" source="12" target="13">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="车型技术分析" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="3">
+                    <mxGeometry x="20" y="70" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="总体威胁建模" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="3">
+                    <mxGeometry x="20" y="99" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="128" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="3" source="126" target="127">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="126" value="复核" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="3">
+                    <mxGeometry x="20" y="503" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="130" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="3" source="127" target="129">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="127" value="报告和修复建议" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="3">
+                    <mxGeometry x="20" y="530" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="129" value="项目&lt;br style=&quot;font-size: 8px&quot;&gt;验收" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fontSize=8;" vertex="1" parent="3">
+                    <mxGeometry x="47.5" y="560" width="25" height="25" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="硬件安全工程师" style="swimlane;startSize=20;" vertex="1" parent="2">
+                    <mxGeometry x="120" y="20" width="120" height="600" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="4" source="17" target="18">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" value="硬件攻击面分析" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="4">
+                    <mxGeometry x="20" y="113" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="4" source="18" target="19">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="18" value="PCB 分析" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="4">
+                    <mxGeometry x="20" y="140" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="4" source="19" target="21">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="19" value="接口分析与攻击" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="4">
+                    <mxGeometry x="20" y="167" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="26" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="4" source="21" target="22">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="侧信道攻击分析" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="4">
+                    <mxGeometry x="20" y="194" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="45" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="4" source="22" target="44">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="22" value="中间人攻击" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="4">
+                    <mxGeometry x="20" y="221" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="47" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="4" source="44" target="46">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="44" value="漏洞利用验证" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="4">
+                    <mxGeometry x="20" y="250" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="46" value="报告与建议" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="4">
+                    <mxGeometry x="20" y="280" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="固件安全工程师" style="swimlane;startSize=20;" vertex="1" parent="2">
+                    <mxGeometry x="240" y="20" width="120" height="600" as="geometry"/>
+                </mxCell>
+                <mxCell id="28" value="固件提取" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="5">
+                    <mxGeometry x="20" y="188" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="30" value="&lt;span&gt;固件攻击面分析&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="5">
+                    <mxGeometry x="20" y="213" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="32" value="bootloader安全分析" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="5">
+                    <mxGeometry x="20" y="239" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="29" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="5" source="30" target="32">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="34" value="kernel 安全分析" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="5">
+                    <mxGeometry x="20" y="264" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="31" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="5" source="32" target="34">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="43" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;fontSize=8;" edge="1" parent="5" source="35" target="41">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="35" value="应用安全分析" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="5">
+                    <mxGeometry x="20" y="289" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="33" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="5" source="34" target="35">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="49" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="5" source="41" target="48">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="41" value="漏洞利用验证" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="5">
+                    <mxGeometry x="20" y="315" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="42" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="5" source="28" target="30">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="70" y="233" as="sourcePoint"/>
+                        <mxPoint x="70" y="244" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="48" value="报告与建议" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="5">
+                    <mxGeometry x="20" y="340" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="总线安全工程师" style="swimlane;startSize=20;" vertex="1" parent="2">
+                    <mxGeometry x="360" y="20" width="120" height="600" as="geometry"/>
+                </mxCell>
+                <mxCell id="50" value="总线协议分析" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="8">
+                    <mxGeometry x="20" y="305" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="51" value="&lt;span&gt;通信矩阵逆向&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="8">
+                    <mxGeometry x="20" y="333" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="52" value="网络隔离分析" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="8">
+                    <mxGeometry x="20" y="359" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="53" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="8" source="51" target="52">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="54" value="中间人攻击" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="8">
+                    <mxGeometry x="20" y="384" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="55" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="8" source="52" target="54">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="57" value="Fuzz 分析" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="8">
+                    <mxGeometry x="20" y="409" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="58" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="8" source="54" target="57">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="60" value="漏洞利用验证" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="8">
+                    <mxGeometry x="20" y="435" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="56" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;fontSize=8;" edge="1" parent="8" source="57" target="60">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="61" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="8" source="50" target="51">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-210" y="224" as="sourcePoint"/>
+                        <mxPoint x="-210" y="235" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="62" value="报告与建议" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="8">
+                    <mxGeometry x="20" y="460" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="59" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="8" source="60" target="62">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="无线网络安全工程师" style="swimlane;startSize=20;" vertex="1" parent="2">
+                    <mxGeometry x="480" y="20" width="120" height="600" as="geometry"/>
+                </mxCell>
+                <mxCell id="66" value="载波分析" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="9">
+                    <mxGeometry x="20" y="305" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="67" value="&lt;span&gt;无线协议嗅探/分析&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="9">
+                    <mxGeometry x="20" y="333" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="68" value="数据包解析" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="9">
+                    <mxGeometry x="20" y="359" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="69" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="9" source="67" target="68">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="70" value="网络隔离分析" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="9">
+                    <mxGeometry x="20" y="384" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="71" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="9" source="68" target="70">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="72" value="中间人攻击" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="9">
+                    <mxGeometry x="20" y="409" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="73" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="9" source="70" target="72">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="74" value="漏洞利用验证" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="9">
+                    <mxGeometry x="20" y="435" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="75" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;fontSize=8;" edge="1" parent="9" source="72" target="74">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="76" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="9" source="66" target="67">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-610" y="154" as="sourcePoint"/>
+                        <mxPoint x="-610" y="165" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="77" value="报告与建议" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="9">
+                    <mxGeometry x="20" y="460" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="78" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="9" source="74" target="77">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="移动应用安全工程师" style="swimlane;startSize=20;" vertex="1" parent="2">
+                    <mxGeometry x="600" y="20" width="120" height="600" as="geometry"/>
+                </mxCell>
+                <mxCell id="81" value="硬编码敏感值发现" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="10">
+                    <mxGeometry x="20" y="175" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="82" value="&lt;span&gt;敏感日志检查&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="10">
+                    <mxGeometry x="20" y="201" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="83" value="会话机制分析" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="10">
+                    <mxGeometry x="20" y="227" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="84" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="10" source="82" target="83">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="85" value="缓存敏感数据分析" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="10">
+                    <mxGeometry x="20" y="254" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="86" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="10" source="83" target="85">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="99" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="10" source="87" target="97">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="87" value="数据存储安全分析" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="10">
+                    <mxGeometry x="20" y="280" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="88" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="10" source="85" target="87">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="89" value="漏洞利用验证" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="10">
+                    <mxGeometry x="20" y="333" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="90" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;fontSize=8;startArrow=none;" edge="1" parent="10" source="97" target="89">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="91" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="10" source="81" target="82">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-1130" y="-46" as="sourcePoint"/>
+                        <mxPoint x="-1130" y="-35" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="92" value="报告与建议" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="10">
+                    <mxGeometry x="20" y="359" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="93" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="10" source="89" target="92">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="100" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="10" source="94" target="96">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="94" value="移动应用攻击面分析" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="10">
+                    <mxGeometry x="20" y="122" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="101" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="10" source="96" target="81">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="96" value="APP逆向分析" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="10">
+                    <mxGeometry x="20" y="148" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="97" value="通信安全分析" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="10">
+                    <mxGeometry x="20" y="306" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="98" value="" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;fontSize=8;endArrow=none;" edge="1" parent="10" source="87" target="97">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="700" y="361" as="sourcePoint"/>
+                        <mxPoint x="700" y="505" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="11" value="云服务安全工程师" style="swimlane;startSize=20;" vertex="1" parent="2">
+                    <mxGeometry x="720" y="20" width="120" height="600" as="geometry"/>
+                </mxCell>
+                <mxCell id="122" value="" style="edgeStyle=none;html=1;fontSize=8;" edge="1" parent="11" source="102" target="120">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="102" value="会话机制安全分析" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="11">
+                    <mxGeometry x="20" y="173.5" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="103" value="&lt;span&gt;交互安全机制分析&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="11">
+                    <mxGeometry x="20" y="199.5" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="104" value="日志安全机制分析" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="11">
+                    <mxGeometry x="20" y="225.5" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="105" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="11" source="103" target="104">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="106" value="存储安全机制分析" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="11">
+                    <mxGeometry x="20" y="252.5" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="107" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="11" source="104" target="106">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="109" value="组件安全机制分析" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="11">
+                    <mxGeometry x="20" y="278.5" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="110" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="11" source="106" target="109">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="111" value="计算环境安全分析" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="11">
+                    <mxGeometry x="20" y="331.5" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="112" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;fontSize=8;startArrow=none;" edge="1" parent="11" source="120" target="111">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="113" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="11" source="102" target="103">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-1770" y="-117.5" as="sourcePoint"/>
+                        <mxPoint x="-1770" y="-106.5" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="124" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="11" source="114" target="123">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="114" value="漏洞利用验证" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="11">
+                    <mxGeometry x="20" y="357.5" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="115" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="11" source="111" target="114">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="117" value="TSP攻击面分析" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="11">
+                    <mxGeometry x="20" y="120.5" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="118" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="11" source="119" target="102">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="119" value="认证机制安全分析" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="11">
+                    <mxGeometry x="20" y="146.5" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="116" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="11" source="117" target="119">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="120" value="通信安全分析" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="11">
+                    <mxGeometry x="20" y="304.5" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="108" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="11" source="109" target="120">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="121" value="" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;fontSize=8;endArrow=none;" edge="1" parent="11" source="109" target="120">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="60" y="289.5" as="sourcePoint"/>
+                        <mxPoint x="60" y="433.5" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="123" value="报告与建议" style="rounded=0;whiteSpace=wrap;html=1;fontSize=8;" vertex="1" parent="11">
+                    <mxGeometry x="20" y="384" width="80" height="12" as="geometry"/>
+                </mxCell>
+                <mxCell id="36" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="2" source="13" target="17">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="60" y="140"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="40" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="2" source="19" target="28">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="300" y="193"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="63" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="2" source="19" target="50">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="420" y="193"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="65" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="2" source="35" target="50">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="420" y="315"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="80" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="2" source="19" target="66">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="540" y="193"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="95" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="2" source="13" target="94">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="90" y="125" as="sourcePoint"/>
+                        <Array as="points">
+                            <mxPoint x="660" y="125"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="125" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="2" source="13" target="117">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="100" y="122" as="sourcePoint"/>
+                        <Array as="points">
+                            <mxPoint x="780" y="125"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="131" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="2" source="46" target="126">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="180" y="510"/>
+                            <mxPoint x="60" y="510"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="132" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=8;" edge="1" parent="2" source="48" target="126">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="300" y="510"/>
+                            <mxPoint x="60" y="510"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="133" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;fontSize=8;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="2" source="62" target="126">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="140" y="520" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="420" y="510"/>
+                            <mxPoint x="60" y="510"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="134" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;fontSize=8;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="2" source="77" target="126">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="370" y="560" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="540" y="510"/>
+                            <mxPoint x="60" y="510"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="135" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;fontSize=8;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="2" source="92" target="126">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="450" y="530" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="660" y="510"/>
+                            <mxPoint x="60" y="510"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="136" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;fontSize=8;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="2" source="123" target="126">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="380" y="550" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="780" y="510"/>
+                            <mxPoint x="60" y="510"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

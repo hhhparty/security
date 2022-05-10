@@ -2,6 +2,7 @@
 
 > https://maskray.me/blog/2021-08-29-all-about-global-offset-table
 
+GOT 全局偏移表。这是 linker 为 外部符号填充的实际偏移表。而PLT（Procedure Linkage Table）程序链接表，要么在 .got.plt节获取地址并跳转，要么无法从.got.plt获取地址时，触发 linker 寻找所需地址。
 
 All about Global Offset Table
 Symbol address
