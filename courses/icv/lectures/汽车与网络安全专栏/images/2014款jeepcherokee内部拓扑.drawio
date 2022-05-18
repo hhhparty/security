@@ -1,0 +1,179 @@
+<mxfile host="65bd71144e">
+    <diagram id="hRLB9ft1tQea4ZPvV-nU" name="Page-1">
+        <mxGraphModel dx="1497" dy="957" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="21" style="edgeStyle=none;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;endArrow=none;endFill=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="24" target="7" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="420" y="105" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="22" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;endArrow=none;endFill=0;exitX=0.75;exitY=1;exitDx=0;exitDy=0;" parent="1" source="24" target="58" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="310" y="160" as="sourcePoint"/>
+                        <mxPoint x="310.0000000000002" y="230" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="7" value="CAN-C总线网络" style="swimlane;horizontal=0;" parent="1" vertex="1">
+                    <mxGeometry x="50" y="420" width="280" height="480" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="防抱死刹车ABS" style="rounded=0;whiteSpace=wrap;html=1;" parent="7" vertex="1">
+                    <mxGeometry x="45.5" y="15" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="33" value="前大灯控制AHLM" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="7">
+                    <mxGeometry x="45.5" y="52" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="34" value="自动巡航控制ACC" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="7">
+                    <mxGeometry x="45.5" y="89" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="35" value="车身控制BCM" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="7">
+                    <mxGeometry x="45.5" y="125" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="36" value="CCB连接器-STAR CAN C BODY" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="7">
+                    <mxGeometry x="45.5" y="162" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="38" value="CCIP连接器-STAR CAN C IP" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="7">
+                    <mxGeometry x="45.5" y="199" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="39" value="DLC数据链路连接器" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="7">
+                    <mxGeometry x="45.5" y="236" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="40" value="传动系统控制DTCM" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="7">
+                    <mxGeometry x="45.5" y="273" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="41" value="电子驻车刹车EPB" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="7">
+                    <mxGeometry x="45.5" y="310" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="42" value="电子助力转向EPS" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="7">
+                    <mxGeometry x="45.5" y="346" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="43" value="电子档位切换ESM" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="7">
+                    <mxGeometry x="45.5" y="383" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="44" value="前向摄像头FFCM" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="7">
+                    <mxGeometry x="45.5" y="420" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="45" value="IPC CLUSTR" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="7">
+                    <mxGeometry x="160" y="15" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="46" value="乘客分类OCM" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="7">
+                    <mxGeometry x="160" y="52" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="47" value="乘客保护控制ORC" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="7">
+                    <mxGeometry x="160" y="89" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="48" value="停车辅助PAM" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="7">
+                    <mxGeometry x="160" y="125" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="49" value="Radio频率HUB（RFH）" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="7">
+                    <mxGeometry x="160" y="162" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="50" value="方向控制SCM" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="7">
+                    <mxGeometry x="160" y="199" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="51" value="转向量锁SCLM" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="7">
+                    <mxGeometry x="160" y="236" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="52" value="传动控制TCM" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="7">
+                    <mxGeometry x="160" y="273" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="无钥匙启动/进入" style="rounded=0;whiteSpace=wrap;html=1;" parent="7" vertex="1">
+                    <mxGeometry x="160" y="310" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="胎压监控TPM" style="rounded=0;whiteSpace=wrap;html=1;" parent="7" vertex="1">
+                    <mxGeometry x="160" y="346" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="31" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;endArrow=none;endFill=0;" edge="1" parent="1" source="16" target="30">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="81" style="edgeStyle=none;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;" edge="1" parent="1" source="16" target="24">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="657" y="255" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="16" value="BCM" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="697" y="245" width="120" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" value="车机" style="swimlane;horizontal=0;" parent="1" vertex="1">
+                    <mxGeometry x="257" y="200" width="200" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" value="蓝牙" style="rounded=0;whiteSpace=wrap;html=1;" parent="24" vertex="1">
+                    <mxGeometry x="47" y="31" width="60" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="26" value="WiFi" style="rounded=0;whiteSpace=wrap;html=1;" parent="24" vertex="1">
+                    <mxGeometry x="117" y="31" width="60" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="27" value="Cellular" style="rounded=0;whiteSpace=wrap;html=1;" parent="24" vertex="1">
+                    <mxGeometry x="47" y="61" width="60" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="29" value="Apps" style="rounded=0;whiteSpace=wrap;html=1;" parent="24" vertex="1">
+                    <mxGeometry x="117" y="61" width="60" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="30" value="" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="747" y="325" width="20" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="32" value="LIN" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="747" y="285" width="60" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="58" value="CAN-IHS总线网络" style="swimlane;horizontal=0;" vertex="1" parent="1">
+                    <mxGeometry x="380" y="420" width="280" height="480" as="geometry"/>
+                </mxCell>
+                <mxCell id="59" value="Radio功放AMP" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="58">
+                    <mxGeometry x="45.5" y="15" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="60" value="车身控制BCM" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="58">
+                    <mxGeometry x="45.5" y="52" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="61" value="CCB 连接器" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="58">
+                    <mxGeometry x="45.5" y="89" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="62" value="CCIP 连接器" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="58">
+                    <mxGeometry x="45.5" y="125" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="63" value="车门驱动DDM" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="58">
+                    <mxGeometry x="45.5" y="162" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="64" value="&lt;span&gt;DLC数据链路连接器&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="58">
+                    <mxGeometry x="45.5" y="199" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="65" value="外部DISC模块EDM" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="58">
+                    <mxGeometry x="45.5" y="236" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="66" value="加热座椅HSM" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="58">
+                    <mxGeometry x="45.5" y="273" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="67" value="A/C加热HVAC" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="58">
+                    <mxGeometry x="45.5" y="310" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="68" value="集成中央堆栈开关&lt;br&gt;ICS" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="58">
+                    <mxGeometry x="45.5" y="346" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="69" value="IPC模块（CLUSTER）" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="58">
+                    <mxGeometry x="45.5" y="383" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="70" value="左后盲点传感器&lt;br&gt;LBSS" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="58">
+                    <mxGeometry x="45.5" y="420" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="71" value="记忆座位驱动MSM" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="58">
+                    <mxGeometry x="160" y="15" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="72" value="乘客车门控制PDM" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="58">
+                    <mxGeometry x="160" y="52" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="73" value="电动尾门PLGM" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="58">
+                    <mxGeometry x="160" y="89" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="74" value="右后盲点传感器&lt;br&gt;RBSS" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="58">
+                    <mxGeometry x="160" y="125" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="82" value="CAN-C" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="200" y="330" width="60" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="83" value="CAN-IHS" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="450" y="330" width="60" height="30" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
