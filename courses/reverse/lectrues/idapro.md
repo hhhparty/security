@@ -176,3 +176,117 @@ Fast Library Identification and Recognition Technology , FLIRT 是IDA的内部�
 
 参考：https://www.hex-rays.com/products/ida/tech/flirt/index.shtml
 
+### 小结
+
+整个文件的加载过程，可以从ida pro的界面下方的“output window”的每行记录中得到，下面就是一个例子：
+
+```
+The database has been successfully repaired.
+
+  bytes   pages size description
+--------- ----- ---- --------------------------------------------
+   262144    32 8192 allocating memory for b-tree...
+$ F40102C.var_4C: incorrect back reference '$ F40102C.Msg'
+$ F401110.arg_0: incorrect back reference '$ F401110.hWndParent'
+$ F401110.arg_4: incorrect back reference '$ F401110.Msg'
+$ F401110.arg_8: incorrect back reference '$ F401110.wParam'
+$ F401110.arg_C: incorrect back reference '$ F401110.lParam'
+Caption: incorrect back reference 'aReverseme1'
+ClassName: incorrect back reference 'aSupremedickhea'
+GetWindowTextA: no back reference
+MessageBoxA: no back reference
+String: incorrect back reference 'aEditBoxIsGoodM'
+Text: no back reference
+WindowName: incorrect back reference 'aNotReversed'
+__imp_GetWindowTextA: incorrect back reference 'GetWindowTextA'
+__imp_MessageBoxA: incorrect back reference 'MessageBoxA'
+aGoodNumber: no back reference
+aOkayForNowMiss: no back reference
+aThatNotANumber: no back reference
+hInstance: no back reference
+hWnd: no back reference
+found nodes in the privrange above the maxnode...fixed
+    65536     8 8192 allocating memory for virtual array...
+   262144    32 8192 allocating memory for name pointers...
+-----------------------------------------------------------------
+   589824            total memory allocated
+
+402250: sparse storage: incorrect flag value: 100 - fixed
+Loading processor module F:\IDA 7.2\procs\pc.dll for metapc...OK
+Loading type libraries...
+Autoanalysis subsystem has been initialized.
+Database for file 'ReverseMe01.exe' has been loaded.
+-----------------------------------------------------------------------------------------
+Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:53:40) [MSC v.1500 64 bit (AMD64)] 
+IDAPython v1.7.0 final (serial 0) (c) The IDAPython Team <idapython@googlegroups.com>
+-----------------------------------------------------------------------------------------
+Using FLIRT signature: SEH for vc7-14
+Propagating type information...
+Function argument information has been propagated
+The initial autoanalysis has been finished.
+Caching 'Functions window'... ok
+Flushing buffers, please wait...ok
+Unloading IDP module F:\IDA 7.2\procs\pc.dll...
+Possible file format: MS-DOS executable (EXE) (F:\IDA 7.2\loaders\dos.dll)
+Possible file format: Portable executable for 80386 (PE) (F:\IDA 7.2\loaders\pe.dll)
+
+  bytes   pages size description
+--------- ----- ---- --------------------------------------------
+   262144    32 8192 allocating memory for b-tree...
+    65536     8 8192 allocating memory for virtual array...
+   262144    32 8192 allocating memory for name pointers...
+-----------------------------------------------------------------
+   589824            total memory allocated
+
+Loading file 'G:\workspace\pediy.com\reverseme\ReverseMe01.exe' into database...
+Detected file format: Portable executable for 80386 (PE)
+Loading processor module F:\IDA 7.2\procs\pc.dll for metapc...OK
+Autoanalysis subsystem has been initialized.
+Assuming __cdecl calling convention by default
+  0. Creating a new segment  (00401000-00402000) ... ... OK
+  1. Creating a new segment  (00402000-00403000) ... ... OK
+  2. Creating a new segment  (00403000-00404000) ... ... OK
+Reading imports directory...
+  3. Creating a new segment  (00402058-00403000) ... ... OK
+Assuming __cdecl calling convention by default
+Type library 'mssdk' loaded. Applying types...
+Types applied to 20 names.
+Plan  FLIRT signature: SEH for vc7-14
+Marking typical code sequences...
+Flushing buffers, please wait...ok
+File 'G:\workspace\pediy.com\reverseme\ReverseMe01.exe' has been successfully loaded into the database.
+IDA is analysing the input file...
+You may start to explore the input file right now.
+-----------------------------------------------------------------------------------------
+Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:53:40) [MSC v.1500 64 bit (AMD64)] 
+IDAPython v1.7.0 final (serial 0) (c) The IDAPython Team <idapython@googlegroups.com>
+-----------------------------------------------------------------------------------------
+Using FLIRT signature: SEH for vc7-14
+Propagating type information...
+Function argument information has been propagated
+The initial autoanalysis has been finished.
+```
+## IDA Pro 界面
+
+<img src="images/idapro/idaprowindow.png">
+
+简要介绍几个窗口
+- 导航栏：被加载文件地址空间的线性视图。默认情况下，会呈现二进制文件的整个地址范围。不同颜色表示不同的内容分布。
+- 反汇编窗口：可以图形或文本方式显示某个函数的指令构成。
+  - 图形方式显示时，显示了函数块之间的各种流。Yes边的箭头默认为绿色；No边的箭头默认为红色；顺序流默认为蓝色。注意，图形方式时，可以设置平移、重新调整块位置、分组和堆叠块（选中几个块，右键选group node）
+  - 可以创建新的反汇编窗口，以便观察。
+
+
+- 函数窗口：列举了每一个ida pro识别出的函数，并给以命名。
+  - 下图所示的函数窗口，segment表示函数所在的节
+  - 后面的start，length表示起始虚拟地址值和字节长度
+  - locals表示本地变量
+  - arguments 表示参数
+  - R表示返回调用方
+  - B表示用EBP引用它的局部变量
+
+
+
+<img src="images/idapro/functionswindow.png">
+
+<img src="images/idapro/functionswindow02.png">
