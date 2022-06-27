@@ -1,5 +1,7 @@
 # Tesla
 
+## 特斯拉 MCU 迭代
+<img src="images/tesla/mcu发展历程.jpg">
 
 ## Model S Plaid MCU 3.0
 
