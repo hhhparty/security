@@ -12,6 +12,21 @@
 
 为了更深入地掌握Android整个架构思想以及各个模块在Android系统所处的地位与价值，计划以Android系统启动过程为主线，以进程的视角来诠释Android M系统全貌，全方位的深度剖析各个模块功能，争取各个击破。这样才能犹如庖丁解牛，解决、分析问题则能游刃有余。
 
+早期android 4.0之前，android是基于linux 2.6.x，后来的4.0及更高基于的是linux 3.x
+- android 1.5 —— linux kernel 2.6.27
+- android 1.6 —— linux kernel 2.6.29
+- android 2.0/2.1 —— linux kernel 2.6.29
+- android 2.2 —— linux kernel 2.6.32
+- android 2.3 —— linux kernel 2.6.35
+- android 3.* —— linux kernel 2.6.36
+- android 4.* —— linux kernel 3.0.1
+- android 4.1/2 —— linux kernel 3.0.31
+
+android的所有应用都在虚拟环境（Dalvik）下运行，简称DVM。从android 4.4版本后，另一个运行时称为 Android Runtime（ART）出现了，用户可以在DVM和ART之间进行自由切换。
+
+DVM类似于JVM，主要是基于寄存器的特性。Dalvik 虚拟机执行一个 .dex 或可执行文件格式，使用adb可以进行交互。
+
+
 ## Android架构
 
 Google提供的5层架构图很经典，但为了更进一步透视Android系统架构，本文更多的是以进程的视角，以分层的架构来诠释Android系统的全貌，阐述Android内部的环环相扣的内在联系。
@@ -135,6 +150,19 @@ ServiceManager 主要做3件事：
 - 通知binder设备，把自己变成context_manager
 - 进入循环，不停读取binder设备，查看是否有对service的请求，若有就调用svcmgr_handler 回调处理请求
 
+#### 系统库
+这其中包含了一些重要的库：
+- Surface Manager 管理窗口和屏幕
+- Media Framework：允许各类型的编解码器来播放和记录不同的媒体
+- WebKit：浏览器渲染引擎
+- OpenGL：在屏幕上正确显示2D或3D内容。
+
+这些库很多是C/C++写的，从Linux移植而来。主要区别是：android 里没有libc库（用于linux大多数任务），而是有bionic库，可以认为他是改造过的Android里的libc。
+
+
+#### 运行时
+
+Android运行时，也称为Dalvik 虚拟机和组件。
 ### Framework层
 
 
@@ -210,6 +238,8 @@ Android 操作系统保存在Linux的日志机制之外，他也使用了另一�
 
 
 ### App层
+
+开发人员开发的应用程序是与android应用曾在打交道。
 
 Zygote进程孵化出的第一个App进程是Launcher，这是用户看到的桌面App；
 

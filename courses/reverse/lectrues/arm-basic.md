@@ -343,7 +343,7 @@ ADD sp,sp,#4
 
 #### 调用函数
 
-##### ARM 函数调用约定：
+**ARM 函数调用约定**：
 
 - 前4个参数被分别放入： r0，r1，r2，r3 寄存器。
 - 其他的参数被逆向（右侧的先入栈）放入堆栈中。
@@ -351,3 +351,188 @@ ADD sp,sp,#4
 - 调用者必须总是保存链接寄存器 r14
 - 被调用者，需要时，必须保存 r4～r14
 - 函数返回结果保存在 r0.
+
+为了调用一个函数，我们需要把参数放到寄存器 r0～r3中，保存当前link 寄存器（r14）的值并且使用`BL`指令跳转到函数。当函数返回时，我们将link寄存器中值恢复到PC（r15），并将结果存放到r0.
+
+例子：
+```
+int x = 0;
+int y = 10;
+int main(){
+        x = printf("value:%d\n",y);
+}
+```
+
+然后会被编译为：
+```s
+.data
+    x:  .word 0
+    y:  .word 10
+    S0: .ascii "value: %d\012\000"
+.text
+    main:
+        LDR r0, =S0  @ Load address of S0
+        LDR r1, =y   @ Load address of y
+        LDR r1, [r1] @ Load value of y
+        PUSH {ip,lr} @ Save registers
+        BL  printf   @ Call printf
+        POP  {ip,lr} @ Restore registers
+        LDR r1, =x   @ Load address of x
+        STR r0, [r1] @ Store return value in x.
+end
+
+Defining a leaf function.
+n.
+A leaf function is a function that computes a value without calling other functions.
+They are easy to write since function arguments are passed in as registers.
+```
+
+再来一个例子：
+```
+square:function integer(x:integer) = {
+
+        return x*x;
+}
+```
+
+被编译为：
+```
+.global square
+square:
+    MUL  r0, r0, r0   @ multiply argument by itself
+    BX   lr           @ return to caller
+
+```
+
+在一般情况下，上面的代码不能执行，需要更复杂的方法，因为堆栈没有正确设置。所以上述函数不适用于想要调用其他函数的函数，
+
+#### 定义一个复杂函数
+
+复杂函数是能够调用其他函数，并计算任意复杂度表达式，并以原始状态完整返回到调用者的函数。
+
+下面的例子接受3个参数，并使用2个局部变量。
+
+```s
+func:
+    PUSH {fp}        @ save the frame pointer
+    MOV  fp, sp      @ set the new frame pointer
+    PUSH {r0,r1,r2}  @ save the arguments on the stack
+    SUB  sp, sp, #8  @ allocate two more local variables
+    PUSH {r4-r10}    @ save callee-saved registers
+    
+    @@@ body of function goes here @@@
+    
+    POP  {r4-r10}     @ restore callee saved registers
+    MOV  sp, fp       @ reset stack pointer
+    POP  {fp}         @ recover previous frame pointer
+    BX   lr           @ return to the caller
+```
+
+又一个例子：
+
+```
+compute: function integer( a: integer, b: integer, c: integer ) ={
+    x:integer = a + b + c;
+    y:integer = x * 5;
+    return y;
+}
+```
+
+编译后指令清单：
+
+```s
+.global compute
+compute:
+@@@@@@@@@@@@@@@@@@ preamble of function sets up stack
+PUSH {fp}        @ save the frame pointer
+MOV  fp, sp      @ set the new frame pointer
+PUSH {r0,r1,r2}  @ save the arguments on the stack
+SUB  sp, sp, #8  @ allocate two more local variables
+PUSH {r4-r10}    @ save callee-saved registers
+
+@@@@@@@@@@@@@@@@@@@@@@@@ body of function starts here
+
+LDR  r0, [fp,#-12]     @ load argument 0 (a) into r0
+LDR  r1, [fp,#-8]      @ load argument 1 (b) into r1
+LDR  r2, [fp,#-4]      @ load argument 2 (c) into r2
+ADD  r1, r1, r2        @ add the args together
+ADD  r0, r0, r1
+STR  r0, [fp,#-20]     @ store the result into local 0 (x)
+LDR  r0, [fp,#-20]     @ load local 0 (x) into a register
+MOV  r1, #5            @ move 5 into a register
+MUL  r2, r0, r1        @ multiply both into r2
+STR  r2, [fp,#-16]     @ store the result in local 1 (y)
+LDR  r0, [fp,#-16]     @ move local 1 (y) into the result
+
+@@@@@@@@@@@@@@@@@@@ epilogue of function restores the stack
+
+POP  {r4-r10}     @ restore callee saved registers
+MOV  sp, fp       @ reset stack pointer
+POP  {fp}         @ recover previous frame pointer
+BX   lr           @ return to the caller
+```
+
+fp（R11）相当于x86中的ebp，sp（R13）相当于esp
+
+
+ARM 栈帧结构
+
+CONTENTS	ADDRESS
+Saved r12	[fp, #8]
+Old lr	        [fp, #4]
+Old frame pointer	[fp] (fp points here)
+Argument 2	[fp, #-4]
+Argument 1	[fp, #-8]
+Argument 0	[fp, #-12]
+Local variable 1	[fp, #-16]
+Local variable 0	[fp, #-20]
+Saved r10	[fp, #-24]
+Saved r9	[fp, #-28]
+Saved r8	[fp, #-32]
+Saved r7	[fp, #-36]
+Saved r6	[fp, #-40]
+Saved r5	[fp, #-44]
+Saved r4	[fp, #-48] (sp points here)
+
+另外一种可以使用的方法是，被调用者首先压入所有参数和寄存器到堆栈，然后再给局部变量分配空间。可以在压入参数和局部变量前使用`PUSH {fp,ip,lr,pc}`到堆栈。
+
+为了优化函数，我们可以避免使用寄存器 r4 和 r5，也就不需要保存他们。也可以保存参数到寄存器里，而不是把他们保存到堆栈，这样计算结果会直接放到 r0 而不是作为局部变量。
+
+#### 64位芯片的不同
+
+64位 ARM 架构提供了2种执行模式：A32 支持32位指令、A64模式支持新的64位执行模式，因此64位CPU可以执行 32bit 和 64bit 指令。
+
+
+#### A32和A64的区别
+
+##### 字长
+A64 指令长度固定为32bits。
+
+A64 寄存器和地址计算为 64位。
+
+##### 寄存器
+
+- A64有32个 64位的寄存器： x0～x31
+- x0，专门的0寄存器
+- x1～x15，通用寄存器
+- x16，x17 用于进程间通信
+- x29，帧指针
+- x30，link 指针
+- x31，stack 指针
+
+
+##### 指令
+A64指令类似于A32指令，但有是条件谓词不再是每条指令的一部分。
+
+##### 调用约定
+
+- 调用一个超过8个参数的函数，会将参数放入x0～x7，剩余的放入堆栈（逆向）
+- 调用者保存x9～x15和x30寄存器
+- 被调用者保存 x19～x29 寄存器
+- 返回值存放在x0，而额外的返回值由x8作为指针指向。
+
+
+### 参考
+- [ARM assembly language baisc](https://iq.opengenus.org/arm-assembly-language/)
+- [RISC and CISC computer architectures](https://iq.opengenus.org/risc-vs-cisc-architecture/)
+- [Writing ARM Assembly Document](https://developer.arm.com/documentation/dui0473/j/writing-arm-assembly-language)
