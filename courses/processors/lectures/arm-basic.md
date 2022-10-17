@@ -2,9 +2,229 @@
 
 来源：《ARM Architecture Reference Manual》
 
+## 引言
+ARM 与 Intel 的指令集不同，Intel 使用了 CISC 复杂指令，ARM 采用了 RISC 精简指令集。精简指令集通过减少每条指令的时钟周期来缩短执行时间，形成更快的指令执行，但是由于指令较少，所以指令序列会比较长。
+
+
 ## 术语
 - Thumb ：ARM指令集中高代码密度的指令子集。
+
+
+## ARM 架构CPU的结构
+
+ARM 架构师一种使用RISC（精简指令集）的CPU架构。它是应用最广的一种处理器架构。过去30年间，有着超过 2150亿基于ARM的芯片应用在各种产品中，从sesors、wearables、smartphones 到超级计算机。ARM CPU架构的优势在于：
+- 集成了安全
+- 高性能且节能
+- 庞大的生态
+- 各类市场上的广泛应用
+
+ARM CPU Arch 定义了基本指令集、异常和内存模型，这些是OS、hypervisor等软件所需要了解的。
+
+ARM CPU 微架构决定了如何实现处理器设计要求，如电源、性能、面积、管道长度、缓存级别等问题。
+
+下面的图显示了基于ARM系统的示例：
+
+<img src="images/arm-arch/01_About_the_Arm_Architecture_diagram.png">
+
+上图的手机包含了下列处理器类型：
+- 一个A-profile 处理器作为主CPU，运行OS，例如Android。这类处理器例如 Armv8-A或Armv9-A。
+- 一个基于R-profile 的蜂窝modem，提供连接性
+- 几个M-profile 的处理器控制运行，例如系统电源管理
+- SIM 卡使用SecurCore，是一个M-profile处理器，带有额外的安全特性。SecurCore通常用在smart cards中。
+
+下面仅讨论 A-Profile。
+
+### 架构的含义
+
+架构这个词意味着一组功能规范。在Arm arch中，我们指用于处理器的功能规范。一个架构规定了一个处理器将如何表现？例如他有什么指令、指令可以做什么？
+
+架构指定了下列内容：
+- 指令集
+- 寄存器集
+- 异常模式
+- 内存模式
+- Debug、trace和profiling
+
+
+### 系统架构
+
+系统包含了比处理器更复杂的内容。Arm 也提供了描述系统需求的说明规范。从下图中可以看出系统与处理器的关系：
+
+<img src="images/arm-arch/02_Development_of_Arm_Architecture_diagram.png">
+
+这个规范是软件兼容性的基础。根据这一规范构建硬件，意味着可以编写软件与之匹配。根据这个规范写的软件可以在相兼容的硬件上运行。ARM 架构是第一层，通过ISA（Instruction Set Architecture）为软件提供了通用的编程模型。
+
+
+基本系统架构（BSA）规范描述了一个系统软件所依赖的硬件系统架构。BSA覆盖了处理器和系统架构的各方面，例如：中断控制、时钟、其他OS所需的通用设备。他提供了一个可靠的用于标准OS、hypervisors和firmware的平台。
+
+BSA 可用于很多不同的市场和用例，其他标准可以建在 BSA之上，提供专用市场的标准。例如，服务器BSA是面向服务器的BSA。SBSA 描述了一个服务器OS硬件和功能需求。
+
+基本启动需求（Base Boot Requirements，BBR）规范包含了基于ARM 架构和OS、Hypervisor可依赖的系统的需求。这个规范建立了固件接口需求，例如 PSCI、SMCCC、UEFI、ACPI 和 SMBIOS。
+
+BBR 还提供了为目标特定用例的菜单，例如：
+- SBBR：规定了UEFI、ACPI和SMBIOS需求，来启动通用的、off-the-shelf的操作系统和虚拟机，例如windows、vmware、rhel、oracle linux、amazon linux。SBBR 也支持别的OS，例如Debian、fedora、centos、sles、ubuntu、opensuse、freebsd、netbsd。
+- EBBR：根据EBBR规范规定了UEFI需求来启动通用的os
+- LBBR：规定了为LinuxBoot固件的特定的潜在需求。
+
+### 架构和微架构
+
+架构不能告诉你一个处理器如何被构建，或者如何工作。构建和处理器设计由微架构给出。
+
+微架构告诉我们一个特定处理器如何工作，包括以下内容：
+- 排线长度和层次
+- 缓存的数量和大小
+- 独立指令的时钟周期数
+- 其他可选的功能
+
+例如：cortex-a53 和 cortex-a72 都由 armv8-A架构实现，这意味着他们使用了同样的架构，但他们有不同的微架构。如下表所示：
+
+<img src="images/arm-arch/08_Arm_Cortex-A53_A72_chip_block_diagram.png">
+
+|Architecture |Cortex-A53|Cortex-A72|
+|-|-|-|
+|Target|Optimized for power efficiency|Optimized for performance|
+|Pipeline|8 stages, In-order|15+ stages ,Out-of-order|
+|Caches|L1 I cache: 8KB - 64KB,L1 D cache: 8KB - 64KB,L2 cache: optional, up to 2MB|L1 I cache: 48KB fixed,L1 D cache: 32KB fixed,L2 cache: mandatory, up to 2MB|
+
+软件可以无修改运行在A53和A72上，因为他们架构相同。
+
+### arm架构的开发
+
+Arm体系结构随着时间的推移而发展，每个版本都建立在之前的基础上。通常，我们可见的架构如下：`Armv8-A` ，意思是架构的版本8，用于 A-profile。
+
+- ARMv8-A，发布于2011，第一款64bit版本arm arch，常见于mobile phones。
+- ARMv9-A，最新版arm arch。在v8-A上增加了：Scalable vector extension v2（SVE2）、Transactional Memory Extension（TME）、Branch Record Buffer Extention(BRBE)、Embedded Trace Extention(ETE)、Trace Buffer Extention（TRBE）等等
+
+Arm 会发布架构的每年更新，增加一些新的指令和功能。
+
+### 其他ARM 架构
+
+Arm架构是最熟知的ARM标准，但是不是唯一的。ARM 有类似的用于构建SoC的多种组建标准。下图提供了一些例子：
+
+<img src="images/arm-arch/05_Interconnect_diagram.png">
+
+
+
+
+- 通用终端控制器GIC Generic Interrupt Controller (GIC)
+- 系统内存管理单元SMMU 
+- System Memory Management Unit (SMMU or sometimes IOMMU)
+- 通用计时器GT
+- 服务器基本系统架构和可信基系统架构SBSA Server Base System Architecture (SBSA) 
+- Trusted Base System Architecture (TBSA)TBSA
+- 高级微处理器总线架构AMBA
+
+### 理解ARM文档
+Arm提供了许多开发文档。
+
+位置：[Arm developer website](https://developer.arm.com/)
+
+提问：[Arm community](https://community.arm.com/)
+
+- 每个 Arm Architecture Reference Mannual 描述了架构规范。一部手册对应一种架构实现。
+- 每个 Arm Cortex 处理器有一个技参考术手册（TRM）。TRM描述了功能特性。通常TRMs提供了与ARM中不同的信息。
+- 每个 Arm Cortex 处理器还有一个配置和集成手册（CIM），描述了如何集成该处理器到一个系统中。通常这类信息仅与SoC设计者相关。
+
+如果你想查找某个特定处理器的信息，你可能需要参考不同的文档。以Cortex-A75 processor为例说明一下：
+
+<img src="images/arm-arch/06_Architecture_documentation.png">
+
+Cortex-A75 实现了 ARMv8.2-A，一个 GICv4 CPU接口和AMBA总线接口，所以你需要参考这些文档。
+
+此外，用户手册Guide 型文档告诉用户基本概念和基本使用。
+
+### 术语
+
+- PE （processing element）：是用在某个arm架构实现的一个通用词汇，可理解为任何有自己程序计数器且能执行程序的任何东西，例如 Cortex-A8是一个单核单线程处理器，该完整处理器是一个PE，cortex-a53是个多核处理器，每个核是一个PE。
+
+- Implementation Defined（IMP DEF）
+- UNPREDICTABLE AND CONSTRAINED UNPREDICTABLE
+- DEPRECATED
+- RES0/RES1 Reserved
+
+### 处理器状态
+
+- ARM state：处理器在运行ARM指令的时候所处的状态
+- Thumb state：处理器执行Thumb指令的时候所处的状态
+- ThumbEE state：处理器执行ThumbEE指令时所处的状态
+- Jazelle state：处理器也可以执行在与上面不同的状态，称为Jazele state，这种情况下不能直接写汇编代码。
+
+要在ARM和Thumb状态之间切换，需要切换汇编器mode，来产生正确的指令码使用 ARM 或 THUMB 指令。为了产生 ThumbEE 代码，使用THUMBX。汇编器代码使用 CODE32 和CODE16也还可以使用，但是推荐ARM和THUMB。
+
+处理器在一个state 不能执行别state的指令集。
+### 处理器模式
+
+ARM 处理器支持不同的处理器mode，这取决于架构版本。
+
+注：ARMv6-M 和 ARMv7-M 不支持与其他ARM处理器的同样modes。 
+
+ARM 处理器模式：
+
+处理器模式 ：
+<img src="images/arm-arch/arm-processor-modes.png">
+
+### 指令集
+
+ARM 架构可以支持3种指令集架构（ISAs）：
+- A64
+- A32
+- T32
+
+参考：
+- [Arm架构支持的不同指令集](https://developer.arm.com/architectures/instruction-sets)
+
+- [ISA 搜索工具](https://developer.arm.com/architectures/cpu-architecture/a-profile/exploration-tools) 可用于查找A64、A32、T32指令
+- Arm架构参考手册
+  - [A-profile](https://developer.arm.com/architectures/cpu-architecture/a-profile/docs)
+  - [R-profile](https://developer.arm.com/architectures/cpu-architecture/r-profile/docs)
+  - [M-profile](https://developer.arm.com/architectures/cpu-architecture/m-profile/docs)
+
+
+
+##### 调用约定
+
+- 调用一个超过8个参数的函数，会将参数放入x0～x7，剩余的放入堆栈（逆向）
+- 调用者保存x9～x15和x30寄存器
+- 被调用者保存 x19～x29 寄存器
+- 返回值存放在x0，而额外的返回值由x8作为指针指向。
+
+
+
+## ARM 架构CPU中的寄存器
+
+所有的ARM处理器中，下列寄存器在任何处理器mode下都是可获得且可访问的：
+- 13个 通用寄存器 R0～R12
+- 1个  堆栈指针 SP，在arm state 中也可作为通用寄存器
+- 1个  链接寄存器 LR，也可作为通用寄存器。
+- 1个  程序计数器 PC
+- 1个  应用程序状态寄存器 APSR
+
+
+还有一些寄存器在特权软件执行下可获得。ARM 处理器有37～40个寄存器，具体数量和用途取决于Security Extensions的实现。
+
+<img src="images/arm-arch/arm寄存器.png">
+
 ## ARM RISC 计算架构汇编语言
+### 参考文献
+ARM提供了一些帮助：
+- [Cortex-A Series Programmers' Guide](https://developer.arm.com/documentation/den0013/latest) 解释了架构基础和汇编代码及其他有用信息。
+- 《Arm Assembly Language: Fundamentals and Techniques》 by William Hohl，这本书是比较流行的一本教学课本
+- 《Embedded Systems Fundamentals with Arm Cortex-M based Microcontrollers: A Practical Approach》 by Dr Alexande G. Dean 包含了一个对应于C编程特性的汇编代码。
+
+### Compiler tools
+
+常见工具包括：
+- armasm
+- armclang
+- GNU gcc
+
+armasm 与 GNU syntax assembly 代码之间的区别可以参考[这里](https://developer.arm.com/documentation/100068/latest/Migrating-from-armasm-to-the-armclang-Integrated-Assembler/Overview-of-differences-between-armasm-and-GNU-syntax-assembly-code)
+
+
+
+
+
+### Guide
 
 汇编语言是面向特定处理器的且是编译器设计的基础。
 
@@ -520,19 +740,8 @@ A64 寄存器和地址计算为 64位。
 - x30，link 指针
 - x31，stack 指针
 
-
-##### 指令
-A64指令类似于A32指令，但有是条件谓词不再是每条指令的一部分。
-
-##### 调用约定
-
-- 调用一个超过8个参数的函数，会将参数放入x0～x7，剩余的放入堆栈（逆向）
-- 调用者保存x9～x15和x30寄存器
-- 被调用者保存 x19～x29 寄存器
-- 返回值存放在x0，而额外的返回值由x8作为指针指向。
-
-
 ### 参考
 - [ARM assembly language baisc](https://iq.opengenus.org/arm-assembly-language/)
 - [RISC and CISC computer architectures](https://iq.opengenus.org/risc-vs-cisc-architecture/)
 - [Writing ARM Assembly Document](https://developer.arm.com/documentation/dui0473/j/writing-arm-assembly-language)
+- [Learn the architecture - Introducing the Arm architecture Version 2.0](https://developer.arm.com/documentation/102404/0200/?lang=en)
