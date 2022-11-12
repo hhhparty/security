@@ -1,0 +1,118 @@
+<mxfile host="65bd71144e">
+    <diagram id="MW6xwPjGVl_z530lIwQF" name="Page-1">
+        <mxGraphModel dx="898" dy="570" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="5" value="硬件安全测试" style="swimlane;" vertex="1" parent="1">
+                    <mxGeometry x="110" y="105" width="200" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="2" value="示波器" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="5">
+                    <mxGeometry x="60" y="75" width="90" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="芯片调试器" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="5">
+                    <mxGeometry x="60" y="115" width="90" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="数字逻辑分析器" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="5">
+                    <mxGeometry x="60" y="155" width="90" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="万用表" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="5">
+                    <mxGeometry x="60" y="35" width="90" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="域控制器/ECU类硬件被测实体" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="600" y="170" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="" style="endArrow=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="310" y="190" as="sourcePoint"/>
+                        <mxPoint x="600" y="190" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="18" value="" style="endArrow=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="310" y="200" as="sourcePoint"/>
+                        <mxPoint x="600" y="200" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="19" value="" style="endArrow=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="310" y="210" as="sourcePoint"/>
+                        <mxPoint x="600" y="210" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="20" value="通信安全测试" style="swimlane;" vertex="1" parent="1">
+                    <mxGeometry x="80" y="340" width="230" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="端口/服务扫描工具" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="20">
+                    <mxGeometry x="10" y="75" width="90" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="22" value="协议分析" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="20">
+                    <mxGeometry x="10" y="115" width="90" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" value="漏洞扫描工具" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="20">
+                    <mxGeometry x="10" y="155" width="90" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" value="射频收发设备" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="20">
+                    <mxGeometry x="10" y="35" width="90" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="42" value="模拟基站" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="20">
+                    <mxGeometry x="120" y="35" width="90" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" value="" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="20" target="26">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="390" y="430" as="sourcePoint"/>
+                        <mxPoint x="440" y="380" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="26" value="具有通信功能或总线接口的被测实体（如T-Box、IVI、TPMS等）" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="600" y="410" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="29" value="软件安全测试" style="swimlane;" vertex="1" parent="1">
+                    <mxGeometry x="80" y="570" width="230" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="30" value="数据传输分析" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="29">
+                    <mxGeometry x="10" y="75" width="90" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="31" value="数据存储分析" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="29">
+                    <mxGeometry x="10" y="115" width="90" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="32" value="可执行文件分析" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="29">
+                    <mxGeometry x="10" y="155" width="90" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="33" value="API 扫描/分析" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="29">
+                    <mxGeometry x="10" y="35" width="90" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="38" value="安全配置分析" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="29">
+                    <mxGeometry x="120" y="155" width="90" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="40" value="OTA过程分析" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="29">
+                    <mxGeometry x="120" y="115" width="90" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="41" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="29">
+                    <mxGeometry x="120" y="75" width="90" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="34" value="" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="29" target="35">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="390" y="660" as="sourcePoint"/>
+                        <mxPoint x="440" y="610" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="35" value="含有较多代码、数据的被测实体（如含有MCU、SoC的域控制器、网关、IVI）" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="590" y="640" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="36" value="" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="310" y="680" as="sourcePoint"/>
+                        <mxPoint x="590" y="680" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="37" value="" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="310" y="660" as="sourcePoint"/>
+                        <mxPoint x="590" y="660" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
