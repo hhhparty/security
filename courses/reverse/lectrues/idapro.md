@@ -444,4 +444,86 @@ IDA pro 为了简化用户对反汇编内容的查找，设立了几种导航方
 - 跳转到地址（已知虚拟地址时可用）：使用快捷键 G 或 点击菜单Jump-Jump to Address，跳转到输入的名称或16进制地址值处。
 - 导航历史记录。Ida pro 菜单Jump 下方有两个快捷箭头，表示的意思是 Jump to Previous 和 Jump to Next position ，这是历史记录的遍历快捷键。
 
-## 
+## IDA pro 的栈视图
+
+设有一段反汇编清单：
+
+```s
+
+.text:00401522 ; =============== S U B R O U T I N E =======================================
+.text:00401522
+.text:00401522 ; Attributes: bp-based frame
+.text:00401522
+.text:00401522                 public _demo_stackframe
+.text:00401522 _demo_stackframe proc near              ; CODE XREF: _main+25↓p
+.text:00401522
+.text:00401522 var_54          = byte ptr -54h
+.text:00401522 var_14          = dword ptr -14h
+.text:00401522 var_10          = dword ptr -10h
+.text:00401522 var_C           = dword ptr -0Ch
+.text:00401522 arg_0           = dword ptr  8
+.text:00401522 arg_4           = dword ptr  0Ch
+.text:00401522 arg_8           = dword ptr  10h
+.text:00401522
+.text:00401522                 push    ebp
+.text:00401523                 mov     ebp, esp
+.text:00401525                 sub     esp, 68h
+.text:00401528                 mov     eax, [ebp+arg_0]
+.text:0040152B                 mov     [ebp+var_C], eax
+.text:0040152E                 mov     eax, [ebp+arg_4]
+.text:00401531                 mov     [ebp+var_10], eax
+.text:00401534                 mov     eax, [ebp+arg_8]
+.text:00401537                 mov     [ebp+var_14], eax
+.text:0040153A                 lea     eax, [ebp+var_54]
+.text:0040153D                 mov     dword ptr [eax], 636261h
+.text:00401543                 mov     eax, [ebp+var_10]
+.text:00401546                 mov     [esp+4], eax
+.text:0040154A                 mov     eax, [ebp+var_14]
+.text:0040154D                 mov     [esp], eax
+.text:00401550                 call    _bar
+.text:00401555                 leave
+.text:00401556                 retn
+.text:00401556 _demo_stackframe endp
+.text:00401556
+.text:00401557
+.text:00401557 ; =============== S U B R O U T I N E =======================================
+.text:00401557
+.text:00401557 ; Attributes: bp-based frame fuzzy-sp
+.text:00401557
+.text:00401557 ; int __cdecl main(int argc, const char **argv, const char **envp)
+.text:00401557                 public _main
+.text:00401557 _main           proc near               ; CODE XREF: ___tmainCRTStartup+25D↑p
+.text:00401557
+.text:00401557 argc            = dword ptr  8
+.text:00401557 argv            = dword ptr  0Ch
+.text:00401557 envp            = dword ptr  10h
+.text:00401557
+.text:00401557                 push    ebp
+.text:00401558                 mov     ebp, esp
+.text:0040155A                 and     esp, 0FFFFFFF0h
+.text:0040155D                 sub     esp, 10h
+.text:00401560                 call    ___main
+.text:00401565                 mov     dword ptr [esp+8], 3
+.text:0040156D                 mov     dword ptr [esp+4], 2
+.text:00401575                 mov     dword ptr [esp], 1
+.text:0040157C                 call    _demo_stackframe
+.text:00401581                 leave
+.text:00401582                 retn
+.text:00401582 _main           endp
+```
+
+函数_demo_stackframe内的简要的栈视图为：
+
+
+.text:00401522 var_54          = byte ptr -54h
+.text:00401522 var_14          = dword ptr -14h
+.text:00401522 var_10          = dword ptr -10h
+.text:00401522 var_C           = dword ptr -0Ch
+.text:00401522 arg_0           = dword ptr  8
+.text:00401522 arg_4           = dword ptr  0Ch
+.text:00401522 arg_8           = dword ptr  10h
+.text:00401522
+
+双击上面任一一个地址会进入ida pro的栈视图详情页，如图所示
+
+<img src="images/idapro/栈视图.png">
