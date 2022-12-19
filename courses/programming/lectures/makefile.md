@@ -1,5 +1,14 @@
 # Makefile
-> 内容来源：陈皓的《跟我一起写 Makefile》 https://blog.csdn.net/haoel/article/details/2886
+> 内容来源：陈皓的《跟我一起写 Makefile》 https://blog.csdn.net/haoel/article/details/288
+
+
+## Make 
+
+make 命令是一个自动化的编译和构建二进制可执行文件的工具，适用于复杂源代码、多种引用和库的统一编译和构建。
+
+make 命令使用了Makefile文件来指定构建过程。默认情况下，make命令会搜索同目录下的Makefile文件。
+
+Makefile 文件是机器可读的文档。虽然主要用于编译C/C++，他也可用于其他规范系统的管理任务。因为编译器需要参数中的所有以来，并且成为了琐碎和错误提醒任务。
 
 ## Makefile 基础
 ### What is?
@@ -43,6 +52,24 @@ command
 - ```$^```，代表所有依赖文件；
 - ```$<```，代表第一个依赖文件；
 
+#### makefile文件结构
+
+- Target：通常是应该存在某个位置的一个文件的名字，如果该文件不存在，或者具有更新时间戳，make则认为该文件无效，就要采取一些步骤重新重建该文件。
+- Dependency：依赖是某个target 的名字。假如我们有2个规则 A和B，如果target A 把target B作为依赖，那么目标B先于目标A被考虑。
+- Recipe：Recipe是执行步骤，用于生成特定的target 名字。
+
+```makefile
+target: dependecy(list)
+        recipe(command)
+# 例子：
+mycalculator: main.c mymath.h add.c subtract.c multiply.c divide.c
+	gcc -o mycalculator main.c mymath.h add.c subtract.c multiply.c divide.c
+```
+
+按照上面的例子：
+- 执行make会生成 mycalculator 可执行文件
+- 它依赖于 main.c mymath.h add.c subtract.c multiply.c divide.c
+- 过程是gcc -o mycalculator main.c mymath.h add.c subtract.c multiply.c divide.c
 ### 示例
 
 在这个示例中，我们的工程有8个C文件，和3个头文件，我们要写一个Makefile来告诉make命令如何编译和链接这几个文件。我们的规则是：
@@ -223,3 +250,5 @@ clean :
 - 注释：Makefile中只有行注释，和UNIX的Shell脚本一样，其注释是用“#”字符，这个就像C/C++中的“//”一样。如果你要在你的Makefile中使用“#”字符，可以用反斜框进行转义，如：“\#”。
 
 
+
+## 

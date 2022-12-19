@@ -1,0 +1,104 @@
+<mxfile host="65bd71144e">
+    <diagram id="PXDNBlG83j9K82IjzBUP" name="第 1 页">
+        <mxGraphModel dx="1108" dy="583" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="车载终端信息安全试验环境拓扑结构" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="340" y="160" width="200" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="信息安全测试装置" style="swimlane;" parent="1" vertex="1">
+                    <mxGeometry x="30" y="230" width="340" height="290" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="示波器" style="rounded=0;whiteSpace=wrap;html=1;" parent="10" vertex="1">
+                    <mxGeometry x="200" y="50" width="120" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="万用表" style="rounded=0;whiteSpace=wrap;html=1;" parent="10" vertex="1">
+                    <mxGeometry x="200" y="100" width="120" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="逻辑分析仪" style="rounded=0;whiteSpace=wrap;html=1;" parent="10" vertex="1">
+                    <mxGeometry x="200" y="150" width="120" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="芯片调试器" style="rounded=0;whiteSpace=wrap;html=1;" parent="10" vertex="1">
+                    <mxGeometry x="200" y="200" width="120" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="装有测试软件的&lt;br&gt;计算机" style="rounded=0;whiteSpace=wrap;html=1;" parent="10" vertex="1">
+                    <mxGeometry x="20" y="132.5" width="120" height="97.5" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" style="edgeStyle=none;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;endArrow=none;endFill=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="10" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="200" y="214.5" as="sourcePoint"/>
+                        <mxPoint x="140" y="214.5" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="17" style="edgeStyle=none;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;endArrow=none;endFill=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="10" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="200" y="164.5" as="sourcePoint"/>
+                        <mxPoint x="140" y="164.5" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="27" style="edgeStyle=none;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;endArrow=none;endFill=0;" parent="10" source="26" target="7" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="80" y="265"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="26" value="串口/USB等接口电路" style="rounded=0;whiteSpace=wrap;html=1;" parent="10" vertex="1">
+                    <mxGeometry x="200" y="250" width="120" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="18" value="信息安全被测实体" style="swimlane;" parent="1" vertex="1">
+                    <mxGeometry x="500" y="230" width="270" height="290" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" value="车载终端" style="rounded=0;whiteSpace=wrap;html=1;" parent="18" vertex="1">
+                    <mxGeometry x="75" y="96.25" width="120" height="97.5" as="geometry"/>
+                </mxCell>
+                <mxCell id="34" value="" style="endArrow=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="10" target="18" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="410" y="450" as="sourcePoint"/>
+                        <mxPoint x="460" y="400" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="37" value="探针/连接线路" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="390" y="340" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="38" value="车载终端信息安全试验软件环境" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="340" y="600" width="200" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="52" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;" edge="1" parent="1" source="39" target="51">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="39" value="信息安全测试计算机" style="swimlane;" vertex="1" parent="1">
+                    <mxGeometry y="660" width="340" height="290" as="geometry"/>
+                </mxCell>
+                <mxCell id="54" value="固件安全分析工具" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="39">
+                    <mxGeometry x="100" y="40" width="140" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="55" value="OBD/UDS访问工具" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="39">
+                    <mxGeometry x="100" y="90" width="140" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="57" value="系统访问工具" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="39">
+                    <mxGeometry x="100" y="190" width="140" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="58" value="漏洞扫描工具" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="39">
+                    <mxGeometry x="100" y="240" width="140" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="59" value="特定格式文件解析工具" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="39">
+                    <mxGeometry x="100" y="140" width="140" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="49" value="信息安全被测实体" style="swimlane;" vertex="1" parent="1">
+                    <mxGeometry x="550" y="660" width="270" height="290" as="geometry"/>
+                </mxCell>
+                <mxCell id="50" value="车载终端" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="49">
+                    <mxGeometry x="75" y="96.25" width="120" height="97.5" as="geometry"/>
+                </mxCell>
+                <mxCell id="53" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;" edge="1" parent="1" source="51" target="49">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="51" value="各类数据通信连接" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="389" y="790" width="120" height="30" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
