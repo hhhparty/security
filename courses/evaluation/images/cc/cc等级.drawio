@@ -1,0 +1,47 @@
+<mxfile host="65bd71144e">
+    <diagram id="dXlR4Ii5xgWr4FpM1--U" name="Page-1">
+        <mxGraphModel dx="823" dy="510" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="EAL1 功能测试级" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="269" y="530" width="190" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="EAL2 结构测试级" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="269" y="490" width="190" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="EAL3 系统测试和检查级" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="269" y="450" width="190" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="EAL4 系统设计、测试和复查级" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="269" y="410" width="190" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="EAL5 半形式化设计和测试级" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="269" y="370" width="190" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="EAL6 半形式化验证设计和测试级" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="269" y="330" width="190" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="EAL7 形式化验证设计和测试级" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="269" y="290" width="190" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="499" y="560" as="sourcePoint"/>
+                        <mxPoint x="499" y="290" as="targetPoint"/>
+                        <Array as="points"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="12" value="最基本" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="499" y="530" width="60" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="最严格" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="499" y="290" width="60" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" value="ISO/IEC 15408:2022&lt;br&gt;GB/T 18336:2001&lt;br&gt;信息技术安全测评等级" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="274" y="220" width="185" height="50" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

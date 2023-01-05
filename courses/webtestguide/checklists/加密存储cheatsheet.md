@@ -78,7 +78,7 @@
 
 |Language| 	Unsafe Functions| 	Cryptographically Secure Functions|
 |-|-|-|
-|C 	|random(),|rand() |	getrandom(2)|
+|C 	|random(),rand() |	getrandom(2)|
 |Java |	java.util.Random() 	|java.security.SecureRandom|
 | PHP |	rand(), mt_rand(), array_rand(), uniqid() |	random_bytes(), random_int() in PHP 7 or openssl_random_pseudo_bytes() in PHP 5|
 | .NET/C#| 	Random() 	|RNGCryptoServiceProvider|

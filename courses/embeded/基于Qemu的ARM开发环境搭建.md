@@ -1,12 +1,59 @@
-# ARM 汇编编程环境搭建
+# 基于QEMU的ARM 汇编编程环境搭建
 
 
 - 安装编译工具
 - 使用qemu模拟arm架构处理器
 
-注明：下列实验在ubuntu desktop 18.04 中进行。
+## QEMU 对arm的支持
+QEMU 是一种通用、开源的机器模拟器和虚拟化工具。QEMU可以被用于各种用途，最常见的用途是“系统模拟”，它提供了一个对完整机器（CPU、Mem、模拟设备）的虚拟化模型，来运行guest OS。在这个模式下，CPU功能可以完全被模拟，或者它可以与类似 KVM、Xen、Hax 或Hypervisor等虚拟机一起工作。Qemu框架允许客户os直接运行在host cpu上。第二种使用方式，是使用QEMU作为 “用户模式模拟”，这时QEMU可以运行为某类CPU编译的程序，而这个程序可以在另一类CPU下编译。在第二种模式下，CPU是被模拟出来的。
+
+- System emualtion
+- User mode emulation
+
+QEMU 提供了一些独立的命令行工具，例如：qemu-img 磁盘镜像工具，可以用来生成、转化和修改磁盘镜像文件。
+
+目前QEMU支持的构建平台（OS）有：
+- 支持的host 架构
+- linux，mac，freebsd，netbsd，openbsd 等os
+- windows os
+
+### System emulation
+这种情况是用qemu完成全系统模拟（相对于 user mode emulation），这里包括了与hypervisors的协同，例如KVM、Xen等
+
+[详情参考](https://www.qemu.org/docs/master/system/index.html)
+
+首先需要安装qemu-system-xxx架构，例如：
+```
+sudo apt install qemu-system-arm
+sudo apt install qemu-system-x86-64
+```
+
+之后，如果已经准备好了镜像文件，例如linux.img
+```
+qemu-system-x86_64 linux.img
+```
+Linux系统就会启动运行。事实上，用户应该知道，上面的示例消除了使用x86_64特定默认值设置VM的复杂性，并假设第一个非交换机参数是带有引导扇区的PC兼容磁盘映像。对于非x86系统，我们模拟了广泛的机器类型，命令行通常在定义机器和引导行为时更加明确。您将在手册的QEMU System Emulator Targets部分找到更多示例命令行。
+
+### 开发板支持
+
+QEMU 构建了两类型的ARM Versatile Express 开发板家族：
+- vexpress-a9，包括了Versatile Express motherboard 和coreTile Express A9x4 子板
+- vexpress-a15，包括了Versatile Express motherboard 和coreTile Express A15x2 子板
+
+
+更多查看 https://www.qemu.org/docs/master/system/arm/vexpress.html
+
+为了使用qemu构建arm虚拟机，需要安装qemu-system-arm
+
+```
+sudo apt install qemu-system-arm
+
+
+```
 
 ## 安装交叉编译工具
+由于之后的OS系统和应用软件都是在ARM架构下执行，所以需要使用这一工具将各种软件的源代码编译链接为ARM指令二进制文件。
+
 安装交叉编译工具，用于编译内核和待开发的应用程序源代码。
 
 `sudo apt install gcc-arm-linux-gnueabi`
@@ -14,6 +61,19 @@
 gcc-arm-linux-gnueabi 是面向arm架构的、linux下运行的、遵循嵌入式应用程序二进制接口的gnu编译工具。
 
 安装好之后使用`dpkg -l gcc-arm-linux-gnueabi`验证一下。
+
+默认的安装路径是在/usr/arm-linux-gnueabi  里面有三个子目录：
+- bin
+- include
+- lib
+
+
+
+后续的编译过程中，需要设置的环境变量通常有：
+- ARCH=arm
+- CROSS_COMPILE=arm-linux-gnueabi-
+- GCC=arm-linux-gnueabi-gcc
+- AR=arm-linux-gnueabi-ar
 
 ## 编译arm虚拟机所用的linux kernel
 - 首先从 https://www.kernel.org/ 下载linux 内核，具体版本视个人需要。
@@ -46,11 +106,13 @@ less .config
 
 ```
 
+对于初学者，建议使用`make CROSS_COMPILE=arm-linux-gnueabi- ARCH=arm vexpress_defconfig` 后续步骤也就省略了。
+
 - 第三步（可选）使用menuconfig 进行内核裁剪。
 
 `make menuconfig` 
 
-不清楚怎么裁剪，就使用`make CROSS_COMPILE=arm-linux-gnueabi- ARCH=arm vexpress_defconfig`。
+不清楚怎么裁剪，就参考第二步的推荐。
 
 - 第四步 编译内核
 
@@ -58,12 +120,20 @@ less .config
 
 之后会有很多选择，可以按需要也可以按默认一路回车。最后得到内核文件在 arch/arm/boot/zImage。Qemu启动时需要这个文件。
 
+如果没有执行步骤三，就参考第二步的推荐生成.config文件，之后再执行本步骤。
+
+编译之后
+
 - 第五步 编译设备树文件dts为dtb，执行下面两条命令：
+
+
 
 `make CROSS_COMPILE=arm-linux-gnueabi- ARCH=arm defconfig`
 `make CROSS_COMPILE=arm-linux-gnueabi- ARCH=arm  dtbs`
 
 到这时，我们可以测试一下qemu加载内核的效果如何？运行下列命令：
+没有安装qemu-system-arm的话，就使用 `apt install -y qemu-system-arm` 安装
+
 
 ` qemu-system-arm -M vexpress-a9 -m 512M -kernel ~/Downloads/linux-5.4.224/arch/arm/boot/zImage -dtb ~/Downloads/linux-5.4.224/arch/arm/boot/dts/vexpress-v2p-ca9.dtb -nographic -append "console=ttyAMA0"`
 
@@ -266,6 +336,15 @@ Exception stack(0x9e493fb0 to 0x9e493ff8)
 
 
 ## 制作根文件系统
+
+构建根文件系统的工具有若干，例如：
+- busybox
+- buildroot
+- yocto
+
+以Busybox 为例，它整合了许多通用UNIX 工具到单个小型可执行文件中。它为常用命令提供了最小的替代。这个系统在编译时，通常要进行配置，与内核编译配置类似。
+
+
 内核启动后的最后一步是挂载根文件系统，然后执行文件系统里的指定程序，例如/etc/rc.local
 
 如果没有文件系统，内核启动到最后就提示 ： panic....
@@ -289,7 +368,8 @@ busybox-1.20.0$ make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- menuconfig
 # 5. Installation Options —— 设置make install 命令后的安装目标地址，可设置为 ./_install
 
 busybox-1.20.0$ make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- 
-# 常见错误很多，通常可以在 busybox-1.20.0/include/libhhh.h 中加入 “#include <sys/reouces.h>” 后可修复。
+# 常见错误很多，通常可以在 busybox-1.20.0/include/libbb.h 中加入 “#include <sys/resource.h>” 后可修复。
+# 在 busybox 1.35 这些升级版本中就没有这项的缺失了。
 # 成功后会生成可执行文件 busybox
 
 # 设置了安装前缀后再执行
@@ -323,8 +403,6 @@ less etc/inittab
 ::respawn:-/bin/sh #如果这里加上 -f root 则自动登录
 tty2::askfirst:-/bin/sh
 ::ctrlaltdel:/bin/umount -a -r
-_install/etc/inittab
-
 ```
 
 init始终是内核启动的第一个用户态进程（其PID始终为1），它的正确位置（对Linux系统来说）是/sbin/init.如果内核找不到init，它就会试着运行/bin/sh，如果运行失败，系统的启动也会失败。
@@ -397,6 +475,7 @@ qemu-system-arm -M vexpress-a9 -m 512M -kernel ./linux-5.4.224/arch/arm/boot/zIm
 
 如果系统持续出现:can't open /dev/tty2: No such file or directory
 can't open /dev/tty2: No such file or directory的报错，那么在命令行中输入 `mknod dev/null c 1 3` 即便被不断输出的内容截断也继续输入，指导输完此命令执行后，通常就会消失。或者可能需要执行 `chmod 777 /etc/init.d/rcS` 
+
 ### 编写helloworld并放到image中
 ```
 mkdir -p ~/workspace/arm_hello
@@ -622,6 +701,24 @@ HelloWorld!
 / # 
 
 ```
+
+### bugfix
+
+#### No user exists for uid 0
+执行whoami 或其他需要用户权限的操作，系统反馈No user exists for uid 0。
+
+如果出现标题所列问题，首先检查虚拟机中 /etc/passwd 是否存在，不存在创建文件，并键入内容:
+
+```
+vi /etc/passwd
+# 键入如下内容
+root:x:0:0:root:/root:/bin/sh
+```
+
+#### 如果系统持续出现:can't open /dev/tty2: No such file or directory
+can't open /dev/tty2: No such file or directory的报错，那么在命令行中输入 `mknod dev/null c 1 3` 即便被不断输出的内容截断也继续输入，指导输完此命令执行后，通常就会消失。或者可能需要执行 `chmod 777 /etc/init.d/rcS` 
+
+
 ## 从源码编译qemu
 
 
@@ -647,3 +744,8 @@ make
 - [编译busybox，动态链接与静态链接的选择](https://blog.csdn.net/newnewman80/article/details/7971317)
 - [用BusyBox制作Linux最小系统](https://www.cnblogs.com/wchonline/p/11417666.html)
 - [Arm Versatile Express boards ](https://qemu.readthedocs.io/en/latest/system/arm/vexpress.html)
+
+
+- https://blog.csdn.net/wxh0000mm/article/details/108234270
+- https://blog.csdn.net/wxh0000mm/article/details/108234539
+- https://so.csdn.net/so/search?q=qemu&t=blog&u=wxh0000mm
